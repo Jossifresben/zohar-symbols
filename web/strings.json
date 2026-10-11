@@ -242,5 +242,213 @@
   "not_found": {
     "en": "Nothing here. Try the home page.",
     "es": "Aquí no hay nada. Prueba la página de inicio."
+  },
+  "breadcrumb_symbols": {
+    "en": "Symbols",
+    "es": "Símbolos"
+  },
+  "also": {
+    "en": "also",
+    "es": "también"
+  },
+  "kind_one_person": {
+    "en": "Person",
+    "es": "Persona"
+  },
+  "kind_one_object": {
+    "en": "Object",
+    "es": "Objeto"
+  },
+  "kind_one_quality": {
+    "en": "Quality",
+    "es": "Cualidad"
+  },
+  "kind_one_event": {
+    "en": "Event",
+    "es": "Acontecimiento"
+  },
+  "passages_n": {
+    "en": "{n} passages",
+    "es": "{n} pasajes"
+  },
+  "all_strata": {
+    "en": "Across the strata",
+    "es": "En todos los estratos"
+  },
+  "appears_alongside": {
+    "en": "Appears alongside",
+    "es": "Aparece junto a"
+  },
+  "cooccurrence_note": {
+    "en": "Co-occurrence within the same passage; Mantua folio paragraph as unit.",
+    "es": "Coaparición en el mismo pasaje; unidad: párrafo del folio de Mantua."
+  },
+  "how_it_moves": {
+    "en": "How it moves",
+    "es": "Cómo se mueve"
+  },
+  "partners": {
+    "en": "Partners",
+    "es": "Compañeros"
+  },
+  "passages_together_n": {
+    "en": "{n} passages together",
+    "es": "{n} pasajes juntos"
+  },
+  "also_with": {
+    "en": "Also with",
+    "es": "También con"
+  },
+  "no_partners": {
+    "en": "No companions yet.",
+    "es": "Aún sin compañeros."
+  },
+  "states": {
+    "en": "States",
+    "es": "Estados"
+  },
+  "state_full": {
+    "en": "full",
+    "es": "llena"
+  },
+  "state_diminished": {
+    "en": "diminished",
+    "es": "menguada"
+  },
+  "state_exile": {
+    "en": "in exile",
+    "es": "en el exilio"
+  },
+  "state_union": {
+    "en": "in union",
+    "es": "en unión"
+  },
+  "unmarked_n": {
+    "en": "{n} passages without a state marker",
+    "es": "{n} pasajes sin marca de estado"
+  },
+  "no_states": {
+    "en": "No states declared for this symbol.",
+    "es": "No hay estados declarados para este símbolo."
+  },
+  "read_it": {
+    "en": "Read it",
+    "es": "Léelo"
+  },
+  "read_it_sub": {
+    "en": "Passages chosen across the strata, with the symbol marked.",
+    "es": "Pasajes elegidos a lo largo de los estratos, con el símbolo marcado."
+  },
+  "not_yet_found": {
+    "en": "Not yet found in the text.",
+    "es": "Aún no aparece en el texto."
+  },
+  "not_translated": {
+    "en": "not yet translated",
+    "es": "sin traducir aún"
+  },
+  "translated_by": {
+    "en": "Translated by {model}",
+    "es": "Traducido por {model}"
+  },
+  "where_in_book": {
+    "en": "Where in the book",
+    "es": "Dónde en el libro"
+  },
+  "for_scholars": {
+    "en": "For scholars",
+    "es": "Para especialistas"
+  },
+  "scholars_method": {
+    "en": "Method",
+    "es": "Método"
+  },
+  "scholars_csv": {
+    "en": "Download CSV",
+    "es": "Descargar CSV"
+  },
+  "scholars_cite": {
+    "en": "Cite",
+    "es": "Citar"
+  },
+  "suggestions": {
+    "en": "Did you mean:",
+    "es": "¿Quisiste decir?"
+  },
+  "stratum_main": {
+    "en": "Main body",
+    "es": "Cuerpo principal"
+  },
+  "stratum_raaya_meheimna": {
+    "en": "Ra'aya Meheimna",
+    "es": "Ra'aya Meheimna"
+  },
+  "stream_raaya_meheimna": {
+    "en": "Ra'aya Meheimna",
+    "es": "Ra'aya Meheimna"
+  },
+  "stratum_midrash_haneelam": {
+    "en": "Midrash ha-Ne'lam",
+    "es": "Midrash ha-Ne'lam"
+  },
+  "stream_midrash_haneelam": {
+    "en": "Midrash ha-Ne'lam",
+    "es": "Midrash ha-Ne'lam"
+  },
+  "stratum_sitrei_torah": {
+    "en": "Sitrei Torah",
+    "es": "Sitrei Torá"
+  },
+  "stream_sitrei_torah": {
+    "en": "Sitrei Torah",
+    "es": "Sitrei Torá"
+  },
+  "stratum_raza_derazin": {
+    "en": "Raza de-Razin",
+    "es": "Raza de-Razín"
+  },
+  "stream_raza_derazin": {
+    "en": "Raza de-Razin",
+    "es": "Raza de-Razín"
+  },
+  "stratum_tosefta": {
+    "en": "Tosefta",
+    "es": "Tosefta"
+  },
+  "stream_tosefta": {
+    "en": "Tosefta",
+    "es": "Tosefta"
+  },
+  "stratum_matnitin": {
+    "en": "Matnitin",
+    "es": "Matnitín"
+  },
+  "stream_matnitin": {
+    "en": "Matnitin",
+    "es": "Matnitín"
+  },
+  "stratum_other": {
+    "en": "Other",
+    "es": "Otros"
+  },
+  "stream_other": {
+    "en": "Other",
+    "es": "Otros"
+  },
+  "stratum_addendum": {
+    "en": "Addendum (Hashmatot)",
+    "es": "Apéndice (Hashmatot)"
+  },
+  "stream_addendum": {
+    "en": "Addendum (Hashmatot)",
+    "es": "Apéndice (Hashmatot)"
+  },
+  "stratum_idra_rabba": {
+    "en": "Idra Rabba",
+    "es": "Idra Rabba"
+  },
+  "stratum_idra_zuta": {
+    "en": "Idra Zuta",
+    "es": "Idra Zuta"
   }
 }

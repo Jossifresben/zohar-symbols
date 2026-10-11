@@ -78,3 +78,37 @@ body[data-kind="event"] .chip:not([data-kind="event"]){display:none}
 }
 .chip,.kind-filter button,.search button{min-height:44px;display:inline-flex;align-items:center}
 .kind-filter button[hidden]{display:none}
+
+/* Symbol page */
+.breadcrumb{font-size:14px;margin-bottom:16px}.breadcrumb a{color:var(--muted)}
+.sym-head h1{font-size:52px;font-weight:500;line-height:1.1;margin:0}
+.sym-head h1 .heb{font-size:38px;margin-left:12px}
+.also{margin:6px 0 14px;font-size:15px}.also .heb{font-size:17px}
+.sym-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px}
+.sym-chips .chip{font-size:14px;color:var(--muted)}
+.sym-chips .chip-node{border-color:var(--gold);color:var(--gold)}
+.sym-top{margin-bottom:40px;align-items:start}
+.claim{grid-column:span 8;font-size:27px;line-height:1.35;margin:0}
+.evidence{grid-column:span 4}
+.label{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0 0 12px}
+.bars{list-style:none;margin:0;padding:0}
+.bar-row{display:grid;grid-template-columns:minmax(0,9em) 1fr 3em;gap:10px;align-items:center;padding:4px 0;color:var(--text);font-size:14px}
+a.bar-row:hover{text-decoration:none}a.bar-row:hover .bar-label{color:var(--gold)}
+.bar-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar-track{height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.bar{display:block;height:100%;border-radius:3px}
+.bar-gold{background:var(--gold)}.bar-blue{background:var(--blue)}.bar-red{background:var(--red)}
+.bar-n{text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
+.footnote{font-size:12px;margin:12px 0 0}
+.section-h{font-size:30px;font-weight:500;margin:0 0 12px}
+.moves,.read,.where,.scholars-tail{margin-bottom:40px}
+.panel{grid-column:span 6}
+.top-partner{font-size:30px;color:var(--gold)}
+.states{list-style:none;margin:0 0 8px;padding:0}.state{font-size:20px}
+.passage-card{margin-bottom:16px}
+.pc-cite{color:var(--gold);font-weight:600}
+.pc-ar{font-size:21px;line-height:1.8;margin:12px 0}
+.pc-ar .mention{color:var(--gold);text-decoration:underline;text-underline-offset:4px}
+.pc-tr{margin:0}.attribution{font-size:12px;margin:6px 0 0}
+.cite{font-size:13px}
+@media (max-width:760px){.sym-head h1{font-size:36px}.claim{font-size:22px}}

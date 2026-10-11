@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="not-found">
+  <p class="intro">{{ t('not_found') }}</p>
+  {%- if suggestions %}
+  <p>{{ t('suggestions') }}
+  {%- for x in suggestions %} <a href="{{ lang_url('symbol', sid=x.id) }}">{{ x.label }}</a>{% if not loop.last %} ·{% endif %}{% endfor %}</p>
+  {%- endif %}
+</section>
+{% endblock %}

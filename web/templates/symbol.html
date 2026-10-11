@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}{{ s.label }} · {{ s.label_ar }} · Zohar{% endblock %}
+{% block content %}
+<nav class="breadcrumb muted" aria-label="breadcrumb">
+  <a href="{{ lang_url('home') }}">{{ t('breadcrumb_symbols') }}</a> ›
+  <a href="{{ lang_url('node', nid=s.node) }}">{{ s.node_label }}</a> ›
+  <span>{{ s.label }}</span>
+</nav>
+
+<section class="sym-head">
+  <h1 class="display">{{ s.label }} <span class="heb gold" lang="he" dir="rtl">{{ s.label_ar }}</span></h1>
+  <p class="also muted">{{ t('also') }} {{ s.label_other }}{% for a in also %} · <span class="heb" lang="he" dir="rtl">{{ a }}</span>{% endfor %}</p>
+  <div class="sym-chips">
+    <span class="chip" data-kind="{{ s.kind }}">{{ t('kind_one_' ~ s.kind) }}</span>
+    <a class="chip chip-node" href="{{ lang_url('node', nid=s.node) }}">{{ s.node_label }}</a>
+    <span class="chip">{{ t('passages_n', n=s.count_passages) }}</span>
+    {%- if strata %}
+    <span class="chip">{% if all_strata %}{{ t('all_strata') }}{% else %}{% for x in strata %}{{ t('stratum_' ~ x.stratum) }}{% if not loop.last %} · {% endif %}{% endfor %}{% endif %}</span>
+    {%- endif %}
+  </div>
+</section>
+
+<section class="grid sym-top">
+  <p class="claim display">{{ s.gloss }}</p>
+  <aside class="card evidence">
+    <h2 class="label">{{ t('appears_alongside') }}</h2>
+    {%- if partners %}
+    <ul class="bars">
+    {%- for p in partners %}
+      <li><a class="bar-row" href="{{ lang_url('symbol', sid=p.id) }}"><span class="bar-label">{{ p.label }}</span><span class="bar-track"><span class="bar bar-{{ p.tone }}" style="width:{{ p.width }}%"></span></span><span class="bar-n">{{ p.passages_together }}</span></a></li>
+    {%- endfor %}
+    </ul>
+    {%- else %}
+    <p class="muted">{{ t('no_partners') }}</p>
+    {%- endif %}
+    <p class="footnote muted">{{ t('cooccurrence_note') }}</p>
+  </aside>
+</section>
+
+<section class="moves">
+  <h2 class="display section-h">{{ t('how_it_moves') }}</h2>
+  {%- if s.moves %}<p class="intro">{{ s.moves }}</p>{% endif %}
+  <div class="grid">
+    <div class="card panel">
+      <h3 class="label">{{ t('partners') }}</h3>
+      {%- if partners %}
+      {%- set top = partners[0] %}
+      <a class="top-partner display" href="{{ lang_url('symbol', sid=top.id) }}">{{ top.label }}</a>
+      <p class="muted">{{ t('passages_together_n', n=top.passages_together) }}</p>
+      {%- if also_with %}
+      <p>{{ t('also_with') }}: {% for p in also_with %}<a href="{{ lang_url('symbol', sid=p.id) }}">{{ p.label }}</a> <span class="muted">({{ p.passages_together }})</span>{% if not loop.last %} · {% endif %}{% endfor %}</p>
+      {%- endif %}
+      {%- else %}
+      <p class="muted">{{ t('no_partners') }}</p>
+      {%- endif %}
+    </div>
+    <div class="card panel">
+      <h3 class="label">{{ t('states') }}</h3>
+      {%- if states.states %}
+      <ul class="states">
+      {%- for x in states.states %}
+        <li><span class="state display">{{ x.display }}</span> <span class="heb muted" lang="he" dir="rtl">{{ x.marker_roots }}</span> <span class="muted">· {{ t('passages_n', n=x.count) }}</span></li>
+      {%- endfor %}
+      </ul>
+      <p class="muted">{{ t('unmarked_n', n=states.unmarked) }}</p>
+      {%- else %}
+      <p class="muted">{{ t('no_states') }}</p>
+      {%- endif %}
+    </div>
+  </div>
+</section>
+
+<section class="read">
+  <h2 class="display section-h">{{ t('read_it') }}</h2>
+  <p class="intro">{{ t('read_it_sub') }}</p>
+  {%- for p in cards %}
+  {% include "_passage_card.html" %}
+  {%- else %}
+  <p class="muted">{{ t('not_yet_found') }}</p>
+  {%- endfor %}
+</section>
+
+<section class="where">
+  <h2 class="display section-h">{{ t('where_in_book') }}</h2>
+  {%- if strata %}
+  <ul class="bars card">
+  {%- for x in strata %}
+    <li class="bar-row"><span class="bar-label">{{ t('stratum_' ~ x.stratum) }}</span><span class="bar-track"><span class="bar bar-gold" style="width:{{ x.width }}%"></span></span><span class="bar-n">{{ x.count }}</span></li>
+  {%- endfor %}
+  </ul>
+  {%- else %}
+  <p class="muted">{{ t('not_yet_found') }}</p>
+  {%- endif %}
+</section>
+
+<section class="scholars-tail">
+  <h2 class="label">{{ t('for_scholars') }}</h2>
+  <p>
+    <a href="{{ lang_url('scholars') }}#method">{{ t('scholars_method') }}</a> ·
+    <a href="{{ lang_url('api_symbol_csv', sid=s.id) }}">{{ t('scholars_csv') }}</a> ·
+    <a href="#cite">{{ t('scholars_cite') }}</a>
+  </p>
+  <p id="cite" class="cite muted">{{ citation }}</p>
+</section>
+{% endblock %}
