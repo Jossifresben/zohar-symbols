@@ -214,3 +214,43 @@ def scholars_pairs(min_together: int = 5, limit: int = 200, lang: str = "en") ->
                              from cooccurrence c join symbol a on a.id=c.symbol_a join symbol b on b.id=c.symbol_b
                              where c.passages_together >= ? order by c.pmi desc, c.symbol_a, c.symbol_b limit ?""",
                           (min_together, limit))]
+
+
+def token_shares() -> dict:
+    """Token totals by lemma outcome: with a root, known non-lexical (empty-root override), unknown; plus confidence >= 0.8."""
+    r = one("""select count(*) tokens,
+                      coalesce(sum(case when source='override' and root is null then 1 else 0 end),0) non_lexical,
+                      coalesce(sum(case when root is null and source='none' then 1 else 0 end),0) unknown,
+                      coalesce(sum(case when confidence >= 0.8 then 1 else 0 end),0) conf_high
+               from token""")
+    tokens, nl, unk = r["tokens"], r["non_lexical"], r["unknown"]
+    return dict(tokens=tokens, with_root=tokens - nl - unk, non_lexical=nl, unknown=unk, conf_high=r["conf_high"])
+
+
+def alias_count() -> int:
+    n = 0
+    for r in rows("select aliases from symbol"):
+        surface, _, roots = r["aliases"].partition("|")
+        n += len([a for a in surface.split(";") if a]) + len([a for a in roots.split(";") if a])
+    return n
+
+
+def symbol_mentions(sid: str, lang: str) -> list[dict]:
+    return [dict(passage_id=r["passage_id"], citation=cite.citation(r["volume"], r["folio"], r["side"]), position=r["position"],
+                 matched_form=r["matched_form"], via=r["via"])
+            for r in rows("""select m.passage_id, p.volume, p.folio, p.side, m.position, m.matched_form, m.via
+                             from mention m join passage p on p.id=m.passage_id where m.symbol_id=?
+                             order by p.volume, p.folio, p.side, p.para, m.position""", (sid,))]
+
+
+def symbols_table(lang: str) -> list[dict]:
+    return [dict(id=r["id"], label=_lab(r, lang), label_en=r["label_en"], label_es=r["label_es"], label_ar=r["label_ar"],
+                 kind=r["kind"], node=r["node"], count_raw=r["count_raw"], count_resolved=r["count_resolved"],
+                 count_passages=r["count_passages"], seed_source=r["seed_source"])
+            for r in rows("""select id,label_en,label_es,label_ar,kind,node,count_raw,count_resolved,count_passages,seed_source
+                             from symbol order by id""")]
+
+
+def all_pairs() -> list[dict]:
+    return [dict(symbol_a=r["symbol_a"], symbol_b=r["symbol_b"], passages_together=r["passages_together"], pmi=r["pmi"])
+            for r in rows("select symbol_a, symbol_b, passages_together, pmi from cooccurrence order by pmi desc, symbol_a, symbol_b")]

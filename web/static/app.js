@@ -16,3 +16,18 @@
     b.addEventListener('click', function () { setKind(b.dataset.kind); });
   });
 })();
+
+// Copy buttons (scholars page): hidden without JS, since the text is selectable anyway.
+(function () {
+  document.querySelectorAll('.copy-btn').forEach(function (b) {
+    if (!navigator.clipboard) return;
+    b.hidden = false;
+    b.addEventListener('click', function () {
+      var src = document.getElementById(b.dataset.copy);
+      navigator.clipboard.writeText(src.textContent).then(function () {
+        var old = b.textContent; b.textContent = b.dataset.done;
+        setTimeout(function () { b.textContent = old; }, 1500);
+      });
+    });
+  });
+})();

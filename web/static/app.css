@@ -136,3 +136,9 @@ a.bar-row:hover{text-decoration:none}a.bar-row:hover .bar-label{color:var(--gold
 .stream-h{margin:24px 0 8px}
 .folio-symbols{margin-top:32px}
 .folio-nav{display:flex;justify-content:space-between;gap:16px;margin:32px 0}
+
+/* scholars / about */
+.card pre{white-space:pre-wrap;background:var(--bg,transparent);border:1px solid var(--border);border-radius:6px;padding:12px;overflow-x:auto}
+table.pairs{border-collapse:collapse;width:100%}.pairs th,.pairs td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--border)}
+.copy-btn{cursor:pointer}
+main>.card{margin-bottom:20px}

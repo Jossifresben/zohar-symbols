@@ -578,5 +578,213 @@
   "passage_not_found": {
     "en": "No such passage.",
     "es": "Ese pasaje no existe."
+  },
+  "footer_about": {
+    "en": "About",
+    "es": "Acerca de"
+  },
+  "caveat": {
+    "en": "We are not scholars. We aim to provide a pleasant experience of the Zohar. Translations and symbol glosses are produced by Anthropic's Claude Fable and have not been reviewed by specialists.",
+    "es": "No somos especialistas. Queremos ofrecer una experiencia agradable del Zohar. Las traducciones y las glosas de los símbolos las produce Claude Fable, de Anthropic, y no han sido revisadas por especialistas."
+  },
+  "sch_title": {
+    "en": "For scholars",
+    "es": "Para estudiosos"
+  },
+  "sch_intro": {
+    "en": "Method, provenance, data and citation. No number on this site is produced by a model: deterministic code counts, a model only translates and glosses, and every step is listed here.",
+    "es": "Método, procedencia, datos y cita. Ningún número de este sitio lo produce un modelo: código determinista cuenta; el modelo solo traduce y glosa; cada paso se detalla aquí."
+  },
+  "sch_method_h": {
+    "en": "Method",
+    "es": "Método"
+  },
+  "sch_m_corpus": {
+    "en": "Corpus and strata. The text is the Hebrew Wikisource Zohar, in Mantua pagination, from its 29 parasha pages. Passages are the folio paragraphs. Nine text streams are read from the editors' section labels and headings, plus the ranges of Idra Rabba and Idra Zuta and a fallback range for the Midrash ha-Ne'lam in Shemot. These streams are the strata shown on the site.",
+    "es": "Corpus y estratos. El texto es el Zohar de Wikisource hebreo, con la paginación de Mantua, tomado de sus 29 páginas por parashá. Los pasajes son los párrafos de cada folio. Nueve corrientes de texto se leen de las etiquetas de sección y los títulos de los editores, más los rangos de Idra Rabá e Idra Zutá y un rango de reserva para el Midrash ha-Ne'lam en Shemot. Esas corrientes son los estratos que muestra el sitio."
+  },
+  "sch_m_lemma": {
+    "en": "Lemmatisation. Each word is reduced to a root with the Aramaic Root Atlas (aramaic_core) plus a Zohar override table. Overrides are looked up through the proclitics ו ד ב ל כ מ ש. An override with an empty root marks a known non-lexical token, such as an abbreviation of a divine name.",
+    "es": "Lematización. Cada palabra se reduce a una raíz con el Atlas de Raíces Arameas (aramaic_core) más una tabla de excepciones propia del Zohar. Las excepciones se buscan a través de los proclíticos ו ד ב ל כ מ ש. Una excepción con raíz vacía marca un token no léxico conocido, como la abreviatura de un nombre divino."
+  },
+  "sch_m_tag": {
+    "en": "Mention tagging. A symbol is tagged by its surface aliases (with safe proclitic pairs) and by its distinctive roots. The longest multi-word match wins. Words that follow רבי, ר׳, א״ר or רב are not tagged, because they are the name of a sage.",
+    "es": "Etiquetado de menciones. Un símbolo se etiqueta por sus alias de superficie (con pares seguros de proclíticos) y por sus raíces distintivas. Gana la coincidencia más larga de varias palabras. No se etiquetan las palabras que siguen a רבי, ר׳, א״ר o רב, porque son el nombre de un sabio."
+  },
+  "sch_m_cooc": {
+    "en": "Co-occurrence and PMI. Two symbols co-occur when both are mentioned in the same passage (a folio paragraph) on different tokens. PMI = log2(c·N / (fa·fb)), where c is the number of passages with both, fa and fb the passages of each, and N all passages. It is shown only for pairs with at least 5 passages together.",
+    "es": "Coocurrencia y PMI. Dos símbolos coocurren cuando ambos se mencionan en el mismo pasaje (un párrafo de folio) sobre palabras distintas. PMI = log2(c·N / (fa·fb)), donde c es el número de pasajes con ambos, fa y fb los pasajes de cada uno y N todos los pasajes. Solo se muestra para pares con al menos 5 pasajes juntos."
+  },
+  "sch_m_states": {
+    "en": "States. A symbol's state (for example full or diminished) is detected when the marker roots declared for that state co-occur with it in the passage. The markers are declared in the seed, not inferred.",
+    "es": "Estados. El estado de un símbolo (por ejemplo pleno o disminuido) se detecta cuando las raíces marcadoras declaradas para ese estado coinciden con él en el pasaje. Los marcadores se declaran en la semilla; no se infieren."
+  },
+  "sch_m_surf": {
+    "en": "Surfaced passages. Passages shown for a symbol are ranked by (2·own + partner mentions) / (tokens + 20). Passages of at least 12 tokens come first, one per stratum first, and ties are broken by folio order.",
+    "es": "Pasajes destacados. Los pasajes que se muestran para un símbolo se ordenan por (2·propias + menciones de compañeros) / (tokens + 20). Primero los de al menos 12 tokens, primero uno por estrato, y los empates se resuelven por orden de folio."
+  },
+  "sch_m_resolve": {
+    "en": "Raw and resolved counts. The raw count is every tagged mention. Where several symbols share an alias, the resolved count assigns the mention by the context of the same node, without normalisation. The raw count is always shown.",
+    "es": "Recuento bruto y resuelto. El recuento bruto es cada mención etiquetada. Cuando varios símbolos comparten un alias, el recuento resuelto asigna la mención según el contexto del mismo nodo, sin normalizar. El recuento bruto se muestra siempre."
+  },
+  "sch_prov_h": {
+    "en": "Provenance",
+    "es": "Procedencia"
+  },
+  "sch_p_seed": {
+    "en": "Seed sources. The symbols and their aliases are seeded from Cordovero, Pardes Rimonim (gate 23), Gikatilla, Sha'arei Orah, and the Zohar's own usage. Each symbol records its seed source.",
+    "es": "Fuentes de la semilla. Los símbolos y sus alias provienen de Cordovero, Pardes Rimonim (puerta 23), de Gikatilla, Sha'arei Orah, y del uso del propio Zohar. Cada símbolo registra su fuente."
+  },
+  "sch_p_counts": {
+    "en": "The dictionary has {symbols} symbols and {aliases} aliases. Of {tokens} tokens, {with_root} have a root, {non_lexical} are known non-lexical tokens and {unknown} are unknown; {conf_high} have lemma confidence of 0.8 or more.",
+    "es": "El diccionario tiene {symbols} símbolos y {aliases} alias. De {tokens} tokens, {with_root} tienen raíz, {non_lexical} son no léxicos conocidos y {unknown} son desconocidos; {conf_high} tienen una confianza de lema de 0,8 o más."
+  },
+  "sch_p_cav": {
+    "en": "Caveats. The strata ranges are conventional. Parasha is a page-level label, not a property of each passage. A scholarly spot-check of the boundaries of the Midrash ha-Ne'lam and the addenda is pending. Zohar III 116a–b is absent from Hebrew Wikisource.",
+    "es": "Salvedades. Los rangos de los estratos son convencionales. La parashá es una etiqueta de página, no una propiedad de cada pasaje. Falta una verificación académica de los límites del Midrash ha-Ne'lam y de los apéndices. Zohar III 116a–b no figura en Wikisource hebreo."
+  },
+  "sch_tables_h": {
+    "en": "Tables",
+    "es": "Tablas"
+  },
+  "sch_t_version": {
+    "en": "tables_version",
+    "es": "tables_version"
+  },
+  "sch_t_built": {
+    "en": "Built at",
+    "es": "Construida el"
+  },
+  "sch_t_revids": {
+    "en": "Source revisions (Wikisource revids)",
+    "es": "Revisiones de origen (revids de Wikisource)"
+  },
+  "sch_t_sources": {
+    "en": "Full source list: data/SOURCES.md",
+    "es": "Lista completa de fuentes: data/SOURCES.md"
+  },
+  "sch_pairs_h": {
+    "en": "Strongest pairs",
+    "es": "Pares más fuertes"
+  },
+  "sch_pairs_note": {
+    "en": "Only pairs with at least 5 passages together are shown, sorted by PMI. A high PMI with few passages is weak evidence; read it with the count.",
+    "es": "Solo se muestran pares con al menos 5 pasajes juntos, ordenados por PMI. Un PMI alto con pocos pasajes es una evidencia débil; léelo junto con el recuento."
+  },
+  "sch_col_a": {
+    "en": "Symbol A",
+    "es": "Símbolo A"
+  },
+  "sch_col_b": {
+    "en": "Symbol B",
+    "es": "Símbolo B"
+  },
+  "sch_col_together": {
+    "en": "Passages together",
+    "es": "Pasajes juntos"
+  },
+  "sch_no_pairs": {
+    "en": "No pair reaches the floor in this build.",
+    "es": "Ningún par alcanza el mínimo en esta versión."
+  },
+  "sch_exports_h": {
+    "en": "Exports",
+    "es": "Exportaciones"
+  },
+  "sch_e_symbols": {
+    "en": "all symbols with counts (JSON)",
+    "es": "todos los símbolos con sus recuentos (JSON)"
+  },
+  "sch_e_pairs": {
+    "en": "all co-occurrence pairs (CSV)",
+    "es": "todos los pares de coocurrencia (CSV)"
+  },
+  "sch_e_meta": {
+    "en": "build metadata (JSON)",
+    "es": "metadatos de la construcción (JSON)"
+  },
+  "sch_e_symbol": {
+    "en": "Per symbol: every mention as CSV (UTF-8 with BOM, opens in Excel) or JSON, e.g. /api/symbol/moon.csv. Every export carries the tables_version.",
+    "es": "Por símbolo: cada mención en CSV (UTF-8 con BOM, abre en Excel) o JSON, p. ej. /api/symbol/moon.csv. Cada exportación lleva la tables_version."
+  },
+  "sch_cite_h": {
+    "en": "Cite",
+    "es": "Citar"
+  },
+  "sch_cite_bibtex": {
+    "en": "BibTeX",
+    "es": "BibTeX"
+  },
+  "sch_cite_chicago": {
+    "en": "Chicago",
+    "es": "Chicago"
+  },
+  "sch_cite_sbl": {
+    "en": "SBL",
+    "es": "SBL"
+  },
+  "sch_copy": {
+    "en": "Copy",
+    "es": "Copiar"
+  },
+  "sch_copied": {
+    "en": "Copied",
+    "es": "Copiado"
+  },
+  "sch_caveat_h": {
+    "en": "Caveat",
+    "es": "Advertencia"
+  },
+  "sch_lic_h": {
+    "en": "Licences",
+    "es": "Licencias"
+  },
+  "sch_lic_text": {
+    "en": "Code: MIT. Text and tables: CC BY-SA 4.0, attributing Hebrew Wikisource. Tradition glosses (Cordovero, Gikatilla) are in the public domain.",
+    "es": "Código: MIT. Texto y tablas: CC BY-SA 4.0, con atribución a Wikisource hebreo. Las glosas de la tradición (Cordovero, Gikatilla) son de dominio público."
+  },
+  "about_title": {
+    "en": "About",
+    "es": "Acerca de"
+  },
+  "about_what_h": {
+    "en": "What this is",
+    "es": "Qué es"
+  },
+  "about_what_1": {
+    "en": "The Zohar speaks in images: the moon, the king, the garden, the mouth of the river. Each one stands for something in a long tradition of reading.",
+    "es": "El Zohar habla en imágenes: la luna, el rey, el jardín, la boca del río. Cada una representa algo en una larga tradición de lectura."
+  },
+  "about_what_2": {
+    "en": "This site shows what each image stands for by counting, not by asserting: where it appears, beside what, in which layer of the text. You can always go back to the passage.",
+    "es": "Este sitio muestra qué representa cada imagen contando, no afirmando: dónde aparece, junto a qué, en qué capa del texto. Siempre puedes volver al pasaje."
+  },
+  "about_who_h": {
+    "en": "Who",
+    "es": "Quién"
+  },
+  "about_who": {
+    "en": "Jose \"Jossi\" Fresco Benaim, SomosUno Digital, Madrid.",
+    "es": "Jose \"Jossi\" Fresco Benaim, SomosUno Digital, Madrid."
+  },
+  "about_orcid": {
+    "en": "ORCID",
+    "es": "ORCID"
+  },
+  "about_attr_h": {
+    "en": "Licences and attribution",
+    "es": "Licencias y atribución"
+  },
+  "about_attr": {
+    "en": "The text is from Hebrew Wikisource, shared under CC BY-SA 4.0, and so are the tables derived from it. Code is MIT.",
+    "es": "El texto proviene de Wikisource hebreo, compartido bajo CC BY-SA 4.0, y lo mismo vale para las tablas derivadas. El código es MIT."
+  },
+  "about_report": {
+    "en": "Report a problem",
+    "es": "Informar de un problema"
+  },
+  "about_method_link": {
+    "en": "Method and data for scholars",
+    "es": "Método y datos para estudiosos"
   }
 }

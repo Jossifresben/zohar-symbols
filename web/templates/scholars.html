@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}{{ t('sch_title') }} · Zohar{% endblock %}
+{% block content %}
+<section class="sym-head"><h1 class="display">{{ t('sch_title') }}</h1><p class="intro">{{ t('sch_intro') }}</p></section>
+<section class="card" id="method"><h2 class="label">{{ t('sch_method_h') }}</h2>
+  {%- for k in ['corpus','lemma','tag','cooc','states','surf','resolve'] %}
+  <p>{{ t('sch_m_' ~ k) }}</p>
+  {%- endfor %}
+</section>
+<section class="card" id="provenance"><h2 class="label">{{ t('sch_prov_h') }}</h2>
+  <p>{{ t('sch_p_seed') }}</p>
+  <p>{{ t('sch_p_counts',
+      symbols='<span data-n="symbols">%d</span>'|safe % counts.symbols, aliases='<span data-n="aliases">%d</span>'|safe % counts.aliases,
+      tokens='<span data-n="tokens">%d</span>'|safe % counts.tokens, with_root='<span data-n="with_root">%d</span>'|safe % counts.with_root,
+      non_lexical='<span data-n="non_lexical">%d</span>'|safe % counts.non_lexical, unknown='<span data-n="unknown">%d</span>'|safe % counts.unknown,
+      conf_high='<span data-n="conf_high">%d</span>'|safe % counts.conf_high)|safe }}</p>
+  <p>{{ t('sch_p_cav') }}</p>
+</section>
+<section class="card" id="tables"><h2 class="label">{{ t('sch_tables_h') }}</h2>
+  <p>{{ t('sch_t_version') }}: <code>{{ meta.tables_version }}</code><br>{{ t('sch_t_built') }}: <code>{{ meta.built_at }}</code><br>
+  {{ t('sch_t_revids') }}: <code>{{ revids }}</code></p>
+  <p><a href="https://github.com/Jossifresben/zohar-symbols/blob/main/data/SOURCES.md">{{ t('sch_t_sources') }}</a></p>
+</section>
+<section class="card" id="pairs"><h2 class="label">{{ t('sch_pairs_h') }}</h2>
+  <p class="muted">{{ t('sch_pairs_note') }}</p>
+  {%- if pairs %}
+  <table class="pairs"><thead><tr><th>{{ t('sch_col_a') }}</th><th>{{ t('sch_col_b') }}</th><th>{{ t('sch_col_together') }}</th><th>PMI</th></tr></thead><tbody>
+  {%- for p in pairs %}
+    <tr><td><a href="{{ lang_url('symbol', sid=p.a) }}">{{ p.a_label }}</a></td><td><a href="{{ lang_url('symbol', sid=p.b) }}">{{ p.b_label }}</a></td><td>{{ p.passages_together }}</td><td>{{ '%.4f'|format(p.pmi) }}</td></tr>
+  {%- endfor %}
+  </tbody></table>
+  {%- else %}<p class="muted">{{ t('sch_no_pairs') }}</p>{%- endif %}
+</section>
+<section class="card" id="exports"><h2 class="label">{{ t('sch_exports_h') }}</h2>
+  <ul>
+    <li><a href="/api/symbols.json">/api/symbols.json</a> — {{ t('sch_e_symbols') }}</li>
+    <li><a href="/api/pairs.csv">/api/pairs.csv</a> — {{ t('sch_e_pairs') }}</li>
+    <li><a href="/api/meta.json">/api/meta.json</a> — {{ t('sch_e_meta') }}</li>
+  </ul>
+  <p>{{ t('sch_e_symbol') }}</p>
+</section>
+<section class="card" id="cite"><h2 class="label">{{ t('sch_cite_h') }}</h2>
+  {%- for k in ['bibtex','chicago','sbl'] %}
+  <h3>{{ t('sch_cite_' ~ k) }}</h3>
+  <pre id="cite-{{ k }}">{{ formats[k] }}</pre>
+  <button type="button" class="copy-btn" data-copy="cite-{{ k }}" data-done="{{ t('sch_copied') }}" hidden>{{ t('sch_copy') }}</button>
+  {%- endfor %}
+</section>
+<section class="card" id="caveat"><h2 class="label">{{ t('sch_caveat_h') }}</h2><p>{{ t('caveat') }}</p></section>
+<section class="card" id="licences"><h2 class="label">{{ t('sch_lic_h') }}</h2><p>{{ t('sch_lic_text') }}</p></section>
+<script src="{{ url_for('static', filename='app.js') }}" defer></script>
+{% endblock %}
