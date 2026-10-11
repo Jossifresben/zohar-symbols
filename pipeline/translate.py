@@ -134,7 +134,7 @@ def submit(requests: list[dict]) -> str:
     return batch.id
 
 
-def collect(batch_id: str, conn) -> list[dict]:
+def collect(batch_id: str, conn, prompt_version: str = PROMPT_VERSION) -> list[dict]:
     import anthropic
     client = anthropic.Anthropic()
     b = client.messages.batches.retrieve(batch_id)
@@ -152,7 +152,7 @@ def collect(batch_id: str, conn) -> list[dict]:
                        text="".join(b.text for b in msg.content if b.type == "text").strip())
         src = conn.execute("select text_ar, token_count from passage where id=?", (pid,)).fetchone()
         row.update(source_hash=source_hash(src["text_ar"]), source_tokens=src["token_count"],
-                   prompt_version=PROMPT_VERSION)
+                   prompt_version=prompt_version)
         rows.append(row)
     rows.sort(key=lambda r: (r["passage_id"], r["lang"], r["effort"]))
     return rows
