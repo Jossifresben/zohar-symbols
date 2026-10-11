@@ -7,8 +7,23 @@ from markupsafe import Markup, escape
 from pipeline.lemmatise import SPLIT, is_word, protect_gershayim
 
 from .. import db, queries
+from ..i18n import get_string
 
 bp = Blueprint("site", __name__)
+
+
+BOOKS = ("Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy")
+
+
+def verse_ref(ref: str | None) -> str:
+    """Localise the book name of a pipeline verse reference ("Exodus 23:17")."""
+    if not ref:
+        return ""
+    book, _, rest = ref.partition(" ")
+    if book in BOOKS:
+        name = get_string(f"book_{book.lower()}", g.lang)
+        return f"{name} {rest}".strip()
+    return ref
 
 
 def highlight(text_ar: str, mentions: list[dict], prefer: str | None = None) -> Markup:
@@ -88,6 +103,7 @@ def register(app) -> None:
     from . import api, ask, home, nodes, passages, scholars, symbols, tree  # noqa: F401  (decorate bp)
 
     app.jinja_env.filters["highlight"] = highlight
+    app.jinja_env.filters["verse_ref"] = verse_ref
 
     @app.context_processor
     def _meta():

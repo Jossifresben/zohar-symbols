@@ -8,17 +8,16 @@
   {%- if nb.next %}<a class="next" rel="next" href="{{ passage_url(nb.next.id) }}">{{ t('next') }} · {{ nb.next.citation }} →</a>{% endif %}
 </nav>
 {% endmacro %}
-{{ folio_nav('top') }}
 <section class="pg-head">
   <h1 class="display">{{ p.citation }}</h1>
   <p class="muted">
     {%- if p.parasha %}{{ p.parasha }}{% endif %}
     {%- if p.stream != 'main' %} · {{ t('stream_' ~ p.stream) }}{% endif %}
     {%- if p.stratum not in ('main', p.stream) %} · {{ t('stratum_' ~ p.stratum) }}{% endif %}
-    {%- if p.verse_ref %} · {{ t('on_verse', ref=p.verse_ref) }}{% endif %}
+    {%- if p.verse_ref %} · {{ t('on_verse', ref=p.verse_ref|verse_ref) }}{% endif %}
   </p>
 </section>
-
+{{ folio_nav('top') }}
 <section class="folio">
   {%- set ns = namespace(cur=none) %}
   {%- for q in paras %}

@@ -105,3 +105,22 @@ def test_folio_nav_at_top_and_bottom(client):
     assert html.count('class="folio-nav folio-nav-bottom"') == 1
     top = html.index("folio-nav-top"); first_para = html.index('class="para')
     assert top < first_para
+
+
+def test_top_nav_sits_between_header_and_text(client):
+    html = client.get("/passage/1.020b.002").get_data(as_text=True)
+    assert html.index("pg-head") < html.index("folio-nav-top") < html.index("stream-h")
+
+
+def test_verse_ref_book_localised_in_spanish(app):
+    from web.views import verse_ref
+    with app.test_request_context("/es/"):
+        from flask import g
+        g.lang = "es"
+        assert verse_ref("Exodus 23:17") == "Éxodo 23:17"
+        assert verse_ref("Genesis 1") == "Génesis 1"
+        assert verse_ref(None) == ""
+    with app.test_request_context("/"):
+        from flask import g
+        g.lang = "en"
+        assert verse_ref("Exodus 23:17") == "Exodus 23:17"

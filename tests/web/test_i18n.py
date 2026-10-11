@@ -84,6 +84,7 @@ def _dynamic_families():
         "stream_": list(STREAMS), "stratum_": list(STREAMS) + ["idra_rabba", "idra_zuta"],
         "sch_m_": ["corpus", "lemma", "tag", "cooc", "states", "surf", "resolve"],
         "sch_cite_": ["bibtex", "chicago", "sbl"],
+        "book_": [b.lower() for b in __import__("web.views", fromlist=["BOOKS"]).BOOKS],
     }
 
 

@@ -874,5 +874,25 @@
   "nav_top": {
     "en": "top",
     "es": "arriba"
+  },
+  "book_genesis": {
+    "en": "Genesis",
+    "es": "Génesis"
+  },
+  "book_exodus": {
+    "en": "Exodus",
+    "es": "Éxodo"
+  },
+  "book_leviticus": {
+    "en": "Leviticus",
+    "es": "Levítico"
+  },
+  "book_numbers": {
+    "en": "Numbers",
+    "es": "Números"
+  },
+  "book_deuteronomy": {
+    "en": "Deuteronomy",
+    "es": "Deuteronomio"
   }
 }
