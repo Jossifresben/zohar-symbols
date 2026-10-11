@@ -133,3 +133,33 @@ def test_repeated_section_with_identical_text_raises():
     with pytest.raises(SegmentError) as e:
         _seg(_sec("x") + "\n=== h ===\n" + _sec("x"))
     assert "duplicate text in repeated section" in str(e.value)
+
+
+def test_text_carrying_templates_keep_their_text():
+    assert clean_wikitext("אתקרי {{גמט דגש|עסטיראה}} ו{{קיצור|ב\"ד|בית דין}} {{הערה|note}}x") == 'אתקרי עסטיראה וב"ד x'
+    assert clean_wikitext("א{{'}} {{צ|{{קו תחתי|מראת}} אלהי\"ם}}") == "א' מראת אלהי\"ם"
+    assert clean_wikitext("{{מצ|תהלים|קלה|ד|כי יעקב בחר}} y") == "כי יעקב בחר y"
+
+
+def test_variant_wrapped_in_bold_is_removed():
+    assert clean_wikitext("אמר (''' ס\"א x''') ב".replace("''' ", "'''")) == "אמר ב"
+
+
+def test_folio_label_with_parasha_suffix():
+    wt = ("<קטע התחלה=דף לה ב - צו/>aaa<קטע סוף=דף לה ב - צו/>\n"
+          "<קטע התחלה=דף לה ב - שמיני/>bbb<קטע סוף=דף לה ב - שמיני/>")
+    ps = _seg(wt)
+    assert [p.id for p in ps] == ["1.035b.01", "1.035b.02"]
+
+
+def test_known_typo_fix_must_match_exactly_once():
+    from pipeline.segment import _TEXT_FIXES
+    (title, old), new = next(iter(_TEXT_FIXES.items()))
+    with pytest.raises(SegmentError, match="known typo"):
+        segment_page(_sec("nothing here"), 1, "X", title)
+
+
+def test_stray_duplicate_start_tag_in_label_fixes():
+    wt = "<קטע התחלה=דף נט ב/>\n<קטע התחלה=דף נט ב/>text<קטע סוף=דף נט ב/>"
+    ps = segment_page(wt, 1, "Noach", "זוהר חלק ג")
+    assert [p.id for p in ps] == ["1.059b.01"]

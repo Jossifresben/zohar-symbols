@@ -8,14 +8,15 @@ BOOKS = {"בראשית": "Genesis", "שמות": "Exodus", "ויקרא": "Levitic
          "במדבר": "Numbers", "דברים": "Deuteronomy"}
 
 _NUM = r"([א-ת\"׳״]+)"
-_START = re.compile(r"<\s*קטע\s+התחלה\s*=\s*דף\s+" + _NUM + r"\s+([אב])\s*/\s*>")
-_END = re.compile(r"<\s*קטע\s+סוף\s*=\s*דף\s+" + _NUM + r"\s+([אב])\s*/\s*>")
+# an optional " - <parasha>" suffix labels a folio shared by two parashot (e.g. "דף לה ב - צו")
+_SUFFIX = r"(?:\s+-\s+[^/<>]+?)?"
+_START = re.compile(r"<\s*קטע\s+התחלה\s*=\s*דף\s+" + _NUM + r"\s+([אב])" + _SUFFIX + r"\s*/\s*>")
+_END = re.compile(r"<\s*קטע\s+סוף\s*=\s*דף\s+" + _NUM + r"\s+([אב])" + _SUFFIX + r"\s*/\s*>")
 # Folio sections only: the page also carries overlay sections (e.g. "שבועות 1",
 # "בראשית א א") that mark verses/readings, not Mantua folios.
 _RAW_START = re.compile(r"<\s*קטע\s+התחלה\s*=\s*דף")
 _SECTION_TAG = re.compile(r"<\s*קטע\s+(?:התחלה|סוף)\s*=[^>]*/>")
 _MM = re.compile(r"\{\{ממ\|([^|}]+)\|([א-ת]+)(?:\|([א-ת]+))?\}\}")
-_TZ = re.compile(r"\{\{צ\|([^|{}]*)(?:\|[^{}]*)?\}\}")
 _SHIN = re.compile(r"\{\{ש\}\}")
 _ANY_TEMPLATE = re.compile(r"\{\{[^{}]*\}\}")
 # Real markup also wraps the reading: (<small>נ"א, ...</small>)
@@ -34,7 +35,24 @@ _WS = re.compile(r"[ \t]+")
 
 # One-off Wikisource typos: (page_title, label) whose start tag is duplicated
 # (a stray tag before the heading, then the real one). The stray tag is skipped.
-_LABEL_FIXES = {("זוהר חלק א", "א א")}
+_LABEL_FIXES = {("זוהר חלק א", "א א"), ("זוהר חלק ג", "נט ב"),
+                ("זוהר חלק יז", "קעט ב")}
+
+
+# One-off Wikisource markup typos, fixed before segmenting: (page_title, old) -> new.
+# Each `old` must occur exactly once on its page or segmenting fails loudly.
+_TEXT_FIXES = {
+    # variant reading "(ס"א נחש זוטא" is never closed; the reading is two words
+    ("זוהר חלק י", 'נחש אחרא (ס"א נחש זוטא,'): 'נחש אחרא (ס"א נחש זוטא),',
+    # editor's note {{הערה| opened but never closed; it ends before the Aramaic resumes
+    # single-brace typo inside a gematria template (an angel name that must stay)
+    ("זוהר חלק יז", '{{גמט דגש{גדרי"ה}}'): '{{גמט דגש|גדרי"ה}}',
+    # editor's note closed with "))" instead of "}}"
+    ("זוהר חלק יז", 'עיי"ש]))'): 'עיי"ש]}}',
+    ("זוהר חלק כה", "ליתוסף קדושה על קדושתיה. ועל דא לא יטול"): "ליתוסף קדושה על קדושתיה.}} ועל דא לא יטול",
+    # template closed with "PP" instead of "}}"
+    ("זוהר חלק יז", "ויחר אפי בהם ואכלםPP,"): "ויחר אפי בהם ואכלם}},",
+}
 
 
 class SegmentError(Exception):
@@ -68,15 +86,50 @@ def _verse_ref(block: str) -> str | None:
     return f"{book} {ch}"
 
 
+# Templates that carry Zohar text: name -> index of the argument that is the text.
+# Every other template (notes, citations, layout marks) is dropped with its content.
+_KEEP_ARG = {"צ": 0, "גמט": 0, "גמט דגש": 0, "קו תחתי": 0, "גדול": 0, "מר": 0, "עוגן": 0,
+             "ב": 0, "קיצור": 0, "תיקון גירסה": 0, "תיקון": 0, 'קו"כ': 0, 'כו"ק': 0, "מצ": 3}
+
+
+def _split_args(inner: str) -> list[str]:
+    """Split on | outside [[links]]."""
+    args, cur, depth = [], [], 0
+    i = 0
+    while i < len(inner):
+        two = inner[i:i + 2]
+        if two == "[[":
+            depth += 1; cur.append(two); i += 2
+        elif two == "]]" and depth:
+            depth -= 1; cur.append(two); i += 2
+        elif inner[i] == "|" and not depth:
+            args.append("".join(cur)); cur = []; i += 1
+        else:
+            cur.append(inner[i]); i += 1
+    args.append("".join(cur))
+    return args
+
+
+def _template_text(m: re.Match) -> str:
+    args = _split_args(m.group(0)[2:-2])
+    name = args[0].strip()
+    if name == "'":
+        return "'"  # the geresh template
+    idx = _KEEP_ARG.get(name)
+    if idx is None or idx + 1 >= len(args):
+        return ""
+    return args[idx + 1]
+
+
 def clean_wikitext(s: str) -> str:
     s = _COMMENT.sub("", s)
     s = _REF.sub("", s)
     s = _SECTION_TAG.sub("", s)
+    s = _BOLD.sub("", s)  # before variants: some are wrapped in bold markup
     s = _VARIANT.sub("", s)
-    s = _TZ.sub(lambda m: m.group(1), s)
     s = _SHIN.sub("\n\n", s)
-    while True:
-        t = _ANY_TEMPLATE.sub("", s)
+    while True:  # innermost templates first, so nesting like {{צ|{{קו תחתי|x}} y}} keeps its text
+        t = _ANY_TEMPLATE.sub(_template_text, s)
         if t == s:
             break
         s = t
@@ -115,6 +168,11 @@ def segment_page(wikitext: str, volume: int, parasha: str, page_title: str,
                  stats: dict | None = None) -> list[Passage]:
     """A repeated (folio, side) on one page continues paragraph numbering;
     stats['continued'] counts such repeats."""
+    for (title, old), new in _TEXT_FIXES.items():
+        if title == page_title:
+            if wikitext.count(old) != 1:
+                raise SegmentError(page_title, "<fix>", f"known typo not found exactly once: {old!r}")
+            wikitext = wikitext.replace(old, new)
     passages: list[Passage] = []
     seen: dict[tuple[int, str], int] = {}
     texts: dict[tuple[int, str], set[str]] = {}

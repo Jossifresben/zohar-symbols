@@ -2,11 +2,11 @@
 
 | item | value |
 |---|---|
-| passages | 678 |
-| tokens | 58011 |
-| mentions | 3910 |
+| passages | 13915 |
+| tokens | 725418 |
+| mentions | 47979 |
 | symbols | 139 |
-| pairs | 2375 |
-| tokens with root | 50070 |
-| state rows | 22 |
+| pairs | 5443 |
+| tokens with root | 644360 |
+| state rows | 228 |
 | state rows stale vs seed (marker_roots empty) | 0 |
