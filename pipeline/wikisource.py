@@ -33,12 +33,11 @@ def fetch_page(title: str, cache_dir: Path, session=None) -> PageText:
     r = session.get(API, params={
         "action": "query", "prop": "revisions", "titles": title,
         "rvprop": "ids|timestamp|content", "rvslots": "main", "format": "json",
-        "formatversion": "1",
+        "formatversion": "2",
     }, timeout=60)
     r.raise_for_status()
-    pages = r.json()["query"]["pages"]
-    page = next(iter(pages.values()))
-    if "missing" in page or "revisions" not in page:
+    page = r.json()["query"]["pages"][0]
+    if page.get("missing") or "revisions" not in page:
         raise LookupError(f"Wikisource page not found: {title}")
     rev = page["revisions"][0]
     pt = PageText(title=page["title"], revid=int(rev["revid"]),

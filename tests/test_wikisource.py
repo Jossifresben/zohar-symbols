@@ -17,9 +17,10 @@ class FakeSession:
 
 
 def _payload(title, text):
-    return {"query": {"pages": {"123": {"title": title, "revisions": [
+    return {"query": {"pages": [{"pageid": 123, "title": title, "revisions": [
         {"revid": 999, "timestamp": "2026-10-01T00:00:00Z",
-         "slots": {"main": {"content": text}}}]}}}}
+         "slots": {"main": {"contentmodel": "wikitext", "contentformat": "text/x-wiki",
+                            "content": text}}}]}]}}
 
 
 def test_fetch_parses_and_caches(tmp_path: Path):
@@ -35,7 +36,7 @@ def test_fetch_parses_and_caches(tmp_path: Path):
 
 
 def test_missing_page_raises(tmp_path: Path):
-    sess = FakeSession({"query": {"pages": {"-1": {"title": "x", "missing": ""}}}})
+    sess = FakeSession({"query": {"pages": [{"title": "x", "missing": True}]}})
     import pytest
     with pytest.raises(LookupError):
         fetch_page("x", tmp_path, session=sess)
