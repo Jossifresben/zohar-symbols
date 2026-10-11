@@ -87,12 +87,28 @@ def _dynamic_families():
     }
 
 
-def test_every_referenced_key_exists():
-    missing = set()
+_CALL_KEY = r"\b(?:t|get_string)\(\s*['\"]([a-z0-9_]+)['\"](?!\s*~)"
+_CALL_ELSE_KEY = r"\b(?:t|get_string)\(\s*['\"][a-z0-9_]+['\"]\s+if\s+[^()]*?\s+else\s+['\"]([a-z0-9_]+)['\"]"
+_KWARG_KEY = r"\b(?:msg|title|message)=['\"]([a-z0-9_]+)['\"]"     # render_template(..., msg="key") in views
+_DEFAULT_KEY = r"\|default\(\s*['\"]([a-z0-9_]+)['\"]\s*\)"         # t(msg|default('key')) in templates
+
+
+def _referenced_literals():
+    """(file, key) for every literal key: first arg of t()/get_string() (and the else-branch of an inline
+    conditional there), render_template kwargs msg=/title=/message= in Python, |default('…') in templates,
+    plus the title/blurb keys of the home CLUSTERS table."""
+    out = set()
     for f, src in _sources().items():
-        for k in re.findall(r"\b(?:t|get_string)\(\s*['\"]([a-z0-9_]+)['\"](?!\s*~)", src):
-            if k not in STRINGS:
-                missing.add((f.name, k))
+        pats = [_CALL_KEY, _CALL_ELSE_KEY] + ([_KWARG_KEY] if f.suffix == ".py" else [_DEFAULT_KEY])
+        for pat in pats:
+            out |= {(f.name, k) for k in re.findall(pat, src)}
+    from web.views.home import CLUSTERS
+    out |= {("home.CLUSTERS", k) for c in CLUSTERS for k in c[3:] if k}
+    return out
+
+
+def test_every_referenced_key_exists():
+    missing = {(f, k) for f, k in _referenced_literals() if k not in STRINGS}
     for prefix, suffixes in _dynamic_families().items():
         for s in suffixes:
             if prefix + s not in STRINGS:
@@ -109,9 +125,7 @@ def test_dynamic_families_match_the_code():
 
 
 def test_no_dead_keys():
-    literals = set()
-    for src in _sources().values():
-        literals |= set(re.findall(r"['\"]([a-z][a-z0-9_]*)['\"]", src))
+    literals = {k for _, k in _referenced_literals()}
     dynamic = {p + s for p, ss in _dynamic_families().items() for s in ss}
     dead = sorted(k for k in STRINGS if k not in literals and k not in dynamic)
     assert not dead, dead
@@ -128,7 +142,7 @@ def test_missing_key_raises_in_testing(app):
 def test_cookie_set_to_current_language(client):
     r = client.get("/es/symbol/moon")
     c = r.headers.get("Set-Cookie", "")
-    assert "lang=es" in c and "Path=/" in c and "SameSite=Lax" in c and "Max-Age=31536000" in c
+    assert "lang=es" in c and "Path=/" in c and "SameSite=Lax" in c and "Max-Age=31536000" in c and "HttpOnly" in c
     r = client.get("/symbol/moon")
     assert "lang=en" in r.headers.get("Set-Cookie", "")
 
@@ -173,10 +187,64 @@ def test_switcher_carries_query_string(client):
 
 
 def test_switcher_survives_hostile_query_strings(client):
-    for q in ["?sid=other", "?_scheme=ftp", "?_external=1&_anchor=x", "?pid=1"]:
+    for q in ["?sid=other", "?_scheme=ftp", "?_external=1&_anchor=x", "?pid=1", "?endpoint=x", "?_external=1",
+              "?_anchor=a", "?_method=POST"]:
         r = _get(client, "/symbol/moon" + q)
         assert r.status_code == 200, q
         assert re.search(r'href="/es/symbol/moon[?"]', r.get_data(as_text=True)), q
+
+
+def test_switcher_keeps_query_keys_verbatim(client):
+    html = _get(client, "/search?q=moon&_anchor=a&endpoint=x").get_data(as_text=True)
+    assert 'href="/es/search?q=moon&amp;_anchor=a&amp;endpoint=x" hreflang="es"' in html
+
+
+@pytest.mark.parametrize("start", ["/es/", "/es/nope", "/es/symbol/nope", "/es/sefirah/nope"])
+def test_switching_to_english_escapes_the_root_redirect(client, start):
+    r = client.get(start)                                   # sets lang=es
+    href = re.search(r'href="([^"]+)" hreflang="en"', r.get_data(as_text=True)).group(1).replace("&amp;", "&")
+    r = client.get(href, follow_redirects=True)
+    # /es/ and /es/nope land on the EN home; a matched route that 404s switches to its own EN 404, which is right
+    assert r.status_code == (404 if start.count("/") == 3 else 200) and '<html lang="en">' in r.get_data(as_text=True), href
+    assert client.get_cookie("lang").value == "en"
+    assert client.get("/").status_code == 200              # and the root no longer bounces to /es/
+
+
+def test_deep_link_switcher_stays_direct(client):
+    assert 'href="/symbol/moon" hreflang="en"' in _get(client, "/es/symbol/moon").get_data(as_text=True)
+
+
+def test_lang_endpoint_sets_cookie_and_redirects(client):
+    r = client.get("/lang/es?next=/es/tree")
+    assert r.status_code == 302 and r.headers["Location"].endswith("/es/tree")
+    c = r.headers["Set-Cookie"]
+    assert "lang=es" in c and "HttpOnly" in c and "SameSite=Lax" in c and "Path=/" in c
+
+
+@pytest.mark.parametrize("nxt", ["//evil.example/", "https://evil.example/", "/\\evil.example", "evil", "",
+                                 "javascript:alert(1)", "/\r\nSet-Cookie:x=1"])
+def test_lang_endpoint_rejects_offsite_next(client, nxt):
+    from urllib.parse import quote
+    r = client.get("/lang/en?next=" + quote(nxt, safe=""))
+    assert r.status_code == 302
+    loc = r.headers["Location"]
+    assert loc in ("/", "http://localhost/"), (nxt, loc)
+
+
+def test_lang_endpoint_rejects_unknown_code(client):
+    assert client.get("/lang/fr?next=/").status_code == 404
+
+
+def test_root_redirect_keeps_query_string(client):
+    client.set_cookie("lang", "es")
+    r = client.get("/?utm=x&a=1")
+    assert r.status_code == 302 and r.headers["Location"].endswith("/es/?utm=x&a=1")
+
+
+def test_cookie_secure_follows_scheme(client):
+    assert "Secure" not in client.get("/symbol/moon").headers["Set-Cookie"]
+    r = client.get("/symbol/moon", base_url="https://localhost")
+    assert "Secure" in r.headers["Set-Cookie"] and "HttpOnly" in r.headers["Set-Cookie"]
 
 
 # --- html lang, title, leaks ------------------------------------------------------------------------------

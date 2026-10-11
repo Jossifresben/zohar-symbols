@@ -473,7 +473,7 @@
   },
   "node_intro_keter": {
     "en": "The hidden head of the divine structure, called Atika Kadisha, the Holy Ancient One, and also Arikh Anpin, the Long Face. These titles occur mostly in the Idrot.",
-    "es": "La cabeza oculta de la estructura divina, llamada Atika Kadisha, el Santo Anciano, y también Arij Anpin, el Rostro Largo. Estos títulos aparecen sobre todo en las Idrot."
+    "es": "La cabeza oculta de la estructura divina, llamada Atiká Kadishá, el Santo Anciano, y también Arij Anpín, el Rostro Largo. Estos títulos aparecen sobre todo en las Idrot."
   },
   "node_intro_hokhmah": {
     "en": "Abba, the Father: the point from which everything unfolds, and Reshit, the beginning. It stands at the head of the right pillar.",
@@ -509,7 +509,7 @@
   },
   "node_intro_malkhut": {
     "en": "The tenth sefirah: the divine presence in the world, called the Shekhinah, the Matronita, the Moon, the Sea, the Earth and Knesset Yisra'el. Her story is exile and union, and much of the Zohar turns on her.",
-    "es": "La décima sefirá: la presencia divina en el mundo, llamada la Shejiná, la Matronita, la Luna, el Mar, la Tierra y Kneset Israel. Su historia es la del exilio y la unión, y buena parte del Zohar gira en torno a ella."
+    "es": "La décima sefirá: la presencia divina en el mundo, llamada la Shejiná, la Matronita, la Luna, el Mar, la Tierra y Knéset Israel. Su historia es la del exilio y la unión, y buena parte del Zohar gira en torno a ella."
   },
   "node_intro_sitra_ahra": {
     "en": "The Other Side: the serpent, Samael and Lilith, and the husk that surrounds the holy. It is fed by excess of judgement.",
@@ -652,8 +652,8 @@
     "es": "tables_version"
   },
   "sch_t_built": {
-    "en": "Built at",
-    "es": "Generada el"
+    "en": "Build date",
+    "es": "Fecha de generación"
   },
   "sch_t_revids": {
     "en": "Source revisions (Wikisource revids)",
@@ -765,7 +765,7 @@
   },
   "about_who": {
     "en": "Jose \"Jossi\" Fresco Benaim, SomosUno Digital, Madrid.",
-    "es": "Jose \"Jossi\" Fresco Benaim, SomosUno Digital, Madrid."
+    "es": "Jose «Jossi» Fresco Benaim, SomosUno Digital, Madrid."
   },
   "about_orcid": {
     "en": "ORCID",

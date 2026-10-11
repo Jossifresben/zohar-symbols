@@ -1,3 +1,3 @@
 {% extends "base.html" %}
-{% block title %}{{ t(title) if title is defined else t('site_title') }} · Zohar{% endblock %}
+{% block title %}{% if title is defined %}{{ t(title) }} · Zohar{% else %}{{ t('site_title') }}{% endif %}{% endblock %}
 {% block content %}<p class="intro">{{ t(msg|default('coming_soon')) }}</p>{% endblock %}

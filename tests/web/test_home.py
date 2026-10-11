@@ -65,7 +65,8 @@ def test_switch_url(client):
     html = client.get("/es/symbol/moon").get_data(as_text=True)
     assert 'href="/symbol/moon" hreflang="en"' in html
     html = client.get("/es/nope").get_data(as_text=True)
-    assert 'href="/" hreflang="en"' in html and 'href="/es/" hreflang="es"' in html
+    # 404 fallback goes through /lang/ so the cookie is reset before the root (which honours it) is reached
+    assert 'href="/lang/en?next=/" hreflang="en"' in html and 'href="/lang/es?next=/es/" hreflang="es"' in html
 
 
 def test_search_by_kind(client):
