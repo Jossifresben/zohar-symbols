@@ -22,14 +22,14 @@ from .translate import (CONTEXT_RADIUS, EFFORT, MODEL, connect, collect, cost_us
 ROOT = Path(__file__).resolve().parent.parent
 WORK = ROOT / "work" / "interpret"
 
-PROMPT_VERSION = "i1"
+PROMPT_VERSION = "i2"   # i1: pilot; i2: hard 200-word cap, plain (no commentary)
 VARIANTS = ("grounded", "plain")
 MAX_COMMENTARY_CHARS = 12000   # per work, per folio-side
 
 INSTRUCTIONS = """You write short explanations of Zohar passages for a bilingual website for curious readers who know nothing about Kabbalah. The site already shows the Aramaic text and a translation; your text sits under them with the heading "What this passage means".
 
 Write what the passage means:
-- 120 to 200 words in each language. Plain, warm, precise prose for an intelligent reader; no jargon left unexplained.
+- 120 to 200 words in each language, never more than 200. Plain, warm, precise prose for an intelligent reader; no jargon left unexplained.
 - Say what happens in the passage: who speaks, which verse is being read, what move the passage makes.
 - Explain what its images stand for. You are given the passage's keys (image -> the sefirah it usually stands for). Use them, but follow the passage itself when it identifies an image differently.
 - The first time you name a sefirah or a technical term, gloss it in a few words (for example: Binah, divine understanding, the "upper mother").
@@ -159,6 +159,72 @@ def review(name: str) -> Path:
     return out
 
 
+CHUNKS = WORK / "chunks"
+BANNED = ("Zeir Anpin", "Zeʿir Anpin", "Arikh Anpin", "partzuf", "tzimtzum", "repentance", "arrepentimiento",
+          "Ohr HaChamah", "Or HaJamá", "Mikdash Melekh", "Cordovero", "Luria", "Vital", "Ashlag", "Sulam")
+MAX_WORDS = 200
+
+
+def write_chunks(conn, size: int = 20) -> int:
+    """Plain requests for Claude Code sub-agents: chunk_000 starts with the pilot passages, so they can be compared."""
+    CHUNKS.mkdir(parents=True, exist_ok=True)
+    first = pilot_ids(conn, 10)
+    rest = [pid for pid in surfaced_ids(conn) if pid not in first]
+    ids = first + rest
+    (CHUNKS / "INSTRUCTIONS.md").write_text(INSTRUCTIONS, encoding="utf-8")
+    n = 0
+    for k in range(0, len(ids), size):
+        items = [{"passage_id": pid, "content": user_content(conn, pid, grounded=False)} for pid in ids[k:k + size]]
+        (CHUNKS / f"chunk_{n:03d}.json").write_text(json.dumps(items, ensure_ascii=False, indent=1), encoding="utf-8")
+        n += 1
+    return n
+
+
+def check(text: str) -> str | None:
+    """None if an interpretation passes the code checks, else the reason."""
+    s = split_langs(text)
+    if not s:
+        return "shape"
+    for lg in ("en", "es"):
+        if len(s[lg].split()) > MAX_WORDS + 10:   # small tolerance for hyphenation/punctuation counting
+            return f"{lg} {len(s[lg].split())} words"
+    hit = [b for b in BANNED if b.lower() in text.lower()]
+    return f"banned: {hit}" if hit else None
+
+
+def ingest(chunk: int, model: str = MODEL) -> dict:
+    """Validate a sub-agent's results for one chunk and append the passing rows to cc_results.jsonl."""
+    from .translate import source_hash
+    conn = connect()
+    want = [x["passage_id"] for x in json.loads((CHUNKS / f"chunk_{chunk:03d}.json").read_text(encoding="utf-8"))]
+    got = {}
+    for line in (CHUNKS / f"chunk_{chunk:03d}_results.jsonl").open(encoding="utf-8"):
+        if line.strip():
+            r = json.loads(line)
+            got[r["passage_id"]] = r["text"]
+    done = {json.loads(l)["passage_id"] for l in (WORK / "cc_results.jsonl").open(encoding="utf-8")} \
+        if (WORK / "cc_results.jsonl").exists() else set()
+    ok, failed = [], {}
+    for pid in want:
+        if pid not in got:
+            failed[pid] = "missing"
+            continue
+        why = check(got[pid])
+        if why:
+            failed[pid] = why
+            continue
+        if pid in done:
+            continue
+        src = conn.execute("select text_ar from passage where id=?", (pid,)).fetchone()["text_ar"]
+        ok.append(dict(passage_id=pid, lang="both", effort="plain", status="succeeded", stop_reason="end_turn",
+                       model=model, via="claude-code-subagent", text=got[pid].strip(),
+                       source_hash=source_hash(src), prompt_version=PROMPT_VERSION))
+    with (WORK / "cc_results.jsonl").open("a", encoding="utf-8") as fh:
+        for r in ok:
+            fh.write(json.dumps(r, ensure_ascii=False) + "\n")
+    return {"chunk": chunk, "accepted": len(ok), "failed": failed}
+
+
 def main(argv=None) -> None:
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -170,6 +236,10 @@ def main(argv=None) -> None:
     c.add_argument("--name", default="pilot")
     r = sub.add_parser("review")
     r.add_argument("name")
+    ch = sub.add_parser("chunks")
+    ch.add_argument("--size", type=int, default=20)
+    ig = sub.add_parser("ingest")
+    ig.add_argument("chunk", type=int)
     a = ap.parse_args(argv)
     WORK.mkdir(parents=True, exist_ok=True)
     conn = connect()
@@ -200,6 +270,10 @@ def main(argv=None) -> None:
         (WORK / f"{a.name}_summary.json").write_text(json.dumps(summary, indent=1), encoding="utf-8")
         json.dump(summary, sys.stdout, indent=1)
         print()
+    elif a.cmd == "chunks":
+        print(f"{write_chunks(conn, a.size)} chunks -> {CHUNKS}")
+    elif a.cmd == "ingest":
+        print(json.dumps(ingest(a.chunk), ensure_ascii=False, indent=1))
     else:
         print(review(a.name))
 
