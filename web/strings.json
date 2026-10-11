@@ -636,8 +636,8 @@
     "es": "El diccionario tiene {symbols} símbolos y alias ({aliases}) en {passages} pasajes ({sides} caras de folio). De {tokens} tokens, {with_root} tienen raíz, {non_lexical} son tokens no léxicos conocidos y {unknown} son desconocidos; {conf_high} tienen una confianza de lema de 0,8 o más."
   },
   "sch_p_cav": {
-    "en": "Caveats. The strata ranges are conventional. Parasha is a page-level label, not a property of each passage. A scholarly spot-check of the boundaries of the Midrash ha-Ne'lam and the addenda is pending. Zohar III 116a–b is absent from Hebrew Wikisource.",
-    "es": "Salvedades. Los rangos de los estratos son convencionales. La parashá es una etiqueta de página, no una propiedad de cada pasaje. Falta una verificación académica de los límites del Midrash ha-Ne'lam y de los apéndices. Zohar III 116a–b no figura en Wikisource hebreo."
+    "en": "Caveats. The strata ranges are conventional. Parasha is a page-level label, not a property of each passage. A scholarly spot-check of the boundaries of the Midrash ha-Ne'lam and the addenda is pending. No passage is numbered Zohar III 116a–b. Wikisource marks no folio 116, and the three classical commentaries on Sefaria (Ohr HaChamah, Mikdash Melekh, Yahel Or) have no comment there either; 115b is of ordinary length and Bamidbar opens at 117a. This looks like a skip in the printed numbering, not lost text, but it has not been checked against a scan of the print.",
+    "es": "Salvedades. Los rangos de los estratos son convencionales. La parashá es una etiqueta de página, no una propiedad de cada pasaje. Falta una verificación académica de los límites del Midrash ha-Ne'lam y de los apéndices. Ningún pasaje lleva el número Zohar III 116a–b. Wikisource no marca ningún folio 116, y los tres comentarios clásicos de Sefaria (Or HaJamá, Mikdash Mélej, Yahel Or) tampoco comentan nada allí; el 115b tiene una extensión normal y Bamidbar empieza en el 117a. Parece un salto en la numeración impresa, no un texto perdido, aunque no se ha cotejado con un facsímil del impreso."
   },
   "sch_tables_h": {
     "en": "Tables",
