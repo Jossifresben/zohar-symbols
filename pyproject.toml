@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "zohar-symbols"
+version = "0.1.0"
+description = "A computed dictionary of the Zohar's symbols"
+requires-python = ">=3.11"
+dependencies = [
+    "requests>=2.31",
+    "aramaic-root-atlas @ git+https://github.com/Jossifresben/aramaic-root-atlas.git",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+
+[tool.setuptools]
+packages = ["pipeline"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
