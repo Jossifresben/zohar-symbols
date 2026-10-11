@@ -4,9 +4,9 @@
 |---|---|
 | passages | 15909 |
 | tokens | 832463 |
-| mentions | 54877 |
+| mentions | 54003 |
 | symbols | 139 |
-| pairs | 5834 |
+| pairs | 5825 |
 | tokens with root | 587273 |
 | non-lexical by override (empty root) | 179542 |
 | no root, unknown | 65648 |
@@ -57,8 +57,8 @@
 
 | item | value |
 |---|---|
-| mentions | 54877 |
-| via surface | 54570 |
+| mentions | 54003 |
+| via surface | 53696 |
 | via root | 307 |
 | symbols with ≥1 mention | 138 |
 | symbols with 0 mentions | 1 |
@@ -68,8 +68,8 @@
 
 | item | value |
 |---|---|
-| pairs | 5834 |
+| pairs | 5825 |
 | states | 257 |
-| strata | {'main': 12538, 'tosefta': 64, 'matnitin': 9, 'sitrei_torah': 171, 'midrash_haneelam': 385, 'raaya_meheimna': 1667, 'raza_derazin': 48, 'other': 11, 'addendum': 220, 'idra_rabba': 655, 'idra_zuta': 141} |
+| strata | {'main': 12545, 'tosefta': 64, 'matnitin': 9, 'sitrei_torah': 171, 'midrash_haneelam': 378, 'raaya_meheimna': 1667, 'raza_derazin': 48, 'other': 11, 'addendum': 220, 'idra_rabba': 655, 'idra_zuta': 141} |
 | mentions of symbols not in seed (skipped) | 0 |
 | symbols with < 6 surfaced | 3 |

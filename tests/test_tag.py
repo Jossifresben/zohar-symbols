@@ -134,3 +134,9 @@ def test_seed_roots_must_occur_among_token_roots():
     sym.aliases_root = [hebrew_to_syriac("ששש")]
     with pytest.raises(SeedError, match="s: alias root"):
         check_seed_roots(toks, [sym])
+
+
+def test_earth_is_aramaic_only():
+    syms = load_kinnuyim(SEEDS)
+    assert next(s for s in syms if s.id == "earth").aliases_surface == ["ארעא"]
+    assert [x["symbol_id"] for x in tag(_toks("p", "ארעא הארץ"), syms)] == ["earth"]

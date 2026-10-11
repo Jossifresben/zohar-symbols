@@ -141,10 +141,13 @@ def test_shemot_midrash_haneelam_fallback_for_main_passages_only():
           dict(id="2.005b.001", volume=2, folio=5, side="b", stream="main"),
           dict(id="2.006a.001", volume=2, folio=6, side="a", stream="main"),
           dict(id="2.022b.001", volume=2, folio=22, side="b", stream="main"),
+          dict(id="2.021b.001", volume=2, folio=21, side="b", stream="main"),
+          dict(id="2.022a.003", volume=2, folio=22, side="a", stream="main"),
           dict(id="2.120a.001", volume=2, folio=120, side="a", stream="addendum")]
     assert assign_strata(ps, rows) == {"2.015a.001": "midrash_haneelam", "2.015a.002": "tosefta",
                                        "2.005b.001": "midrash_haneelam", "2.006a.001": "main",
-                                       "2.022b.001": "main", "2.120a.001": "addendum"}
+                                       "2.022b.001": "main", "2.120a.001": "addendum",
+                                       "2.021b.001": "midrash_haneelam", "2.022a.003": "main"}
 
 
 def _m(sym, pid, pos):
