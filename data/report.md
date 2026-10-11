@@ -7,6 +7,6 @@
 | mentions | 47979 |
 | symbols | 139 |
 | pairs | 5443 |
-| tokens with root | 644360 |
-| state rows | 228 |
+| tokens with root | 509249 |
+| state rows | 226 |
 | state rows stale vs seed (marker_roots empty) | 0 |
