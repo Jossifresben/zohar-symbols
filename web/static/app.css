@@ -11,7 +11,6 @@ a:hover{text-decoration:underline}
 .wordmark:hover{text-decoration:none}
 .wm-latin{font-size:28px;font-weight:500}
 .wm-heb{font-size:24px;color:var(--gold)}
-.wm-sub{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .site-nav{display:flex;gap:20px;flex:1}
 .site-nav a{color:var(--muted);display:inline-flex;align-items:center;min-height:44px}
 .site-nav a:hover{color:var(--text);text-decoration:none}
@@ -115,7 +114,9 @@ a.bar-row:hover{text-decoration:none}a.bar-row:hover .bar-label{color:var(--gold
 
 /* node + tree pages */
 .node-head .intro{max-width:720px}
-.node-symbols{display:grid;gap:16px;margin-bottom:24px}
+.node-symbols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:24px}
+.node-symbols .card{min-width:0}
+.node-symbols .chip{max-width:100%;white-space:normal;line-height:1.1;padding:4px 14px}
 .node-partners{max-width:520px;margin-bottom:24px}
 .node-list{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:8px 18px}
 .tree-figure{margin:0;max-width:560px}

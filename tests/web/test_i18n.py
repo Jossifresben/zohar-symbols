@@ -265,7 +265,7 @@ def test_html_lang_and_localised_title(client, page):
 @pytest.mark.parametrize("page", PAGES)
 def test_spanish_pages_have_no_english_ui(client, page):
     r = _get(client, "/es" + page)
-    assert "Symbols · Símbolos" in r.get_data(as_text=True)  # wordmark untouched
+    assert "wm-sub" not in r.get_data(as_text=True)  # wordmark is just Zohar + זֹהַר
     leaks = _found(EN_UI, _visible_ui(r.get_data(as_text=True)))
     assert not leaks, (page, leaks)
 
