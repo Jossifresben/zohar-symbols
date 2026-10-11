@@ -18,7 +18,9 @@ def test_tree_twelve_distinct_links_and_a11y(client):
     html = client.get("/tree").get_data(as_text=True)
     assert len(set(re.findall(r'href="(/sefirah/[a-z_]+)"', html))) == 12
     assert 'role="img"' in html and 'aria-label="Tree of Life diagram: ten sefirot joined by twenty-two paths"' in html
-    assert html.count("<line") == 22 and html.count("<circle") == 11
+    outer = html.split('class="tree-paths"', 1)[1].split("</g>", 1)[0]
+    inner = html.split('class="tree-paths-inner"', 1)[1].split("</g>", 1)[0]
+    assert outer.count("<line") == 22 and inner.count("<line") == 22 and html.count("<circle") == 11  # double-line paths
     assert "1652" in html
 
 

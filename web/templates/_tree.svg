@@ -1,5 +1,11 @@
 <svg class="tree-svg" viewBox="0 0 600 880" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{ t('tree_aria') }}">
-  <g class="tree-paths" stroke="var(--border)" stroke-width="2" fill="none">
+  {#- each path is drawn twice, a wide line under a narrow one in the ground colour: a double line, as in the printed trees #}
+  <g class="tree-paths" stroke="var(--border)" stroke-width="9" stroke-linecap="butt" fill="none">
+  {%- for a, b in lines %}
+    <line x1="{{ a.x }}" y1="{{ a.y }}" x2="{{ b.x }}" y2="{{ b.y }}"/>
+  {%- endfor %}
+  </g>
+  <g class="tree-paths-inner" stroke="var(--ground)" stroke-width="5" stroke-linecap="butt" fill="none">
   {%- for a, b in lines %}
     <line x1="{{ a.x }}" y1="{{ a.y }}" x2="{{ b.x }}" y2="{{ b.y }}"/>
   {%- endfor %}
@@ -11,14 +17,14 @@
   {%- for p in pts %}
   <a href="{{ lang_url('node', nid=p.id) }}" class="tree-node">
     <title>{{ t('node_' ~ p.id) }}</title>
-    <circle cx="{{ p.x }}" cy="{{ p.y }}" r="34" fill="var(--surface)" stroke="var(--border)" stroke-width="2"/>
-    <text x="{{ p.x }}" y="{{ p.y + 5 }}" text-anchor="middle" font-size="14" fill="var(--text)">{{ t('node_' ~ p.id) }}</text>
-    <text x="{{ p.x }}" y="{{ p.y + 56 }}" text-anchor="middle" font-size="18" font-family="'Frank Ruhl Libre',serif" fill="var(--gold)" direction="rtl" lang="he" class="tree-heb">{{ p.ar }}</text>
+    <circle cx="{{ p.x }}" cy="{{ p.y }}" r="36" fill="var(--surface)" stroke="var(--border)" stroke-width="2"/>
+    <text x="{{ p.x }}" y="{{ p.y + 8 }}" text-anchor="middle" font-size="23" font-family="'Frank Ruhl Libre',serif" fill="var(--gold)" direction="rtl" lang="he">{{ p.ar }}</text>
+    <text x="{{ p.x }}" y="{{ p.y + 56 }}" text-anchor="middle" font-size="14" fill="var(--text)" class="tree-heb">{{ t('node_' ~ p.id) }}</text>
   </a>
   {%- endfor %}
   <a href="{{ lang_url('node', nid=shadow.id) }}" class="tree-node tree-shadow">
     <title>{{ t('node_sitra_ahra') }} — {{ t('tree_other_side') }}</title>
-    <circle cx="{{ shadow.x }}" cy="{{ shadow.y }}" r="34" fill="none" stroke="var(--red)" stroke-opacity=".5" stroke-width="2" stroke-dasharray="6 5"/>
+    <circle cx="{{ shadow.x }}" cy="{{ shadow.y }}" r="36" fill="none" stroke="var(--red)" stroke-opacity=".5" stroke-width="2" stroke-dasharray="6 5"/>
     <text x="{{ shadow.x }}" y="{{ shadow.y + 5 }}" text-anchor="middle" font-size="13" fill="var(--red)">{{ t('node_sitra_ahra') }}</text>
   </a>
 </svg>
