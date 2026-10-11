@@ -1,0 +1,166 @@
+"""Every figure a page shows is a column read here; nothing is computed by a model."""
+import difflib
+import math
+
+from . import cite
+from .db import one, all as rows
+from .i18n import get_string
+
+NODE_ORDER = ["keter", "hokhmah", "binah", "hesed", "gevurah", "tiferet", "netzah", "hod", "yesod", "malkhut", "sitra_ahra", "ein_sof"]
+NODE_AR = {"keter": "כתר", "hokhmah": "חכמה", "binah": "בינה", "hesed": "חסד", "gevurah": "גבורה", "tiferet": "תפארת",
+           "netzah": "נצח", "hod": "הוד", "yesod": "יסוד", "malkhut": "מלכות", "sitra_ahra": "סטרא אחרא", "ein_sof": "אין סוף"}
+PILLAR = {"hesed": "right", "netzah": "right", "hokhmah": "right", "gevurah": "left", "hod": "left", "binah": "left"}
+
+
+def t_node(n: str, lang: str) -> str:
+    return get_string(f"node_{n}", lang)
+
+
+def _lab(row, lang: str) -> str:
+    return row[f"label_{lang}"] or row["label_en"]
+
+
+def _size(count: int, cmax: int) -> int:
+    if count <= 0:
+        return 15
+    return int(round(15 + 29 * math.log1p(count) / math.log1p(max(cmax, 1))))
+
+
+def meta() -> dict:
+    return {r["key"]: r["value"] for r in rows("select key, value from meta")}
+
+
+def nodes_with_symbols(lang: str) -> list[dict]:
+    syms = rows("select id,label_en,label_es,label_ar,kind,node,count_passages from symbol order by count_passages desc, id")
+    cmax = syms[0]["count_passages"] if syms else 1
+    by: dict[str, list] = {n: [] for n in NODE_ORDER}
+    for r in syms:
+        by.setdefault(r["node"], []).append(dict(id=r["id"], label=_lab(r, lang), label_ar=r["label_ar"], kind=r["kind"],
+                                                 count_passages=r["count_passages"], size=_size(r["count_passages"], cmax)))
+    return [dict(node=n, label=t_node(n, lang), label_ar=NODE_AR[n], symbols=by[n]) for n in NODE_ORDER]
+
+
+def partners(sid: str, lang: str, k: int = 7) -> list[dict]:
+    ps = rows("""select case when symbol_a=? then symbol_b else symbol_a end as other, passages_together, pmi
+                 from cooccurrence where symbol_a=? or symbol_b=? order by passages_together desc, other limit ?""",
+              (sid, sid, sid, k))
+    if not ps:
+        return []
+    ids = [r["other"] for r in ps]
+    labels = {r["id"]: _lab(r, lang) for r in rows(
+        f"select id,label_en,label_es from symbol where id in ({','.join('?' * len(ids))})", tuple(ids))}
+    return [dict(id=r["other"], label=labels[r["other"]], passages_together=r["passages_together"], pmi=r["pmi"]) for r in ps]
+
+
+def symbol(sid: str, lang: str) -> dict | None:
+    s = one("select * from symbol where id=?", (sid,))
+    if not s:
+        return None
+    other = "es" if lang == "en" else "en"
+    surface, _, roots = s["aliases"].partition("|")
+    label = _lab(s, lang)
+    gloss = s[f"gloss_{lang}"]
+    if not gloss:
+        top = partners(sid, lang, 1)
+        n = s["count_passages"]
+        if n == 0:
+            gloss = get_string("gloss_fallback_none", lang, label=label)
+        elif top:
+            gloss = get_string("gloss_fallback", lang, label=label, n=n, partner=top[0]["label"])
+        else:
+            gloss = get_string("gloss_fallback_alone", lang, label=label, n=n)
+    return dict(id=s["id"], label=label, label_ar=s["label_ar"], label_other=_lab(s, other), kind=s["kind"], node=s["node"],
+                node_label=t_node(s["node"], lang),
+                aliases_surface=[a for a in surface.split(";") if a], aliases_root=[a for a in roots.split(";") if a],
+                count_raw=s["count_raw"], count_resolved=s["count_resolved"], count_passages=s["count_passages"],
+                seed_source=s["seed_source"], gloss=gloss, moves=s[f"moves_{lang}"] or None)
+
+
+def states(sid: str) -> dict:
+    decl = rows("select state_label, marker_roots from state_decl where symbol_id=? order by state_label", (sid,))
+    counts = {r["state_label"]: r["n"] for r in rows(
+        "select state_label, count(*) n from state where symbol_id=? group by state_label", (sid,))}
+    marked = one("select count(distinct passage_id) n from state where symbol_id=?", (sid,))["n"]
+    tot = one("select count_passages n from symbol where id=?", (sid,))
+    total = tot["n"] if tot else 0
+    return dict(states=[dict(label=d["state_label"], marker_roots=d["marker_roots"], count=counts.get(d["state_label"], 0)) for d in decl],
+                unmarked=max(0, total - marked))
+
+
+def strata_distribution(sid: str) -> list[dict]:
+    return [dict(stratum=r["stratum"], count=r["n"]) for r in rows(
+        """select p.stratum, count(distinct p.id) n from mention m join passage p on p.id=m.passage_id
+           where m.symbol_id=? group by p.stratum order by n desc, p.stratum""", (sid,))]
+
+
+def surfaced(sid: str, lang: str) -> list[dict]:
+    ids = [r["passage_id"] for r in rows("select passage_id from surfaced where symbol_id=? order by rank", (sid,))]
+    return [p for p in (passage(pid, lang) for pid in ids) if p]
+
+
+def passage(pid: str, lang: str) -> dict | None:
+    p = one("select * from passage where id=?", (pid,))
+    if not p:
+        return None
+    ms = rows("""select m.position, m.symbol_id, m.matched_form, s.label_en, s.label_es from mention m
+                 join symbol s on s.id=m.symbol_id where m.passage_id=? order by m.position""", (pid,))
+    tr = one("select text from translation where passage_id=? and lang=?", (pid, lang))
+    return dict(id=p["id"], citation=cite.citation(p["volume"], p["folio"], p["side"]), volume=p["volume"], folio=p["folio"],
+                side=p["side"], para=p["para"], parasha=p["parasha"], stream=p["stream"], stratum=p["stratum"],
+                text_ar=p["text_ar"], verse_ref=p["verse_ref"], token_count=p["token_count"],
+                translation=tr["text"] if tr else None,
+                mentions=[dict(position=m["position"], symbol_id=m["symbol_id"], matched_form=m["matched_form"], label=_lab(m, lang)) for m in ms])
+
+
+def folio(volume: int, fol: int, side: str, lang: str) -> list[dict]:
+    ids = [r["id"] for r in rows("select id from passage where volume=? and folio=? and side=? order by para, id", (volume, fol, side))]
+    return [passage(pid, lang) for pid in ids]
+
+
+def node(nid: str, lang: str) -> dict | None:
+    if nid not in NODE_ORDER:
+        return None
+    by_kind: dict[str, list] = {}
+    for r in rows("select id,label_en,label_es,label_ar,kind,count_passages from symbol where node=? order by count_passages desc, id", (nid,)):
+        by_kind.setdefault(r["kind"], []).append(dict(id=r["id"], label=_lab(r, lang), label_ar=r["label_ar"], count_passages=r["count_passages"]))
+    pn = rows("""select o.node as other, sum(c.passages_together) as n
+                 from cooccurrence c join symbol a on a.id=c.symbol_a join symbol b on b.id=c.symbol_b
+                 join symbol o on o.id = case when a.node=? then b.id else a.id end
+                 where (a.node=? or b.node=?) and a.node != b.node
+                 group by o.node order by n desc, o.node""", (nid, nid, nid))
+    return dict(node=nid, label=t_node(nid, lang), label_ar=NODE_AR[nid], pillar=PILLAR.get(nid, "middle"),
+                symbols_by_kind=by_kind,
+                partner_nodes=[dict(node=r["other"], label=t_node(r["other"], lang), passages_together=r["n"]) for r in pn])
+
+
+def search(q: str, lang: str, k: int = 10) -> list[dict]:
+    q = q.strip()
+    if not q:
+        return []
+    ql = q.lower()
+    rs = rows("""select id,label_en,label_es,label_ar,kind,node,count_passages from symbol
+                 where instr(lower(label_en),?)>0 or instr(lower(label_es),?)>0 or instr(label_ar,?)>0
+                    or instr(substr(aliases,1,instr(aliases||'|','|')-1),?)>0
+                 order by count_passages desc, id limit ?""", (ql, ql, q, q, k))
+    return [dict(id=r["id"], label=_lab(r, lang), label_ar=r["label_ar"], kind=r["kind"], node=r["node"],
+                 count_passages=r["count_passages"]) for r in rs]
+
+
+def nearest_symbols(q: str, k: int = 3) -> list[dict]:
+    names: dict[str, str] = {}
+    for r in rows("select id,label_en,label_es from symbol"):
+        for cand in (r["id"], r["label_en"], r["label_es"]):
+            names.setdefault(cand.lower(), r["id"])
+    out: list[str] = []
+    for m in difflib.get_close_matches(q.strip().lower(), list(names), n=k * 3, cutoff=0.6):
+        if names[m] not in out:
+            out.append(names[m])
+    return [dict(id=i) for i in out[:k]]
+
+
+def scholars_pairs(min_together: int = 5, limit: int = 200) -> list[dict]:
+    return [dict(a=r["symbol_a"], b=r["symbol_b"], a_label=r["la"], b_label=r["lb"], passages_together=r["passages_together"], pmi=r["pmi"])
+            for r in rows("""select c.symbol_a, c.symbol_b, a.label_en la, b.label_en lb, c.passages_together, c.pmi
+                             from cooccurrence c join symbol a on a.id=c.symbol_a join symbol b on b.id=c.symbol_b
+                             where c.passages_together >= ? order by c.pmi desc, c.symbol_a, c.symbol_b limit ?""",
+                          (min_together, limit))]

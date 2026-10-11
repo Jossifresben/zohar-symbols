@@ -1,12 +1,102 @@
 {
-  "nav_symbols": {"en": "Symbols", "es": "Símbolos"},
-  "nav_sefirot": {"en": "Sefirot", "es": "Sefirot"},
-  "nav_read": {"en": "Read", "es": "Leer"},
-  "nav_ask": {"en": "Ask", "es": "Preguntar"},
-  "nav_scholars": {"en": "Scholars", "es": "Estudiosos"},
-  "footer_source": {"en": "Text: Hebrew Wikisource, Zohar (public domain). Every figure on this site is computed by deterministic code.", "es": "Texto: Wikisource hebreo, Zohar (dominio público). Cada cifra de este sitio la calcula código determinista."},
-  "footer_counts": {"en": "Counts are mentions in the corpus, not interpretations.", "es": "Los recuentos son menciones en el corpus, no interpretaciones."},
-  "footer_scholars": {"en": "For scholars: method and data", "es": "Para estudiosos: método y datos"},
-  "lang_en": {"en": "EN", "es": "EN"},
-  "lang_es": {"en": "ES", "es": "ES"}
+  "nav_symbols": {
+    "en": "Symbols",
+    "es": "Símbolos"
+  },
+  "nav_sefirot": {
+    "en": "Sefirot",
+    "es": "Sefirot"
+  },
+  "nav_read": {
+    "en": "Read",
+    "es": "Leer"
+  },
+  "nav_ask": {
+    "en": "Ask",
+    "es": "Preguntar"
+  },
+  "nav_scholars": {
+    "en": "Scholars",
+    "es": "Estudiosos"
+  },
+  "footer_source": {
+    "en": "Text: Hebrew Wikisource, Zohar (public domain). Every figure on this site is computed by deterministic code.",
+    "es": "Texto: Wikisource hebreo, Zohar (dominio público). Cada cifra de este sitio la calcula código determinista."
+  },
+  "footer_counts": {
+    "en": "Counts are mentions in the corpus, not interpretations.",
+    "es": "Los recuentos son menciones en el corpus, no interpretaciones."
+  },
+  "footer_scholars": {
+    "en": "For scholars: method and data",
+    "es": "Para estudiosos: método y datos"
+  },
+  "lang_en": {
+    "en": "EN",
+    "es": "EN"
+  },
+  "lang_es": {
+    "en": "ES",
+    "es": "ES"
+  },
+  "node_keter": {
+    "en": "Keter",
+    "es": "Kéter"
+  },
+  "node_hokhmah": {
+    "en": "Ḥokhmah",
+    "es": "Jojmá"
+  },
+  "node_binah": {
+    "en": "Binah",
+    "es": "Biná"
+  },
+  "node_hesed": {
+    "en": "Ḥesed",
+    "es": "Jésed"
+  },
+  "node_gevurah": {
+    "en": "Gevurah",
+    "es": "Guevurá"
+  },
+  "node_tiferet": {
+    "en": "Tif'eret",
+    "es": "Tiféret"
+  },
+  "node_netzah": {
+    "en": "Netzaḥ",
+    "es": "Nétsaj"
+  },
+  "node_hod": {
+    "en": "Hod",
+    "es": "Hod"
+  },
+  "node_yesod": {
+    "en": "Yesod",
+    "es": "Yesod"
+  },
+  "node_malkhut": {
+    "en": "Malkhut",
+    "es": "Maljut"
+  },
+  "node_sitra_ahra": {
+    "en": "Sitra Aḥra",
+    "es": "Sitra Ajra"
+  },
+  "node_ein_sof": {
+    "en": "Ein Sof",
+    "es": "Ein Sof"
+  },
+  "gloss_fallback": {
+    "en": "{label}: appears in {n} passages of the Zohar, most often alongside {partner}.",
+    "es": "{label}: aparece en {n} pasajes del Zohar, casi siempre junto a {partner}."
+  },
+  "gloss_fallback_alone": {
+    "en": "{label}: appears in {n} passages of the Zohar.",
+    "es": "{label}: aparece en {n} pasajes del Zohar."
+  },
+  "gloss_fallback_none": {
+    "en": "{label}: not yet found in the text.",
+    "es": "{label}: aún no aparece en el texto."
+  }
 }

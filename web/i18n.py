@@ -27,3 +27,16 @@ def init_i18n(app) -> None:
         return {"lang": g.get("lang", "en")}
 
     app.jinja_env.globals["t"] = t
+
+
+_CACHE: dict = {}
+
+
+def get_string(key: str, lang: str, **kw) -> str:
+    """Request-free lookup with the same semantics as `t` (a missing key raises KeyError)."""
+    if "strings" not in _CACHE:
+        _CACHE["strings"] = json.loads(STRINGS_PATH.read_text(encoding="utf-8"))
+    entry = _CACHE["strings"].get(key)
+    if entry is None:
+        raise KeyError(key)
+    return entry.get(lang, entry["en"]).format(**kw)
