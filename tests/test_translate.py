@@ -35,3 +35,17 @@ def test_requests_share_a_byte_identical_cached_system():
     assert "סיהרא" in system[0]["text"] and "Luna" in system[0]["text"]
     assert "[TARGET]" in reqs[0]["params"]["messages"][0]["content"]
     assert reqs[0]["params"]["model"] == "claude-fable-5-1"
+
+
+def test_cost_prices_1h_cache_writes_at_double():
+    u = {"cache_creation_input_tokens": 2_000_000,
+         "cache_creation": {"ephemeral_1h_input_tokens": 1_000_000, "ephemeral_5m_input_tokens": 1_000_000}}
+    assert tr.cost_usd(u) == pytest.approx(6.25 + 10.0)
+
+
+@pytest.mark.skipif(not REAL.exists(), reason="real database not built")
+def test_context_window_is_two_neighbours_each_side():
+    conn = tr.connect(REAL)
+    content = tr.user_content(conn, "3.199a.020", "en")
+    ctx = content.split("Context:\n", 1)[1].split("\n\nTARGET passage", 1)[0]
+    assert ctx.count("\n\n") == 4 and "[TARGET]" in ctx
