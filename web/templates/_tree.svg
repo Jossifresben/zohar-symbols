@@ -12,13 +12,13 @@
   </g>
   <a href="{{ lang_url('node', nid=ein_sof.id) }}" class="tree-node tree-ein-sof">
     <title>{{ t('node_ein_sof') }}</title>
-    <text x="{{ ein_sof.x }}" y="{{ ein_sof.y }}" text-anchor="middle" font-size="15" fill="var(--muted)">{{ t('node_ein_sof') }} · <tspan lang="he" font-family="'Frank Ruhl Libre',serif" fill="var(--gold)" direction="rtl">{{ ein_sof.ar }}</tspan></text>
+    <text x="{{ ein_sof.x }}" y="{{ ein_sof.y }}" text-anchor="middle" font-size="15" fill="var(--muted)">{{ t('node_ein_sof') }} · <tspan lang="he" style="font-family:var(--heb-font)" fill="var(--gold)" direction="rtl">{{ ein_sof.ar }}</tspan></text>
   </a>
   {%- for p in pts %}
   <a href="{{ lang_url('node', nid=p.id) }}" class="tree-node">
     <title>{{ t('node_' ~ p.id) }}</title>
     <circle cx="{{ p.x }}" cy="{{ p.y }}" r="36" fill="var(--surface)" stroke="var(--border)" stroke-width="2"/>
-    <text x="{{ p.x }}" y="{{ p.y + 8 }}" text-anchor="middle" font-size="23" font-family="'Frank Ruhl Libre',serif" fill="var(--gold)" direction="rtl" lang="he">{{ p.ar }}</text>
+    <text x="{{ p.x }}" y="{{ p.y + 8 }}" text-anchor="middle" font-size="23" style="font-family:var(--heb-font)" fill="var(--gold)" direction="rtl" lang="he">{{ p.ar }}</text>
     <text x="{{ p.x }}" y="{{ p.y + 56 }}" text-anchor="middle" font-size="14" fill="var(--text)" class="tree-heb">{{ t('node_' ~ p.id) }}</text>
   </a>
   {%- endfor %}

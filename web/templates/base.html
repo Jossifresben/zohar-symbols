@@ -6,8 +6,10 @@
 <title>{% block title %}{{ t('site_title') }}{% endblock %}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Frank+Ruhl+Libre:wght@400;500;700&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Frank+Ruhl+Libre:wght@400;500;700&family=Noto+Rashi+Hebrew:wght@400;500&family=Noto+Sans+Hebrew:wght@400;500&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+<script>try{var f=localStorage.getItem('hebfont');if(f==='rashi'||f==='sans')document.documentElement.dataset.hebfont=f;}catch(e){}</script>
+<script src="{{ url_for('static', filename='app.js') }}" defer></script>
 <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
 </head>
 <body>
@@ -28,6 +30,13 @@
     <a class="lang-btn{% if lang == 'en' %} active{% endif %}" href="{{ switch_url('en') }}" hreflang="en">{{ t('lang_en') }}</a>
     <a class="lang-btn{% if lang == 'es' %} active{% endif %}" href="{{ switch_url('es') }}" hreflang="es">{{ t('lang_es') }}</a>
   </div>
+  <label class="font-pick" hidden><span class="sr-only">{{ t('font_label') }}</span>
+    <select id="hebfont" title="{{ t('font_label') }}">
+      <option value="frank">א · Frank Ruhl</option>
+      <option value="rashi">א · Rashi</option>
+      <option value="sans">א · Noto Sans</option>
+    </select>
+  </label>
 </header>
 <main>
 {% block content %}{% endblock %}

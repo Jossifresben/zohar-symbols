@@ -5,7 +5,12 @@ body{margin:0;background:var(--ground);color:var(--text);font-family:'Source San
 a{color:var(--blue);text-decoration:none}
 a:hover{text-decoration:underline}
 .display{font-family:'Cormorant Garamond',serif}
-.heb{font-family:'Frank Ruhl Libre',serif;direction:rtl}
+:root{--heb-font:'Frank Ruhl Libre',serif}
+html[data-hebfont="rashi"]{--heb-font:'Noto Rashi Hebrew','Frank Ruhl Libre',serif}
+html[data-hebfont="sans"]{--heb-font:'Noto Sans Hebrew','Source Sans 3',sans-serif}
+.heb{font-family:var(--heb-font);direction:rtl}
+.wm-heb{font-family:'Frank Ruhl Libre',serif}
+.font-pick select{min-height:44px;background:var(--ground);color:var(--muted);border:1px solid var(--border);border-radius:6px;padding:4px 8px;font:inherit;font-size:13px}
 .site-header{display:flex;align-items:center;gap:32px;padding:16px 32px;border-bottom:1px solid var(--border);flex-wrap:wrap}
 .wordmark{display:flex;align-items:center;gap:10px;color:var(--text)}
 .wm-mark{display:block;flex:none}

@@ -938,5 +938,9 @@
   "interp_by": {
     "en": "Interpretation inferred by {model}: not a traditional commentary, not reviewed by specialists",
     "es": "Interpretación inferida por {model}: no es un comentario tradicional ni la han revisado especialistas"
+  },
+  "font_label": {
+    "en": "Hebrew font",
+    "es": "Letra hebrea"
   }
 }
