@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% macro chips(part, ev=False) %}
+<div class="chips">
+{%- for s in part.chips %}
+  <a class="chip" data-kind="{{ s.kind }}" title="{{ s.label_ar }}" href="{{ url_for('.symbol', sid=s.id) }}" style="font-size:{{ s.size }}px">{{ s.label }}</a>
+{%- endfor %}
+  {%- if part.more %}
+  <a class="more" href="{{ url_for('.node', nid=part.node) }}">{{ t('cluster_more', n=part.more) }}</a>
+  {%- endif %}
+</div>
+{% endmacro %}
+{% block content %}
+<section class="hero">
+  <h1 class="display">{{ t('home_title') }}</h1>
+  <p class="intro">{{ t('home_intro') }}</p>
+  <form class="search" action="{{ url_for('.search') }}" method="get" role="search">
+    <input type="search" name="q" value="{{ q }}" placeholder="{{ t('search_placeholder') }}" aria-label="{{ t('search_placeholder') }}">
+    <button type="submit">{{ t('search_button') }}</button>
+  </form>
+  <div class="kind-filter" role="group" aria-label="{{ t('kind_label') }}">
+    <button type="button" data-kind="all" class="active"><span class="dot dot-all"></span>{{ t('kind_all') }}</button>
+    {%- for k in ['person', 'object', 'quality', 'event'] %}
+    <button type="button" data-kind="{{ k }}"><span class="dot dot-{{ k }}"></span>{{ t('kind_' ~ k) }}</button>
+    {%- endfor %}
+  </div>
+</section>
+{% if q %}
+<section class="results card">
+  <h2 class="display">{{ t('search_results', q=q) }}</h2>
+  {% if results %}
+  <ul>
+  {%- for r in results %}
+    <li><a href="{{ url_for('.symbol', sid=r.id) }}">{{ r.label }}</a> <span class="heb gold">{{ r.label_ar }}</span> <span class="muted">· {{ t('node_' ~ r.node) }}</span></li>
+  {%- endfor %}
+  </ul>
+  {% else %}<p class="muted">{{ t('search_none', q=q) }}</p>{% endif %}
+</section>
+{% endif %}
+<section class="grid field">
+{%- for c in clusters %}
+  <article class="card cluster cluster-{{ c.key }}" data-cluster="{{ c.key }}" style="grid-column:span {{ c.span }}">
+    <header class="cluster-head">
+      <h2 class="display">{{ t(c.title) }}{% if c.single and c.parts[0].label_ar %} <span class="heb gold">{{ c.parts[0].label_ar }}</span>{% endif %}</h2>
+      <span class="muted count">{{ t('symbols_count', n=c.total) }}</span>
+    </header>
+    {%- if c.blurb %}<p class="blurb muted">{{ t(c.blurb) }}</p>{% endif %}
+    {%- if c.single %}
+    {{ chips(c.parts[0]) }}
+    {%- else %}
+    <div class="cols cols-{{ c.parts|length }}">
+    {%- for p in c.parts %}
+      <div class="col" data-node="{{ p.node }}">
+        <h3 class="display">{{ p.label }} <span class="heb gold">{{ p.label_ar }}</span></h3>
+        {{ chips(p) }}
+      </div>
+    {%- endfor %}
+    </div>
+    {%- endif %}
+  </article>
+{%- endfor %}
+</section>
+<section class="grid orient">
+  <a class="card orient-card" style="grid-column:span 4" href="{{ url_for('.tree') }}"><h3 class="display">{{ t('orientation_tree_title') }}</h3><p class="muted">{{ t('orientation_tree_body') }}</p></a>
+  <a class="card orient-card" style="grid-column:span 4" href="{{ url_for('.passage', pid='1.001a.001') }}"><h3 class="display">{{ t('orientation_read_title') }}</h3><p class="muted">{{ t('orientation_read_body') }}</p></a>
+  <a class="card orient-card" style="grid-column:span 4" href="{{ url_for('.ask') }}"><h3 class="display">{{ t('orientation_ask_title') }}</h3><p class="muted">{{ t('orientation_ask_body') }}</p></a>
+</section>
+<script src="{{ url_for('static', filename='app.js') }}" defer></script>
+{% endblock %}

@@ -1,4 +1,4 @@
-"""UI strings (strings.json) and the `t()` template helper. Task 8 makes g.lang URL-driven."""
+"""UI strings (strings.json) and the `t()` template helper. g.lang is set per request in web/views/__init__.py (URL prefix)."""
 import json
 from pathlib import Path
 
@@ -17,10 +17,6 @@ def init_i18n(app) -> None:
                 raise KeyError(key)
             return key
         return entry[g.get("lang", "en")].format(**kw)
-
-    @app.before_request
-    def _set_lang():
-        g.lang = "en"
 
     @app.context_processor
     def _ctx():

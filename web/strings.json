@@ -98,5 +98,137 @@
   "gloss_fallback_none": {
     "en": "{label}: not yet found in the text.",
     "es": "{label}: aún no aparece en el texto."
+  },
+  "home_title": {
+    "en": "The Zohar speaks in images. Here is what they mean.",
+    "es": "El Zohar habla en imágenes. Esto es lo que significan."
+  },
+  "home_intro": {
+    "en": "Every symbol below is a figure the Zohar returns to again and again. Larger means more passages. Choose one to see where it appears and what it is paired with.",
+    "es": "Cada símbolo de abajo es una figura a la que el Zohar vuelve una y otra vez. Cuanto mayor, más pasajes. Elige uno para ver dónde aparece y con qué se asocia."
+  },
+  "search_placeholder": {
+    "en": "Search a symbol: moon, king, sea…",
+    "es": "Busca un símbolo: luna, rey, mar…"
+  },
+  "search_button": {
+    "en": "Search",
+    "es": "Buscar"
+  },
+  "search_results": {
+    "en": "Results for “{q}”",
+    "es": "Resultados para «{q}»"
+  },
+  "search_none": {
+    "en": "No symbol matches “{q}”.",
+    "es": "Ningún símbolo coincide con «{q}»."
+  },
+  "kind_label": {
+    "en": "Filter by kind",
+    "es": "Filtrar por tipo"
+  },
+  "kind_all": {
+    "en": "All",
+    "es": "Todos"
+  },
+  "kind_person": {
+    "en": "Persons",
+    "es": "Personas"
+  },
+  "kind_object": {
+    "en": "Objects",
+    "es": "Objetos"
+  },
+  "kind_quality": {
+    "en": "Qualities",
+    "es": "Cualidades"
+  },
+  "kind_event": {
+    "en": "Events",
+    "es": "Sucesos"
+  },
+  "cluster_more": {
+    "en": "+ {n} more",
+    "es": "+ {n} más"
+  },
+  "symbols_count": {
+    "en": "{n} symbols",
+    "es": "{n} símbolos"
+  },
+  "cluster_malkhut_title": {
+    "en": "The Shekhinah",
+    "es": "La Shejiná"
+  },
+  "cluster_malkhut_blurb": {
+    "en": "The divine presence in the world. Most of the Zohar is about her: her union with the King, her exile, her return.",
+    "es": "La presencia divina en el mundo. De ella trata la mayor parte del Zohar: su unión con el Rey, su exilio, su regreso."
+  },
+  "cluster_tiferet_title": {
+    "en": "The King",
+    "es": "El Rey"
+  },
+  "cluster_tiferet_blurb": {
+    "en": "The holy blessed One as he shows himself: the husband of the Shekhinah, the centre of the Tree.",
+    "es": "El Santo, bendito sea, tal como se manifiesta: esposo de la Shejiná, centro del Árbol."
+  },
+  "cluster_binah_title": {
+    "en": "The Mother",
+    "es": "La Madre"
+  },
+  "cluster_sides_title": {
+    "en": "Right and Left",
+    "es": "Derecha e izquierda"
+  },
+  "cluster_yesod_title": {
+    "en": "The Righteous One",
+    "es": "El Justo"
+  },
+  "cluster_head_title": {
+    "en": "The Hidden Head",
+    "es": "La Cabeza oculta"
+  },
+  "cluster_head_blurb": {
+    "en": "Mostly in the Idrot, the Zohar's most esoteric stratum.",
+    "es": "Sobre todo en las Idrot, el estrato más esotérico del Zohar."
+  },
+  "cluster_sitra_title": {
+    "en": "The Other Side",
+    "es": "El Otro Lado"
+  },
+  "cluster_events_title": {
+    "en": "What happens",
+    "es": "Lo que sucede"
+  },
+  "cluster_nh_title": {
+    "en": "Thighs and Pillars",
+    "es": "Muslos y columnas"
+  },
+  "orientation_tree_title": {
+    "en": "The Tree of Life as a map",
+    "es": "El Árbol de la Vida como mapa"
+  },
+  "orientation_tree_body": {
+    "en": "Drawn later than the Zohar, useful anyway. Labelled as such.",
+    "es": "Dibujado después del Zohar, pero útil igualmente. Y señalado como tal."
+  },
+  "orientation_read_title": {
+    "en": "Open the Zohar, symbols lit",
+    "es": "Abrir el Zohar con los símbolos iluminados"
+  },
+  "orientation_read_body": {
+    "en": "Read a passage with every symbol marked, in Hebrew and in translation.",
+    "es": "Lee un pasaje con cada símbolo marcado, en hebreo y en traducción."
+  },
+  "orientation_ask_title": {
+    "en": "Why does the Zohar talk about the sea so much?",
+    "es": "¿Por qué habla tanto del mar el Zohar?"
+  },
+  "orientation_ask_body": {
+    "en": "Answers grounded in the passages, with the count behind every claim.",
+    "es": "Respuestas basadas en los pasajes, con el recuento detrás de cada afirmación."
+  },
+  "ask_coming": {
+    "en": "Ask is coming soon.",
+    "es": "Preguntar llegará pronto."
   }
 }
