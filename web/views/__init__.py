@@ -1,5 +1,5 @@
 """Route registration. Later tasks add blueprints here."""
-from flask import jsonify
+from flask import jsonify, render_template
 
 from .. import db
 
@@ -16,11 +16,9 @@ def register(app) -> None:
         return jsonify(ok=True, tables_version=row["value"] if row else None)
 
     @app.route("/")
-    def index():
-        from flask import render_template
+    def home():  # placeholder, replaced in Task 3
         return render_template("base.html")
 
     @app.route("/scholars")
-    def scholars():
-        from flask import render_template
+    def scholars():  # placeholder, replaced in Task 7
         return render_template("base.html")

@@ -18,7 +18,8 @@ dependencies = [
 dev = ["pytest>=7.0"]
 
 [tool.setuptools]
-packages = ["pipeline", "web"]
+[tool.setuptools.packages.find]
+include = ["pipeline*", "web*"]
 
 [tool.setuptools.package-data]
 web = ["templates/*", "static/*", "strings.json"]
