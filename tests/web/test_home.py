@@ -91,3 +91,19 @@ def test_events_cap_links_to_kind_search(app):
 
 def test_stubs_have_no_english_in_es(client):
     assert "Pronto podrás" in client.get("/es/ask").get_data(as_text=True)
+
+
+def test_home_tells_the_story(client):
+    html = client.get("/").get_data(as_text=True)
+    assert "Zohar III:152a" in html and "/passage/3.152a.005" in html
+    assert "לבושא דאורייתא" in html and "garment" in html
+    assert "/symbol/moon#read" in html and "We asked the book instead" in html
+
+
+def test_home_story_es(app):
+    html = app.test_client().get("/es/").get_data(as_text=True)
+    assert "vestido" in html and "Cómo usarlo" in html and "Nosotros se lo preguntamos al libro" in html
+
+
+def test_search_page_has_no_epigraph(client):
+    assert "epigraph" not in client.get("/search?q=moon").get_data(as_text=True)

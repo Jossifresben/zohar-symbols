@@ -25,7 +25,7 @@ def _lab(row, lang: str) -> str:
 def _size(count: int, cmax: int) -> int:
     if count <= 0:
         return 15
-    return int(round(15 + 29 * math.log1p(count) / math.log1p(max(cmax, 1))))
+    return int(round(15 + 15 * math.log1p(count) / math.log1p(max(cmax, 1))))
 
 
 def meta() -> dict:

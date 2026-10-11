@@ -100,12 +100,8 @@
     "es": "{label}: todavía no se ha encontrado en el texto."
   },
   "home_title": {
-    "en": "The Zohar speaks in images. Here is what they mean.",
-    "es": "El Zohar habla en imágenes. Descubre qué significan."
-  },
-  "home_intro": {
-    "en": "Every symbol below is a figure the Zohar returns to again and again. Larger means more passages. Choose one to see where it appears and what it is paired with.",
-    "es": "Cada símbolo que ves aquí es una figura a la que el Zohar vuelve una y otra vez. Cuanto más grande el nombre, en más pasajes aparece. Elige uno para ver dónde está y con qué se asocia."
+    "en": "The Zohar speaks in images. Here the book itself tells you what they mean.",
+    "es": "El Zohar habla en imágenes. Aquí es el propio libro el que te dice qué significan."
   },
   "search_placeholder": {
     "en": "Search a symbol: moon, king, sea…",
@@ -818,5 +814,61 @@
   "sch_forms_roots": {
     "en": "{surfaces} forms + {roots} roots",
     "es": "{surfaces} formas + {roots} raíces"
+  },
+  "home_quote": {
+    "en": "“The stories of the Torah are the Torah’s garment… Wine rests only in a jar; so the Torah rests only in this garment. Therefore one must look only at what lies beneath the garment.”",
+    "es": "«Los relatos de la Torá son el vestido de la Torá… El vino solo reposa en una jarra; así la Torá solo reposa en este vestido. Por eso hay que mirar únicamente lo que hay bajo el vestido»."
+  },
+  "home_quote_note": {
+    "en": "Translation: ours.",
+    "es": "Traducción propia."
+  },
+  "home_p1": {
+    "en": "The Zohar, the central book of Kabbalah, was written in Aramaic in thirteenth-century Castile. It rarely names what it speaks of. Where a philosopher would say the divine presence in the world, the Zohar says the Moon, the Sea, the Bride, the Apple Orchard. Hundreds of images, ten divine powers.",
+    "es": "El Zohar, el libro central de la Cábala, se escribió en arameo en la Castilla del siglo XIII. Casi nunca nombra aquello de lo que habla. Donde un filósofo diría la presencia divina en el mundo, el Zohar dice la Luna, el Mar, la Novia, el Huerto de manzanos. Cientos de imágenes, diez potencias divinas."
+  },
+  "home_p2": {
+    "en": "Kabbalists have long kept dictionaries of these images, which tell you what each one means. We asked the book instead. We read its {n} passages and counted which images appear together. The code shows itself: the Moon keeps company with the Sun, waxes in union, wanes in exile. In the Zohar, an image means what it keeps company with.",
+    "es": "Los cabalistas llevan siglos haciendo diccionarios de estas imágenes, que te dicen qué significa cada una. Nosotros se lo preguntamos al libro. Leímos sus {n} pasajes y contamos qué imágenes aparecen juntas. Y el código se deja ver: la Luna va con el Sol, crece en la unión y mengua en el exilio. En el Zohar, una imagen significa aquello con lo que se acompaña."
+  },
+  "home_p3": {
+    "en": "Every number here is counted, not asserted. We are not scholars; we built a way in.",
+    "es": "Cada cifra está contada, no afirmada. No somos especialistas: hemos construido una puerta de entrada."
+  },
+  "howto_title": {
+    "en": "How to use it",
+    "es": "Cómo usarlo"
+  },
+  "howto_1": {
+    "en": "Pick an image",
+    "es": "Elige una imagen"
+  },
+  "howto_1_body": {
+    "en": "Start with the Moon, for example.",
+    "es": "Empieza por la Luna, por ejemplo."
+  },
+  "howto_2": {
+    "en": "See what it stands for and what it appears with",
+    "es": "Mira qué representa y con qué aparece"
+  },
+  "howto_2_body": {
+    "en": "Its sefirah, its companions, its states.",
+    "es": "Su sefirá, sus acompañantes, sus estados."
+  },
+  "howto_3": {
+    "en": "Read it in the passages",
+    "es": "Léela en los pasajes"
+  },
+  "howto_3_body": {
+    "en": "Every underlined word leads to its own page.",
+    "es": "Cada palabra subrayada lleva a su propia página."
+  },
+  "field_caption": {
+    "en": "The size of each name shows how often it appears.",
+    "es": "El tamaño de cada nombre indica cuántas veces aparece."
+  },
+  "home_method_link": {
+    "en": "Where do these numbers come from?",
+    "es": "¿De dónde salen estas cifras?"
   }
 }

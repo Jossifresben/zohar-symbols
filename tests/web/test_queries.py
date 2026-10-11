@@ -13,7 +13,7 @@ def test_nodes_with_symbols_sizes(app):
         malkhut = next(n for n in nodes if n["node"] == "malkhut")
         moon = next(s for s in malkhut["symbols"] if s["id"] == "moon")
         # moon: 1.020a.001, 1.020a.002, 1.020b.001, 1.020b.003 (Ra'aya Meheimna)
-        assert moon["count_passages"] == 4 and 15 <= moon["size"] <= 44
+        assert moon["count_passages"] == 4 and 15 <= moon["size"] <= 30
         assert [n["node"] for n in nodes] == q.NODE_ORDER
         assert malkhut["label"] == "Malkhut"
         assert q.nodes_with_symbols("es")[3]["label"] == "Jésed"

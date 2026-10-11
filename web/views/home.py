@@ -11,12 +11,12 @@ CLUSTERS = [
     ("malkhut", 7, ["malkhut"], "cluster_malkhut_title", "cluster_malkhut_blurb"),
     ("tiferet", 5, ["tiferet"], "cluster_tiferet_title", "cluster_tiferet_blurb"),
     ("binah", 4, ["binah"], "cluster_binah_title", None),
-    ("sides", 4, ["hesed", "gevurah"], "cluster_sides_title", None),
+    ("sides", 8, ["hesed", "gevurah"], "cluster_sides_title", None),
+    ("head", 8, ["keter", "hokhmah", "ein_sof"], "cluster_head_title", "cluster_head_blurb"),
     ("yesod", 4, ["yesod"], "cluster_yesod_title", None),
-    ("head", 5, ["keter", "hokhmah", "ein_sof"], "cluster_head_title", "cluster_head_blurb"),
-    ("sitra", 4, ["sitra_ahra"], "cluster_sitra_title", None),
-    ("events", 3, [], "cluster_events_title", None),
     ("nh", 4, ["netzah", "hod"], "cluster_nh_title", None),
+    ("sitra", 4, ["sitra_ahra"], "cluster_sitra_title", None),
+    ("events", 4, [], "cluster_events_title", None),
 ]
 
 
@@ -41,7 +41,8 @@ def build_clusters(lang: str) -> list[dict]:
 
 
 def _page(q: str = "", results=None, heading: str | None = None):
-    return render_template("home.html", clusters=build_clusters(g.lang), q=q, results=results, heading=heading)
+    return render_template("home.html", clusters=build_clusters(g.lang), q=q, results=results, heading=heading,
+                           passages=queries.cached("passage_totals")["passages"])
 
 
 @bp.route("/")

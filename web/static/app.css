@@ -46,20 +46,23 @@ main{max-width:1200px;margin:0 auto;padding:32px}
 .gold{color:var(--gold)}.muted{color:var(--muted)}
 .results{margin-bottom:24px}.results h2{margin:0 0 8px;font-weight:500}.results ul{margin:0;padding-left:20px}
 .field,.orient{margin-bottom:24px}
-.cluster-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.cluster-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.cluster{min-width:0;overflow:hidden}
+.cluster .count{white-space:nowrap}
+.cols .col{min-width:0}
 .cluster h2{font-size:26px;font-weight:500;margin:0}
 .cluster h3{font-size:20px;font-weight:500;margin:0 0 8px}
 .cluster .count{font-size:13px}
 .blurb{margin:4px 0 0;font-size:14px}
 .chips{display:flex;flex-wrap:wrap;gap:8px 10px;margin-top:14px;align-items:baseline}
-.chips .chip{font-family:'Cormorant Garamond',serif;line-height:1.2}
+.chips .chip{font-family:'Cormorant Garamond',serif;line-height:1.15;max-width:100%;white-space:normal;overflow-wrap:anywhere;padding:4px 14px}
 .chips .chip:hover{border-color:var(--gold);text-decoration:none}
 .chip[data-kind="object"]{color:var(--gold)}
 .chip[data-kind="quality"]{color:var(--moon)}
 .chip[data-kind="event"]{color:var(--blue)}
 .more{font-size:14px;color:var(--muted)}
 .cols{display:grid;gap:0;margin-top:14px}
-.cols-2{grid-template-columns:1fr 1fr}.cols-3{grid-template-columns:repeat(3,1fr)}
+.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}
 .cols .col{padding:0 16px}.cols .col:first-child{padding-left:0}
 .cols .col+.col{border-left:1px solid var(--border)}.cols .chips{margin-top:0}
 .cols h3 .heb{font-size:16px}
@@ -144,3 +147,21 @@ a.bar-row:hover{text-decoration:none}a.bar-row:hover .bar-label{color:var(--gold
 table.pairs{border-collapse:collapse;width:100%}.pairs th,.pairs td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--border)}
 .copy-btn{cursor:pointer}
 main>.card{margin-bottom:20px}
+
+/* home intro */
+.epigraph{margin:8px 0 40px;padding:28px 32px;border-left:2px solid var(--gold);background:var(--surface);border-radius:0 10px 10px 0;max-width:920px}
+.epigraph blockquote{margin:0}
+.epi-ar{font-size:24px;line-height:1.7;color:var(--gold);margin:0 0 14px}
+.epi-tr{font-family:'Cormorant Garamond',serif;font-size:22px;line-height:1.45;margin:0 0 12px}
+.epigraph figcaption{font-size:14px}
+.story{max-width:720px;margin:0 0 28px}
+.story p{font-size:18px;line-height:1.6;margin:0 0 14px}
+.howto-title{margin:8px 0 12px}
+.howto{list-style:none;padding:0;margin:0 0 36px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.howto a.card{display:flex;flex-direction:column;gap:6px;height:100%;box-sizing:border-box;color:var(--text)}
+.howto a.card:hover{border-color:var(--gold);text-decoration:none}
+.howto strong{font-size:22px;font-weight:500}
+.howto-n{font-size:13px;color:var(--gold);font-weight:600;letter-spacing:.1em}
+.field-caption{margin:0 0 12px;font-size:14px}
+.method-link{margin:8px 0 32px}
+@media (max-width:760px){.howto{grid-template-columns:1fr}.epi-ar{font-size:20px}.epi-tr{font-size:19px}.epigraph{padding:20px}}

@@ -2,9 +2,30 @@
 {% from "_chips.html" import chips with context %}
 {% block title %}{% if q or heading %}{{ heading or t('search_results', q=q) }} · Zohar{% else %}{{ t('site_title') }}{% endif %}{% endblock %}
 {% block content %}
+{%- if not (q or heading) %}
+<figure class="epigraph">
+  <blockquote>
+    <p class="heb epi-ar" lang="arc" dir="rtl">ועל דא האי ספור דאורייתא – לבושא דאורייתא איהו… חמרא לא יתיב אלא בקנקן – כך אורייתא לא יתיב אלא בלבושא דא. ועל דא לא בעי לאסתכלא אלא במה דאית תחות לבושא.</p>
+    <p class="epi-tr">{{ t('home_quote') }}</p>
+  </blockquote>
+  <figcaption><a href="{{ passage_url('3.152a.005') }}">Zohar III:152a</a> · <span class="muted">{{ t('home_quote_note') }}</span></figcaption>
+</figure>
+{%- endif %}
 <section class="hero">
   <h1 class="display">{{ t('home_title') }}</h1>
-  <p class="intro">{{ t('home_intro') }}</p>
+  {%- if not (q or heading) %}
+  <div class="story">
+    <p>{{ t('home_p1') }}</p>
+    <p>{{ t('home_p2', n=passages|num) }}</p>
+    <p class="muted">{{ t('home_p3') }}</p>
+  </div>
+  <h2 class="label howto-title">{{ t('howto_title') }}</h2>
+  <ol class="howto">
+    <li><a class="card" href="{{ lang_url('symbol', sid='moon') }}"><span class="howto-n">1</span><strong class="display">{{ t('howto_1') }}</strong><span class="muted">{{ t('howto_1_body') }}</span></a></li>
+    <li><a class="card" href="{{ lang_url('symbol', sid='moon') }}"><span class="howto-n">2</span><strong class="display">{{ t('howto_2') }}</strong><span class="muted">{{ t('howto_2_body') }}</span></a></li>
+    <li><a class="card" href="{{ lang_url('symbol', sid='moon') }}#read"><span class="howto-n">3</span><strong class="display">{{ t('howto_3') }}</strong><span class="muted">{{ t('howto_3_body') }}</span></a></li>
+  </ol>
+  {%- endif %}
   <form class="search" action="{{ url_for('.search') }}" method="get" role="search">
     <input type="search" name="q" value="{{ q }}" placeholder="{{ t('search_placeholder') }}" aria-label="{{ t('search_placeholder') }}">
     <button type="submit">{{ t('search_button') }}</button>
@@ -28,6 +49,7 @@
   {% else %}<p class="muted">{{ t('search_none', q=q) }}</p>{% endif %}
 </section>
 {% endif %}
+<p class="field-caption muted">{{ t('field_caption') }}</p>
 <section class="grid field">
 {%- for c in clusters %}
   <article class="card cluster cluster-{{ c.key }}" data-cluster="{{ c.key }}" style="grid-column:span {{ c.span }}">
@@ -56,5 +78,6 @@
   <a class="card orient-card" style="grid-column:span 4" href="{{ url_for('.passage', pid=first_passage_id) }}"><h3 class="display">{{ t('orientation_read_title') }}</h3><p class="muted">{{ t('orientation_read_body') }}</p></a>
   <a class="card orient-card" style="grid-column:span 4" href="{{ url_for('.ask') }}"><h3 class="display">{{ t('orientation_ask_title') }}</h3><p class="muted">{{ t('orientation_ask_body') }}</p></a>
 </section>
+<p class="method-link"><a href="{{ lang_url('scholars') }}#method">{{ t('home_method_link') }} →</a></p>
 <script src="{{ url_for('static', filename='app.js') }}" defer></script>
 {% endblock %}
