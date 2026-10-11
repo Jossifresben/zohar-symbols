@@ -95,3 +95,17 @@ def test_lockfile_pins_adds_and_refetch_rewrites(tmp_path: Path):
     n = len(sess.calls)
     fetch_locked(["A", "B"], cache, lock, session=sess)      # cached at the locked revisions
     assert len(sess.calls) == n
+
+
+def test_refetch_only_clears_the_requested_titles(tmp_path: Path):
+    from pipeline.fetch import fetch_locked
+    sess = RevSession({1: ("A", "a1"), 2: ("A", "a2"), 5: ("B", "b5"), 6: ("B", "b6")}, {"A": 1, "B": 5})
+    lock, cache = tmp_path / "lock.json", tmp_path / "cache"
+    fetch_locked(["A", "B"], cache, lock, session=sess)
+    sess.latest = {"A": 2, "B": 6}
+    got = fetch_locked(["A"], cache, lock, refetch=True, session=sess)       # --refetch --only 1
+    assert [p.wikitext for p in got] == ["a2"]
+    assert json.loads(lock.read_text(encoding="utf-8")) == {"A": 2, "B": 5}
+    n = len(sess.calls)
+    assert fetch_locked(["A", "B"], cache, lock, session=sess)[1].wikitext == "b5"  # B still cached
+    assert len(sess.calls) == n

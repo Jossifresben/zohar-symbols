@@ -130,7 +130,21 @@ def test_labelled_stream_is_its_stratum_and_overrides_ranges():
     s = assign_strata(passages, rows)
     assert s == {"3.130a.001": "raaya_meheimna", "3.130a.002": "idra_rabba",
                  "1.100a.001": "midrash_haneelam", "1.100a.002": "main"}
-    assert {r["stratum"] for r in rows} == {"idra_rabba", "idra_zuta"}
+    assert {r["stratum"] for r in rows} == {"idra_rabba", "idra_zuta", "midrash_haneelam"}
+    assert {r["volume"] for r in rows if r["stratum"] == "midrash_haneelam"} == {2}   # Shemot only
+
+
+def test_shemot_midrash_haneelam_fallback_for_main_passages_only():
+    rows = load_strata(SEEDS / "strata.tsv")
+    ps = [dict(id="2.015a.001", volume=2, folio=15, side="a", stream="main"),
+          dict(id="2.015a.002", volume=2, folio=15, side="a", stream="tosefta"),
+          dict(id="2.005b.001", volume=2, folio=5, side="b", stream="main"),
+          dict(id="2.006a.001", volume=2, folio=6, side="a", stream="main"),
+          dict(id="2.022b.001", volume=2, folio=22, side="b", stream="main"),
+          dict(id="2.120a.001", volume=2, folio=120, side="a", stream="addendum")]
+    assert assign_strata(ps, rows) == {"2.015a.001": "midrash_haneelam", "2.015a.002": "tosefta",
+                                       "2.005b.001": "midrash_haneelam", "2.006a.001": "main",
+                                       "2.022b.001": "main", "2.120a.001": "addendum"}
 
 
 def _m(sym, pid, pos):

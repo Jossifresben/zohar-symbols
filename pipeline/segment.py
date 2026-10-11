@@ -1,5 +1,6 @@
 """Wikitext of a parasha page → passages keyed by Mantua folio and paragraph."""
 import re
+from collections import Counter
 from dataclasses import dataclass
 
 from .hebnum import heb_to_int
@@ -18,7 +19,7 @@ _OVERLAY_LABEL = re.compile(r"^(?:(?:בראשית|שמות|ויקרא|במדבר
                             r"|שבועות\s+\d+|ספרא דצניעותא(?:\s+\S+)?)$")
 # Fixed order: paragraph numbering of a folio-side runs main first, then streams in this order.
 STREAMS = ("main", "raaya_meheimna", "midrash_haneelam", "sitrei_torah", "raza_derazin",
-           "tosefta", "matnitin", "other")
+           "tosefta", "matnitin", "other", "addendum")
 _STREAM_WORDS = {'רע"מ': "raaya_meheimna", "רע״מ": "raaya_meheimna", "רעיא מהימנא": "raaya_meheimna",
                  "מדרש הנעלם": "midrash_haneelam", "סתרי תורה": "sitrei_torah",
                  "רזא דרזין": "raza_derazin", "תוספתא": "tosefta", "מתניתין": "matnitin",
@@ -33,8 +34,23 @@ PARASHA_NAMES = frozenset("""בראשית נח לך לך וירא חיי שרה 
 # A section whose whole content is an editor's note that the folio has no text in this stream.
 _PLACEHOLDER = re.compile(r"^\((?=[^()]*(?:רעיא מהימנא|זהר|זוהר))(?=[^()]*(?:דף|פרשת|אין))[^()]*\)$")
 _RAW_TAG = re.compile(r"<\s*קטע\s+(?:התחלה|סוף)")
+# A plain "דף N S" section takes its stream from the level-2 heading that governs it, if that heading
+# names a stream (Wikisource leaves e.g. Mishpatim's Ra'aya Meheimna under plain labels).
+_H2 = re.compile(r"^==(?!=)(.+?)(?<!=)==[ \t]*$", re.M)
+_HEADING_STREAMS = {"רעיא מהימנא": "raaya_meheimna", 'רע"מ': "raaya_meheimna", "רע״מ": "raaya_meheimna",
+                    "מדרש הנעלם": "midrash_haneelam", "סתרי תורה": "sitrei_torah", "תוספתא": "tosefta",
+                    "מתניתין": "matnitin", "רזא דרזין": "raza_derazin"}
+# Appendix text (the "השמטות" printed at the end of the Vilna/Izmir editions) that the Wikisource
+# editors copied into place: an opener line naming the סימן, the text, then an "(עד כאן ...)" closer.
+_ADD_OPEN_SIMAN = re.compile(r"סימן|סי['׳]")
+_ADD_OPEN_VERB = re.compile(r"כאן מובא|העתקתי|הבאתי|מובא כסימן|השלמה מההשמטות")
+_ADD_CLOSE = re.compile(r"\((?:עד כאן|ע\"כ)(?=[^()]*(?:תוספת(?!א)|סימן|העתקת|הקטע|השמטות|דפוס))[^()]*\)")
+# some appendices are set off by big brackets instead of a closing note
+_ADD_BRACKETS = re.compile(r"\{\{גדול\|'{3}[\[\]]'{3}\}\}|<big>[\[\]]</big>")
+_WIKITABLE = re.compile(r"^\{\|.*?^\|\}[ \t]*$", re.M | re.S)  # editors' tables, not Zohar text
 _SECTION_TAG = re.compile(r"<\s*קטע\s+(?:התחלה|סוף)\s*=[^>]*/>")
 _HEBREW = re.compile(r"[א-ת]")
+_HR = re.compile(r"^[ \t]*-{4,}[ \t]*$", re.M)  # wiki horizontal rule
 _HEADING = re.compile(r"^[ \t]*=+[^=\n].*?=+[ \t]*$", re.M)
 _MM = re.compile(r"\{\{ממ\|([^|}]+)\|([א-ת]+)(?:\|([א-ת]+))?\}\}")
 _SHIN = re.compile(r"\{\{ש\}\}")
@@ -177,6 +193,7 @@ def clean_wikitext(s: str) -> str:
     s = _COMMENT.sub("", s)
     s = _REF.sub("", s)
     s = _HEADING.sub("", s)  # section headings are not stored in v0.1
+    s = _HR.sub("", s)
     s = _SECTION_TAG.sub("", s)
     s = _BOLD.sub("", s)  # before variants: some are wrapped in bold markup
     s = _VARIANT.sub("", s)
@@ -223,6 +240,7 @@ class Label:
     folio: int
     side: str
     key: str  # "<num> <side>" as written, for _LABEL_FIXES
+    plain: bool = False  # "דף N S" with neither prefix nor suffix
 
 
 def _strip_word(prefix: str, word: str) -> tuple[str, bool]:
@@ -249,7 +267,7 @@ def classify_label(label: str, page_title: str = "") -> Label | None:
         if suffix and suffix not in PARASHA_NAMES:
             raise SegmentError(page_title, label, f"unknown label suffix {suffix!r}")
         return Label(stream, _num(m.group("num")), "a" if m.group("side") == "א" else "b",
-                     f"{m.group('num')} {m.group('side')}")
+                     f"{m.group('num')} {m.group('side')}", plain=not (m.group("prefix") or suffix))
     if _OVERLAY_LABEL.match(label):
         return None
     raise SegmentError(page_title, label, "unclassified section label")
@@ -276,6 +294,62 @@ def renumber(passages: list[dict]) -> list[dict]:
     return passages
 
 
+def heading_stream(heading: str, page_title: str = "") -> str:
+    """The stream a level-2 heading names, or "main"; a heading naming two streams fails."""
+    found = {st for word, st in _HEADING_STREAMS.items() if word in heading}
+    if len(found) > 1:
+        raise SegmentError(page_title, heading, "heading names more than one stream")
+    return found.pop() if found else "main"
+
+
+def _governing_heading(wikitext: str, h2: list[re.Match], start: int, end: int) -> str:
+    """The last level-2 heading before the section's first text: one inside the section counts if
+    only markup precedes it (Wikisource sometimes opens the tag before the parasha heading)."""
+    best = ""
+    for h in h2:
+        if h.start() < start:
+            best = h.group(1)
+        elif h.start() < end and not _HEBREW.search(clean_wikitext(wikitext[start:h.start()])):
+            best = h.group(1)
+        else:
+            break
+    return best.strip()
+
+
+def split_addenda(block: str, page_title: str = "", label: str = "") -> list[tuple[bool, str]]:
+    """Split a section into (is_addendum, text) runs. The opener line and the closer note are
+    dropped; an opener without a closer, or a closer without an opener, fails loudly."""
+    out: list[tuple[bool, str]] = []
+    pos = 0
+    while True:
+        op = None
+        for lm in re.finditer(r"^.*$", block[pos:], re.M):
+            line = lm.group(0)
+            if _ADD_OPEN_SIMAN.search(line) and _ADD_OPEN_VERB.search(line):
+                op = (pos + lm.start(), pos + lm.end())
+                break
+        stray = _ADD_CLOSE.search(block, pos, op[0] if op else len(block))
+        if stray:
+            raise SegmentError(page_title, label, f"appendix closer without opener: {stray.group(0)!r}")
+        if op is None:
+            out.append((False, block[pos:]))
+            return out
+        out.append((False, block[pos:op[0]]))
+        cl = _ADD_CLOSE.search(block, op[1])
+        br = next((b for b in _ADD_BRACKETS.finditer(block, op[1]) if "]" in b.group(0)), None)
+        ends = [c for c in (cl, br) if c]
+        if not ends:
+            raise SegmentError(page_title, label, "appendix opener without a closer in the section")
+        c = min(ends, key=lambda x: x.start())
+        end, pos = c.start(), c.end()
+        ls = block.rfind("\n", 0, c.start()) + 1
+        le = block.find("\n", c.end())
+        le = len(block) if le < 0 else le
+        if not _HEBREW.search(clean_wikitext(block[ls:c.start()] + block[c.end():le])):
+            end, pos = ls, le  # the closer's line is only the note and its wrapper markup: drop it
+        out.append((True, _ADD_BRACKETS.sub("", block[op[1]:end])))
+
+
 def segment_page(wikitext: str, volume: int, parasha: str, page_title: str,
                  stats: dict | None = None) -> list[Passage]:
     """A repeated (folio, side, stream) on one page continues that stream; stats['continued']
@@ -286,6 +360,8 @@ def segment_page(wikitext: str, volume: int, parasha: str, page_title: str,
                 raise SegmentError(page_title, "<fix>", f"known typo not found exactly once: {old!r}")
             wikitext = wikitext.replace(old, new)
     wikitext = _COMMENT.sub("", wikitext)  # a tag inside an HTML comment is not a section
+    wikitext = _WIKITABLE.sub("", wikitext)
+    h2 = list(_H2.finditer(wikitext))
     all_tags = list(_TAG_ANY.finditer(wikitext))
     n_raw = len(_RAW_TAG.findall(wikitext))
     if n_raw != len(all_tags):
@@ -323,17 +399,27 @@ def segment_page(wikitext: str, volume: int, parasha: str, page_title: str,
         if _PLACEHOLDER.match(" ".join(clean_wikitext(block).split())):
             stats["placeholders"] = stats.get("placeholders", 0) + 1
             continue
-        key = (lab.folio, lab.side, lab.stream)
-        nsec[key] = nsec.get(key, 0) + 1
-        if nsec[key] > 1:
-            stats["continued"] = stats.get("continued", 0) + 1
-            stats.setdefault("continued_keys", {})[_stream_key(volume, *key)] = nsec[key]
+        stream = lab.stream
+        if lab.plain:
+            stream = heading_stream(_governing_heading(wikitext, h2, m.start(), e.start()), page_title)
+            if stream != "main":
+                stats.setdefault("heading_streams", Counter())[stream] += 1
         vref = _verse_ref(block)
-        prior = set(texts.get(key, ()))
-        for text in _paragraphs(block, page_title, label):
-            if nsec[key] > 1 and text in prior:
-                raise SegmentError(page_title, label, "duplicate text in repeated section")
-            found.append(dict(id="", volume=volume, folio=lab.folio, side=lab.side, para=0,
-                              parasha=parasha, text_ar=text, verse_ref=vref, stream=lab.stream))
-            texts.setdefault(key, set()).add(text)
+        runs = split_addenda(block, page_title, label)
+        for st in sorted({"addendum" if add else stream for add, _ in runs}):
+            key = (lab.folio, lab.side, st)
+            nsec[key] = nsec.get(key, 0) + 1
+            if nsec[key] > 1:
+                stats["continued"] = stats.get("continued", 0) + 1
+                stats.setdefault("continued_keys", {})[_stream_key(volume, *key)] = nsec[key]
+        for add, run in runs:
+            st = "addendum" if add else stream
+            key = (lab.folio, lab.side, st)
+            prior = set(texts.get(key, ()))
+            for text in _paragraphs(run, page_title, label):
+                if nsec[key] > 1 and text in prior:
+                    raise SegmentError(page_title, label, "duplicate text in repeated section")
+                found.append(dict(id="", volume=volume, folio=lab.folio, side=lab.side, para=0,
+                                  parasha=parasha, text_ar=text, verse_ref=vref, stream=st))
+                texts.setdefault(key, set()).add(text)
     return [Passage(**p) for p in renumber(found)]

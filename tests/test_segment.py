@@ -272,3 +272,65 @@ def test_section_closed_by_another_stream_raises():
 def test_end_tag_without_start_raises():
     with pytest.raises(SegmentError, match="end tag without a start"):
         _seg(_sec("א") + "ב<קטע סוף=דף כ ב/>")
+
+
+# --- second pass: stream from headings, appendix text (addendum) ---
+
+HEADINGS_FIX = Path(__file__).parent / "fixtures" / "headings.wikitext"
+
+
+def _headings(stats=None):
+    return segment_page(HEADINGS_FIX.read_text(encoding="utf-8"), 2, "X", "t", stats)
+
+
+def test_plain_label_takes_stream_from_level2_heading():
+    stats = {}
+    by_id = {p.id: p for p in _headings(stats)}
+    assert by_id["2.114a.001"].stream == "main"                 # parasha heading
+    assert by_id["2.114b.002"].stream == "raaya_meheimna"       # plain label under an RM heading
+    assert by_id["2.114b.001"].stream == "main"                 # parasha-prefixed label stays main
+    assert stats["heading_streams"] == {"raaya_meheimna": 1}
+
+
+def test_heading_inside_section_before_its_text_governs():
+    # the 115a tag opens under the Tosefta/Matnitin heading, but the Terumah heading precedes its text
+    ps = [p for p in _headings() if p.folio == 115 and p.stream == "main"]
+    assert [p.text_ar for p in ps] == ["רבי אבא פתח.", "תא חזי מלכא.", "בתר הכי אמר רבי יוסי.",
+                                       "שבעה קשורין אינון."]
+
+
+def test_heading_naming_two_streams_fails_for_a_plain_label():
+    from pipeline.segment import heading_stream
+    assert heading_stream("רעיא מהימנא - פרשת משפטים") == "raaya_meheimna"
+    assert heading_stream("פרשת בא - זהר") == "main"
+    with pytest.raises(SegmentError, match="more than one stream"):
+        heading_stream("פרשת שמות - תוספתא/מתניתין")
+    with pytest.raises(SegmentError, match="more than one stream"):
+        _seg("==פרשת שמות - תוספתא/מתניתין==\n" + _sec("א"))
+
+
+def test_appendix_text_becomes_addendum_and_markers_are_dropped():
+    ps = _headings()
+    add = [p for p in ps if p.stream == "addendum"]
+    assert [(p.id, p.text_ar) for p in add] == [("2.115a.006", "ואוליפנא האי מאן דאתער בליליא."),
+                                               ("2.115a.007", "שבעה יומין עלאין.")]
+    joined = " ".join(p.text_ar for p in ps)
+    for marker in ("כאן מובא", "עד כאן", "העתקתי", "סימן", "----", "[", "]", "טבלת", "17"):
+        assert marker not in joined
+
+
+def test_appendix_closer_mid_line_splits_the_line():
+    wt = _sec("פתח.\n(כאן מובא קטע של תוספת - סימן י\"ז)\nתרועה - שלשלת. <small>'''(ע\"כ תוספת מדפוס איזמיר)'''</small>, ואיהו לא.")
+    assert [(p.stream, p.text_ar) for p in _seg(wt)] == [
+        ("main", "פתח."), ("addendum", "תרועה - שלשלת."), ("main", ", ואיהו לא.")]
+
+
+def test_appendix_opener_without_closer_raises():
+    with pytest.raises(SegmentError, match="opener without a closer"):
+        _seg(_sec("א\n(כאן מובא קטע של תוספת - סימן י')\nב"))
+
+
+def test_appendix_closer_without_opener_raises():
+    with pytest.raises(SegmentError, match="closer without opener"):
+        _seg(_sec("א (עד כאן תוספת שמודפס בסוף דפוס ווילנא) ב"))
+    assert [p.text_ar for p in _seg(_sec("א (עד כאן תוספתא) ב"))] == ["א (עד כאן תוספתא) ב"]  # Tosefta's own closer

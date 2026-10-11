@@ -3,7 +3,6 @@
 import argparse
 import csv
 import json
-import shutil
 from collections import Counter
 from statistics import median
 from dataclasses import asdict
@@ -13,7 +12,7 @@ from .lemmatise import tokenize
 from .report import write_report
 from .segment import STREAMS, _stream_key, renumber, segment_page
 from .version import TABLES_VERSION
-from .wikisource import PageText, fetch_page
+from .wikisource import PageText, _cache_path, fetch_page
 
 ROOT = Path(__file__).resolve().parent.parent
 RAW = ROOT / "raw"
@@ -44,6 +43,8 @@ def build_raw(pages: list[tuple[str, int, str, PageText]]) -> dict:
         passages = [asdict(p) for p in segment_page(pt.wikitext, volume, parasha, title, stats)]
         out["continued_folios"] += stats.get("continued", 0)
         out["placeholders"] += stats.get("placeholders", 0)
+        for st, n in stats.get("heading_streams", {}).items():
+            out.setdefault("heading_streams", {})[st] = out.get("heading_streams", {}).get(st, 0) + n
         out["continued_detail"].update(stats.get("continued_keys", {}))
         for p in passages:
             key = (p["volume"], p["folio"], p["side"], p["stream"])
@@ -71,8 +72,8 @@ def write_sources_md(out: dict, path: Path) -> None:
 
 
 def size_outliers(passages: list[dict], factor: int = 3) -> list[tuple[str, str]]:
-    """Folio-sides (all streams) whose paragraph or token count exceeds factor × the corpus median:
-    the signature of two folios merged under one label, or of a missed section boundary."""
+    """Folio-sides (all streams) whose token count exceeds factor × the corpus median token count:
+    the signature of two folios merged under one label, or of text inlined from elsewhere."""
     paras, toks = Counter(), Counter()
     for p in passages:
         k = f"{p['volume']}.{p['folio']:03d}{p['side']}"
@@ -80,9 +81,9 @@ def size_outliers(passages: list[dict], factor: int = 3) -> list[tuple[str, str]
         toks[k] += len(tokenize(p["text_ar"]))
     if not paras:
         return []
-    mp, mt = median(paras.values()), median(toks.values())
+    mt = median(toks.values())
     return [(f"size outlier: {k}", f"{paras[k]} paras, {toks[k]} tokens") for k in sorted(paras)
-            if paras[k] > factor * mp or toks[k] > factor * mt]
+            if toks[k] > factor * mt]
 
 
 def report_rows(out: dict) -> list[tuple[str, object]]:
@@ -94,6 +95,8 @@ def report_rows(out: dict) -> list[tuple[str, object]]:
         ("folios continued within a page", out["continued_folios"]),
         ("placeholder sections dropped", out.get("placeholders", 0)),
     ]
+    rows += [(f"plain-label sections streamed by heading: {st}", n)
+             for st, n in sorted(out.get("heading_streams", {}).items())]
     streams = Counter(p.get("stream", "main") for p in out["passages"])
     rows += [(f"passages: {s}", streams[s]) for s in STREAMS if streams[s]]
     rows += size_outliers(out["passages"])
@@ -119,8 +122,9 @@ def fetch_locked(titles: list[str], cache_dir: Path, lock_path: Path, refetch: b
     """Fetch each title at its locked revision. A title missing from the lockfile is fetched at its
     latest revision and added. refetch clears the cache and re-locks every title to its latest."""
     old = load_lock(lock_path)
-    if refetch:
-        shutil.rmtree(cache_dir, ignore_errors=True)
+    if refetch:  # only the requested titles: `--refetch --only N` leaves the other pages cached
+        for t in titles:
+            _cache_path(cache_dir, t).unlink(missing_ok=True)
     lock = {k: v for k, v in old.items() if k not in titles} if refetch else dict(old)
     out = []
     for t in titles:
@@ -136,7 +140,7 @@ def main(argv=None) -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--only", type=int, default=None, help="fetch only the first N parasha pages")
     ap.add_argument("--refetch", action="store_true",
-                    help="clear the cache and lock every page to its latest revision")
+                    help="clear the cached pages and lock them to their latest revisions")
     args = ap.parse_args(argv)
     rows = load_parashot(ROOT / "seeds" / "parashot.tsv")
     if args.only:

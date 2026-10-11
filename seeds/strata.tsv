@@ -1,4 +1,6 @@
-# ranges are conventional; see spec §5. Only main-stream passages use this file: Ra'aya Meheimna, Midrash ha-Ne'lam, Sitrei Torah etc. come from the Wikisource stream labels.
+# ranges are conventional; see spec §5. Only main-stream passages use this file: Ra'aya Meheimna, Midrash ha-Ne'lam, Sitrei Torah etc. come from the Wikisource stream labels and headings. The two Shemot Midrash ha-Ne'lam rows cover text Wikisource leaves unlabelled.
 volume	from_folio	from_side	to_folio	to_side	stratum	source
 3	127	b	145	a	idra_rabba	Tishby
 3	287	b	296	b	idra_zuta	Tishby
+2	4	a	5	b	midrash_haneelam	Tishby
+2	14	a	22	a	midrash_haneelam	Tishby

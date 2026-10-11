@@ -93,7 +93,7 @@ All tables produced by the pipeline, read-only in the web app (SQLite).
 | **translation** | `passage_id`, `lang`, `text`, `model_id`, `prompt_hash`, `created_at` | Provenance one join away. |
 | **gloss** | `symbol_id`, `source`, `locus`, `summary_en`, `summary_es` | Tradition entries (Cordovero, Gikatilla). |
 
-**Surfaced passages** (the six shown on a symbol page) are a deterministic query, not a table: highest mention density of the symbol and its top partners, one per stratum where possible, ties broken by folio order.
+**Surfaced passages** (the six shown on a symbol page) are a deterministic query: score = (2·own + 1·top-partner mentions) / (tokens + 20), a smoothed density so short passages cannot win on length alone; passages of at least 12 tokens are taken first and shorter ones only to fill up to six; one per stratum where possible, ties broken by id.
 
 ---
 
@@ -107,7 +107,7 @@ All tables produced by the pipeline, read-only in the web app (SQLite).
 
 **States.** Declared per symbol as (label, marker roots). A passage is in the state when symbol and any marker root co-occur. Moon: *full* ← fullness/wholeness/Sabbath roots; *diminished* ← ז-ע-ר, מ-ע-ט, exile roots. Unmarked passages are shown as unmarked. No model.
 
-**Strata.** Folio-range assignment per `strata.tsv` (conventional, Tishby). Shown as "where in the book"; Scholars tail notes it is conventional.
+**Strata.** A passage's stream comes from its Wikisource section label (`רע"מ דף …`, `מדרש הנעלם דף …`, …) or, for a plain `דף` label, from the level-2 heading that governs it; editors' inlined appendix text (השמטות) is stream `addendum`. A non-main stream is the stratum; main-stream passages fall back to the `strata.tsv` ranges (Idra Rabba, Idra Zuta, and the unlabelled Shemot Midrash ha-Ne'lam, Tishby). Shown as "where in the book"; Scholars tail notes the ranges are conventional.
 
 **Glosses.** Fable receives counts, top partners, states and tradition entries for a symbol and writes a one-sentence meaning and a short "how it moves" in EN and ES. Prompt forbids symbolism absent from the input. Stored with model id and prompt hash; shown with attribution.
 
