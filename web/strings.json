@@ -472,8 +472,8 @@
     "es": "1 pasaje sin marca de estado"
   },
   "node_intro_keter": {
-    "en": "The hidden head of the divine structure, called Atika Kadisha and Arikh Anpin. It is named mostly in the Idrot, and rarely elsewhere in the Zohar.",
-    "es": "La cabeza oculta de la estructura divina, llamada Atika Kadisha y Arij Anpin. Se nombra sobre todo en las Idrot, y rara vez en el resto del Zohar."
+    "en": "The hidden head of the divine structure, called Atika Kadisha, the Holy Ancient One, and also Arikh Anpin, the Long Face. These titles occur mostly in the Idrot.",
+    "es": "La cabeza oculta de la estructura divina, llamada Atika Kadisha, la Antigua Santa, y también Arij Anpin, el Rostro Largo. Estos títulos aparecen sobre todo en las Idrot."
   },
   "node_intro_hokhmah": {
     "en": "Abba, the Father: the point from which everything unfolds, and Reshit, the beginning. It stands at the head of the right pillar.",
@@ -485,7 +485,7 @@
   },
   "node_intro_hesed": {
     "en": "The Right, associated with Abraham, with water and with white. It is the sefirah of lovingkindness.",
-    "es": "La Derecha, asociada con Abraham, con el agua y con el blanco. Es la sefirá de la bondad amorosa."
+    "es": "La Derecha, asociada con Abraham, con el agua y con el blanco. Es la sefirá de la amor generoso."
   },
   "node_intro_gevurah": {
     "en": "The Left, associated with Isaac, with fire and with red. It is the sefirah of judgement.",
@@ -496,8 +496,8 @@
     "es": "El Rey, el Sol, Jacob que se llama Israel, y la Torá escrita. Está en la columna central, entre la Derecha y la Izquierda, y es la pareja de la Shejiná."
   },
   "node_intro_netzah": {
-    "en": "One of the two thighs of the divine body, the pillars from which the prophets draw. In Cordovero's scheme it corresponds to Moses.",
-    "es": "Uno de los dos muslos del cuerpo divino, las columnas de las que beben los profetas. En el esquema de Cordovero corresponde a Moisés."
+    "en": "One of the two thighs of the divine body, the supports from which the prophets draw. In Cordovero's scheme it corresponds to Moses.",
+    "es": "Uno de los dos muslos del cuerpo divino, los soportes de los que beben los profetas. En el esquema de Cordovero corresponde a Moisés."
   },
   "node_intro_hod": {
     "en": "The other thigh, paired with Netzaḥ. In Cordovero's scheme it corresponds to Aaron.",
@@ -508,8 +508,8 @@
     "es": "El Tzadik, el Justo, que es la señal del pacto y se vincula con José. Es el canal por el que las sefirot superiores fluyen hacia Maljut."
   },
   "node_intro_malkhut": {
-    "en": "The tenth sefirah: the divine presence in the world, called the Shekhinah, the Matronita, the Moon, the Sea, the Earth and Knesset Yisra'el. Her story is exile and union, and most of the Zohar is about her.",
-    "es": "La décima sefirá: la presencia divina en el mundo, llamada la Shejiná, la Matronita, la Luna, el Mar, la Tierra y Knesset Yisra'el. Su historia es el exilio y la unión, y la mayor parte del Zohar trata de ella."
+    "en": "The tenth sefirah: the divine presence in the world, called the Shekhinah, the Matronita, the Moon, the Sea, the Earth and Knesset Yisra'el. Her story is exile and union, and much of the Zohar turns on her.",
+    "es": "La décima sefirá: la presencia divina en el mundo, llamada la Shejiná, la Matronita, la Luna, el Mar, la Tierra y Knesset Yisra'el. Su historia es la del exilio y la unión, y buena parte del Zohar gira en torno a ella."
   },
   "node_intro_sitra_ahra": {
     "en": "The Other Side: the serpent, Samael and Lilith, and the husk that surrounds the holy. It is fed by excess of judgement.",
@@ -554,5 +554,9 @@
   "node_no_symbols": {
     "en": "No symbols tagged here.",
     "es": "No hay símbolos etiquetados aquí."
+  },
+  "tree_aria": {
+    "en": "Tree of Life diagram: ten sefirot joined by twenty-two paths",
+    "es": "Diagrama del Árbol de la Vida: diez sefirot unidas por veintidós senderos"
   }
 }

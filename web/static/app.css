@@ -123,3 +123,8 @@ a.bar-row:hover{text-decoration:none}a.bar-row:hover .bar-label{color:var(--gold
 .tree-node:hover circle{stroke:var(--gold)}
 .tree-node:hover{text-decoration:none}
 .tree-figure figcaption{font-size:14px;margin-top:12px}
+.tree-heb{paint-order:stroke;stroke:var(--ground);stroke-width:5px;stroke-linejoin:round}
+.tree-node:focus{outline:none}
+.tree-node:focus-visible circle{stroke:var(--gold);stroke-width:3}
+.tree-figure figcaption span{display:block}.tree-legend{color:var(--red);margin-bottom:4px}
+.sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}

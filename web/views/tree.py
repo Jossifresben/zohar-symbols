@@ -15,5 +15,5 @@ PATHS = [(1, 2), (1, 3), (1, 6), (2, 3), (2, 4), (2, 6), (3, 5), (3, 6), (4, 5),
 def tree():
     pts = [dict(id=n, x=round(x * 600), y=round(y * 800), ar=queries.NODE_AR[n]) for n, x, y in SEFIROT]
     lines = [(pts[a - 1], pts[b - 1]) for a, b in PATHS]
-    return render_template("tree.html", pts=pts, lines=lines, shadow=dict(id="sitra_ahra", x=300, y=1.02 * 800 + 20, ar=queries.NODE_AR["sitra_ahra"]),
+    return render_template("tree.html", node_ids=queries.NODE_ORDER, pts=pts, lines=lines, shadow=dict(id="sitra_ahra", x=300, y=1.02 * 800 + 20, ar=queries.NODE_AR["sitra_ahra"]),
                            ein_sof=dict(id="ein_sof", x=300, y=14, ar=queries.NODE_AR["ein_sof"]))

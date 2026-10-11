@@ -10,7 +10,8 @@ NODE_ORDER = ["keter", "hokhmah", "binah", "hesed", "gevurah", "tiferet", "netza
 NODE_AR = {"keter": "כתר", "hokhmah": "חכמה", "binah": "בינה", "hesed": "חסד", "gevurah": "גבורה", "tiferet": "תפארת",
            "netzah": "נצח", "hod": "הוד", "yesod": "יסוד", "malkhut": "מלכות", "sitra_ahra": "סטרא אחרא", "ein_sof": "אין סוף"}
 STATE_ORDER = ["full", "diminished", "union", "exile"]  # display order; undeclared labels follow alphabetically
-PILLAR = {"hesed": "right", "netzah": "right", "hokhmah": "right", "gevurah": "left", "hod": "left", "binah": "left"}
+PILLAR = {"hesed": "right", "netzah": "right", "hokhmah": "right", "gevurah": "left", "hod": "left", "binah": "left",
+          "keter": "middle", "tiferet": "middle", "yesod": "middle", "malkhut": "middle", "sitra_ahra": None, "ein_sof": None}
 
 
 def t_node(n: str, lang: str) -> str:
@@ -135,7 +136,7 @@ def node(nid: str, lang: str) -> dict | None:
                  join mention m2 on m2.passage_id=m1.passage_id join symbol s2 on s2.id=m2.symbol_id
                  where s1.node=? and s2.node<>s1.node
                  group by s2.node order by n desc, s2.node""", (nid,))
-    return dict(node=nid, label=t_node(nid, lang), label_ar=NODE_AR[nid], pillar=PILLAR.get(nid, "middle"),
+    return dict(node=nid, label=t_node(nid, lang), label_ar=NODE_AR[nid], pillar=PILLAR.get(nid),
                 symbols_by_kind=by_kind,
                 partner_nodes=[dict(node=r["other"], label=t_node(r["other"], lang), passages_together=r["n"]) for r in pn])
 

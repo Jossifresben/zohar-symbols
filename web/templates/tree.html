@@ -5,7 +5,12 @@
   <h1 class="display">{{ t('tree_title') }}</h1>
   <figure class="tree-figure">
     {% include "_tree.svg" %}
-    <figcaption class="muted">{{ t('tree_other_side') }}. {{ t('tree_provenance') }}</figcaption>
+    <figcaption class="muted"><span class="tree-legend">{{ t('tree_other_side') }}</span><span class="tree-prov">{{ t('tree_provenance') }}</span></figcaption>
   </figure>
+  <ul class="sr-only">
+  {%- for nid in node_ids %}
+    <li><a href="{{ lang_url('node', nid=nid) }}">{{ t('node_' ~ nid) }}</a></li>
+  {%- endfor %}
+  </ul>
 </section>
 {% endblock %}

@@ -4,7 +4,9 @@
 {% block content %}
 <section class="sym-head node-head">
   <h1 class="display">{{ n.label }} <span class="heb gold" lang="he" dir="rtl">{{ n.label_ar }}</span></h1>
+  {%- if n.pillar %}
   <div class="sym-chips"><span class="chip">{{ t('pillar_' ~ n.pillar) }}</span></div>
+  {%- endif %}
   <p class="intro">{{ t('node_intro_' ~ n.node) }}</p>
 </section>
 <section class="grid node-symbols">
