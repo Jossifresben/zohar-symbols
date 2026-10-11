@@ -22,25 +22,36 @@ def _cache_path(cache_dir: Path, title: str) -> Path:
     return cache_dir / (hashlib.sha1(title.encode("utf-8")).hexdigest() + ".json")
 
 
-def fetch_page(title: str, cache_dir: Path, session=None) -> PageText:
+def fetch_page(title: str, cache_dir: Path, session=None, revid: int | None = None) -> PageText:
+    """Latest revision of `title`, or exactly revision `revid` when given (a lockfile pin).
+    The cache holds one revision per title; a cached revision other than `revid` is refetched."""
     cache_dir.mkdir(parents=True, exist_ok=True)
     cp = _cache_path(cache_dir, title)
     if cp.exists():
-        return PageText(**json.loads(cp.read_text(encoding="utf-8")))
+        pt = PageText(**json.loads(cp.read_text(encoding="utf-8")))
+        if revid is None or pt.revid == revid:
+            return pt
     if session is None:
         session = requests.Session()
         session.headers["User-Agent"] = UA
-    r = session.get(API, params={
-        "action": "query", "prop": "revisions", "titles": title,
-        "rvprop": "ids|timestamp|content", "rvslots": "main", "format": "json",
-        "formatversion": "2",
-    }, timeout=60)
+    params = {"action": "query", "prop": "revisions", "rvprop": "ids|timestamp|content",
+              "rvslots": "main", "format": "json", "formatversion": "2"}
+    if revid is None:
+        params["titles"] = title
+    else:
+        params["revids"] = str(revid)
+    r = session.get(API, params=params, timeout=60)
     r.raise_for_status()
-    page = r.json()["query"]["pages"][0]
+    q = r.json()["query"]
+    if q.get("badrevids"):
+        raise LookupError(f"Wikisource revision not found: {title} @ {revid}")
+    page = q["pages"][0]
     if page.get("missing") or "revisions" not in page:
         raise LookupError(f"Wikisource page not found: {title}")
     rev = page["revisions"][0]
     pt = PageText(title=page["title"], revid=int(rev["revid"]),
                   timestamp=rev["timestamp"], wikitext=rev["slots"]["main"]["content"])
+    if revid is not None and (pt.revid != revid or pt.title != title):
+        raise LookupError(f"asked for {title} @ {revid}, got {pt.title} @ {pt.revid}")
     cp.write_text(json.dumps(asdict(pt), ensure_ascii=False), encoding="utf-8")
     return pt

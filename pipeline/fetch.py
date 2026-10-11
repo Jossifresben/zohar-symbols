@@ -3,6 +3,7 @@
 import argparse
 import csv
 import json
+import shutil
 from collections import Counter
 from statistics import median
 from dataclasses import asdict
@@ -101,15 +102,47 @@ def report_rows(out: dict) -> list[tuple[str, object]]:
     return rows
 
 
+LOCKFILE = ROOT / "seeds" / "wikisource_revisions.json"
+
+
+def load_lock(path: Path) -> dict[str, int]:
+    return json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+
+
+def write_lock(path: Path, lock: dict[str, int]) -> None:
+    path.write_text(json.dumps(dict(sorted(lock.items())), ensure_ascii=False, indent=1) + "\n",
+                    encoding="utf-8")
+
+
+def fetch_locked(titles: list[str], cache_dir: Path, lock_path: Path, refetch: bool = False,
+                 session=None) -> list[PageText]:
+    """Fetch each title at its locked revision. A title missing from the lockfile is fetched at its
+    latest revision and added. refetch clears the cache and re-locks every title to its latest."""
+    old = load_lock(lock_path)
+    if refetch:
+        shutil.rmtree(cache_dir, ignore_errors=True)
+    lock = {k: v for k, v in old.items() if k not in titles} if refetch else dict(old)
+    out = []
+    for t in titles:
+        pt = fetch_page(t, cache_dir, session=session, revid=lock.get(t))
+        lock[t] = pt.revid
+        out.append(pt)
+    if lock != old:
+        write_lock(lock_path, lock)
+    return out
+
+
 def main(argv=None) -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--only", type=int, default=None, help="fetch only the first N parasha pages")
+    ap.add_argument("--refetch", action="store_true",
+                    help="clear the cache and lock every page to its latest revision")
     args = ap.parse_args(argv)
     rows = load_parashot(ROOT / "seeds" / "parashot.tsv")
     if args.only:
         rows = rows[:args.only]
-    pages = [(r["page_title"], r["volume"], r["parasha"], fetch_page(r["page_title"], RAW / "cache"))
-             for r in rows]
+    texts = fetch_locked([r["page_title"] for r in rows], RAW / "cache", LOCKFILE, args.refetch)
+    pages = [(r["page_title"], r["volume"], r["parasha"], pt) for r, pt in zip(rows, texts)]
     out = build_raw(pages)
     RAW.mkdir(exist_ok=True)
     (RAW / f"zohar.v{TABLES_VERSION}.json").write_text(json.dumps(out, ensure_ascii=False), encoding="utf-8")
