@@ -69,3 +69,9 @@ def test_logo_and_favicon_served(client):
     for f in ("logo.svg", "favicon.svg"):
         r = client.get(f"/static/{f}")
         assert r.status_code == 200 and b"<svg" in r.data
+
+
+def test_footer_has_author_orcid(client):
+    for path, by in (("/", "By Jose Fresco Benaim"), ("/es/", "Por Jose Fresco Benaim")):
+        html = client.get(path).get_data(as_text=True)
+        assert by in html and 'href="https://orcid.org/0009-0000-2026-0836"' in html

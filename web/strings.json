@@ -926,5 +926,9 @@
   "src_added": {
     "en": "this project's assignment",
     "es": "asignación de este proyecto"
+  },
+  "footer_author": {
+    "en": "By Jose Fresco Benaim",
+    "es": "Por Jose Fresco Benaim"
   }
 }
