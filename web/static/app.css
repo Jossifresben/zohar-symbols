@@ -7,7 +7,6 @@ a:hover{text-decoration:underline}
 .display{font-family:'Cormorant Garamond',serif}
 :root{--heb-font:'Frank Ruhl Libre',serif}
 html[data-hebfont="rashi"]{--heb-font:'Noto Rashi Hebrew','Frank Ruhl Libre',serif}
-html[data-hebfont="sans"]{--heb-font:'Noto Sans Hebrew','Source Sans 3',sans-serif}
 .heb{font-family:var(--heb-font);direction:rtl}
 .wm-heb{font-family:'Frank Ruhl Libre',serif}
 .font-pick select{min-height:44px;background:var(--ground);color:var(--muted);border:1px solid var(--border);border-radius:6px;padding:4px 8px;font:inherit;font-size:13px}

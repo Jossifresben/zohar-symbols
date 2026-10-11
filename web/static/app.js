@@ -38,7 +38,7 @@
   var sel = document.getElementById('hebfont');
   if (!sel) return;
   sel.parentElement.hidden = false;
-  sel.value = document.documentElement.dataset.hebfont || 'frank';
+  sel.value = document.documentElement.dataset.hebfont === 'rashi' ? 'rashi' : 'frank';
   sel.addEventListener('change', function () {
     var v = sel.value;
     if (v === 'frank') { delete document.documentElement.dataset.hebfont; } else { document.documentElement.dataset.hebfont = v; }

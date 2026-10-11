@@ -942,5 +942,9 @@
   "font_label": {
     "en": "Hebrew font",
     "es": "Letra hebrea"
+  },
+  "font_standard": {
+    "en": "Standard",
+    "es": "Estándar"
   }
 }
