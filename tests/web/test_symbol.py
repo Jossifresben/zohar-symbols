@@ -72,14 +72,15 @@ def test_symbol_page_es_has_no_english_ui(client):
     assert "Aparece junto a" in html and "Léelo" in html
 
 
-def test_symbol_links_resolve(client):
+def test_symbol_links_resolve(app):
+    client = app.test_client()
     for prefix in ("", "/es"):
         html = client.get(f"{prefix}/symbol/moon").get_data(as_text=True)
         hrefs = set(re.findall(r'href="(/[^"#]*)', html))
         for h in hrefs:
             if h.startswith("/static/"):
                 continue
-            assert client.get(h).status_code == 200, h
+            assert app.test_client().get(h).status_code == 200, h
 
 
 def test_partners_return_node(app):
