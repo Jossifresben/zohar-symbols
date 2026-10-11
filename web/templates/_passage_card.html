@@ -1,6 +1,6 @@
 <article class="card passage-card">
   <header class="pc-head">
-    <a class="pc-cite" href="{{ lang_url('passage', pid=p.id) }}">{{ p.citation }}</a>
+    <a class="pc-cite" href="{{ passage_url(p.id) }}">{{ p.citation }}</a>
     {%- if p.parasha %} <span class="muted">· {{ p.parasha }}</span>{% endif %}
     {%- if p.stream != 'main' %} <span class="muted">· {{ t('stream_' ~ p.stream) }}</span>{% endif %}
   </header>

@@ -122,6 +122,33 @@ def folio(volume: int, fol: int, side: str, lang: str) -> list[dict]:
     return [passage(pid, lang) for pid in ids]
 
 
+def folio_neighbours(volume: int, fol: int, side: str) -> tuple[str | None, str | None]:
+    """First passage id of the previous / next folio-side that exists (the data has gaps), ordered (volume, folio, side)."""
+    cur = (volume, fol, side)
+    sides = rows("select volume, folio, side, min(para) as para from passage group by volume, folio, side order by volume, folio, side")
+    prev = nxt = None
+    for r in sides:
+        key = (r["volume"], r["folio"], r["side"])
+        if key < cur:
+            prev = r
+        elif key > cur and nxt is None:
+            nxt = r
+    def pid(r):
+        if not r:
+            return None
+        return one("select id from passage where volume=? and folio=? and side=? and para=? order by id limit 1",
+                   (r["volume"], r["folio"], r["side"], r["para"]))["id"]
+    return pid(prev), pid(nxt)
+
+
+def folio_symbols(volume: int, fol: int, side: str, lang: str) -> list[dict]:
+    """Distinct symbols mentioned on a folio-side, by passage count then id (display-only, no sizes)."""
+    return [dict(id=r["id"], kind=r["kind"], label=_lab(r, lang), label_ar=r["label_ar"], size=16) for r in rows(
+        """select s.id, s.kind, s.label_en, s.label_es, s.label_ar, count(distinct m.passage_id) n from mention m
+           join passage p on p.id=m.passage_id join symbol s on s.id=m.symbol_id
+           where p.volume=? and p.folio=? and p.side=? group by s.id order by n desc, s.id""", (volume, fol, side))]
+
+
 def node(nid: str, lang: str) -> dict | None:
     if nid not in NODE_ORDER:
         return None

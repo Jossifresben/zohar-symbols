@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% from "_chips.html" import chips %}
+{% block title %}{{ p.citation }} · Zohar{% endblock %}
+{% block content %}
+<section class="pg-head">
+  <h1 class="display">{{ p.citation }}</h1>
+  <p class="muted">
+    {%- if p.parasha %}{{ p.parasha }}{% endif %}
+    {%- if p.stream != 'main' %} · {{ t('stream_' ~ p.stream) }}{% endif %}
+    {%- if p.stratum not in ('main', p.stream) %} · {{ t('stratum_' ~ p.stratum) }}{% endif %}
+    {%- if p.verse_ref %} · {{ t('on_verse', ref=p.verse_ref) }}{% endif %}
+  </p>
+</section>
+
+<section class="folio">
+  {%- set ns = namespace(seen=[]) %}
+  {%- for q in paras %}
+  {%- if q.stream != 'main' and q.stream not in ns.seen %}
+  {%- set ns.seen = ns.seen + [q.stream] %}
+  <h2 class="stream-h label">{{ t('stream_' ~ q.stream) }}</h2>
+  {%- endif %}
+  <article class="para{% if q.id == p.id %} focus{% endif %}" id="p{{ q.para }}">
+    <p class="heb pc-ar" lang="arc" dir="rtl">{{ q.text_ar|highlight(q.mentions) }}</p>
+    {%- if q.id == p.id %}
+    {%- if q.translation %}
+    <p class="pc-tr" lang="{{ lang }}">{{ q.translation }}</p>
+    <p class="attribution muted">{{ t('translated_by', model=q.translation_model) }}</p>
+    {%- else %}
+    <p class="pc-tr"><span class="muted">{{ t('not_translated') }}</span></p>
+    {%- endif %}
+    {%- endif %}
+  </article>
+  {%- endfor %}
+</section>
+
+<section class="folio-symbols">
+  <h2 class="label">{{ t('symbols_in_folio') }}</h2>
+  {{ chips(dict(chips=symbols, more=0, node=None)) }}
+</section>
+
+<nav class="folio-nav">
+  {%- if nb.prev %}<a class="prev" rel="prev" href="{{ passage_url(nb.prev.id) }}">← {{ t('previous') }} · {{ nb.prev.citation }}</a>{% endif %}
+  {%- if nb.next %}<a class="next" rel="next" href="{{ passage_url(nb.next.id) }}">{{ t('next') }} · {{ nb.next.citation }} →</a>{% endif %}
+</nav>
+{% endblock %}

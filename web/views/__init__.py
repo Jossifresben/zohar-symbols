@@ -69,6 +69,12 @@ def register(app) -> None:
 
     with app.app_context():
         row = db.one("select id from passage order by volume, folio, side, para limit 1")
+    def passage_url(pid: str) -> str:
+        """Passage page URL scrolled to the paragraph (`#p<para>`); pid is `v.FFFs.PPP`."""
+        para = int(pid.rsplit(".", 1)[-1])
+        return url_for(("site_es." if g.get("lang") == "es" else "site.") + "passage", pid=pid) + f"#p{para}"
+
+    app.jinja_env.globals["passage_url"] = passage_url
     app.jinja_env.globals["first_passage_id"] = row["id"] if row else ""
 
     @app.before_request
@@ -77,6 +83,8 @@ def register(app) -> None:
 
     @app.errorhandler(404)
     def _not_found(_e):
+        if "/passage/" in request.path:
+            return render_template("404.html", message="passage_not_found", suggestions=[]), 404
         if "/sefirah/" in request.path:
             return render_template("404_node.html", node_ids=queries.NODE_ORDER), 404
         q = request.path.rstrip("/").rsplit("/", 1)[-1]

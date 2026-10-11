@@ -558,5 +558,25 @@
   "tree_aria": {
     "en": "Tree of Life diagram: ten sefirot joined by twenty-two paths",
     "es": "Diagrama del Árbol de la Vida: diez sefirot unidas por veintidós senderos"
+  },
+  "on_verse": {
+    "en": "On {ref}",
+    "es": "Sobre {ref}"
+  },
+  "symbols_in_folio": {
+    "en": "Symbols in this folio",
+    "es": "Símbolos en este folio"
+  },
+  "previous": {
+    "en": "Previous",
+    "es": "Anterior"
+  },
+  "next": {
+    "en": "Next",
+    "es": "Siguiente"
+  },
+  "passage_not_found": {
+    "en": "No such passage.",
+    "es": "Ese pasaje no existe."
   }
 }

@@ -6,7 +6,7 @@ def test_symbol_page_moon(client):
     assert "Moon" in html and "סיהרא" in html
     assert 'href="/symbol/sun"' in html            # top partner bar
     assert "full" in html and "diminished" in html  # declared states
-    assert 'href="/passage/1.020b.001"' in html     # surfaced card
+    assert 'href="/passage/1.020b.001#p1"' in html     # surfaced card
     assert "not yet translated" in html.lower() or "sin traducir" in html.lower()
 
 
@@ -60,7 +60,7 @@ def test_evidence_bar_widths_are_integers(client):
 
 def test_stream_label_on_raaya_card(client):
     html = client.get("/symbol/moon").get_data(as_text=True)
-    card = html.split('href="/passage/1.020b.003"')[1].split("</article>")[0]
+    card = html.split('href="/passage/1.020b.003#p3"')[1].split("</article>")[0]
     assert "Ra&#39;aya Meheimna" in card or "Ra'aya Meheimna" in card
 
 
