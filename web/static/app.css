@@ -141,6 +141,8 @@ a.bar-row:hover{text-decoration:none}a.bar-row:hover .bar-label{color:var(--gold
 .stream-h{margin:24px 0 8px}
 .folio-symbols{margin-top:32px}
 .folio-nav{display:flex;justify-content:space-between;gap:16px;margin:32px 0}
+.folio-nav-top{margin:0 0 20px;font-size:14px}
+.folio-nav .next{margin-left:auto}
 
 /* scholars / about */
 .card pre{white-space:pre-wrap;background:var(--bg,transparent);border:1px solid var(--border);border-radius:6px;padding:12px;overflow-x:auto}

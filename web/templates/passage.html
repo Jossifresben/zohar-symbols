@@ -2,6 +2,13 @@
 {% from "_chips.html" import chips %}
 {% block title %}{{ p.citation }} · Zohar{% endblock %}
 {% block content %}
+{% macro folio_nav(pos) %}
+<nav class="folio-nav folio-nav-{{ pos }}" aria-label="{{ t('nav_folio') }}{% if pos == 'top' %} ({{ t('nav_top') }}){% endif %}">
+  {%- if nb.prev %}<a class="prev" rel="prev" href="{{ passage_url(nb.prev.id) }}">← {{ t('previous') }} · {{ nb.prev.citation }}</a>{% endif %}
+  {%- if nb.next %}<a class="next" rel="next" href="{{ passage_url(nb.next.id) }}">{{ t('next') }} · {{ nb.next.citation }} →</a>{% endif %}
+</nav>
+{% endmacro %}
+{{ folio_nav('top') }}
 <section class="pg-head">
   <h1 class="display">{{ p.citation }}</h1>
   <p class="muted">
@@ -38,8 +45,5 @@
   {{ chips(dict(chips=symbols, more=0, node=None)) }}
 </section>
 
-<nav class="folio-nav" aria-label="{{ t('nav_folio') }}">
-  {%- if nb.prev %}<a class="prev" rel="prev" href="{{ passage_url(nb.prev.id) }}">← {{ t('previous') }} · {{ nb.prev.citation }}</a>{% endif %}
-  {%- if nb.next %}<a class="next" rel="next" href="{{ passage_url(nb.next.id) }}">{{ t('next') }} · {{ nb.next.citation }} →</a>{% endif %}
-</nav>
+{{ folio_nav('bottom') }}
 {% endblock %}

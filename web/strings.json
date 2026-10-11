@@ -870,5 +870,9 @@
   "home_method_link": {
     "en": "Where do these numbers come from?",
     "es": "¿De dónde salen estas cifras?"
+  },
+  "nav_top": {
+    "en": "top",
+    "es": "arriba"
   }
 }

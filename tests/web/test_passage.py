@@ -97,3 +97,11 @@ def test_passage_page_headings_include_main(client):
     assert html.count('class="stream-h label"') >= 2
     assert ">Main text<" in html and ">Ra&#39;aya Meheimna<" in html or ">Ra'aya Meheimna<" in html
     assert ">Texto principal<" in client.get("/es/passage/1.020b.002").get_data(as_text=True)
+
+
+def test_folio_nav_at_top_and_bottom(client):
+    html = client.get("/passage/1.020b.002").get_data(as_text=True)
+    assert html.count('class="folio-nav folio-nav-top"') == 1
+    assert html.count('class="folio-nav folio-nav-bottom"') == 1
+    top = html.index("folio-nav-top"); first_para = html.index('class="para')
+    assert top < first_para

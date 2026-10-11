@@ -41,7 +41,8 @@ def test_a11y_headings_and_nav_labels(app):
     html = app.test_client().get("/nope").get_data(as_text=True)
     assert '<a href="/">Back to the home page</a>' in html
     html = app.test_client().get("/passage/1.020b.002").get_data(as_text=True)
-    assert '<nav class="folio-nav" aria-label="Folio navigation"' in html
+    assert '<nav class="folio-nav folio-nav-top" aria-label="Folio navigation (top)"' in html
+    assert '<nav class="folio-nav folio-nav-bottom" aria-label="Folio navigation"' in html
 
 
 def test_tree_hebrew_text_is_tagged(app):
