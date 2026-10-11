@@ -35,13 +35,20 @@
 
 // Hebrew font picker: hidden without JS; the choice lives in localStorage (a per-reader convenience).
 (function () {
-  var sel = document.getElementById('hebfont');
-  if (!sel) return;
-  sel.parentElement.hidden = false;
-  sel.value = document.documentElement.dataset.hebfont === 'rashi' ? 'rashi' : 'frank';
-  sel.addEventListener('change', function () {
-    var v = sel.value;
-    if (v === 'frank') { delete document.documentElement.dataset.hebfont; } else { document.documentElement.dataset.hebfont = v; }
-    try { localStorage.setItem('hebfont', v); } catch (e) {}
+  var group = document.querySelector('.font-pick');
+  if (!group) return;
+  var buttons = group.querySelectorAll('button[data-font]');
+  group.hidden = false;
+  function show(v) {
+    buttons.forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.font === v ? 'true' : 'false'); });
+  }
+  show(document.documentElement.dataset.hebfont === 'rashi' ? 'rashi' : 'frank');
+  buttons.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var v = b.dataset.font;
+      if (v === 'rashi') { document.documentElement.dataset.hebfont = 'rashi'; } else { delete document.documentElement.dataset.hebfont; }
+      show(v);
+      try { localStorage.setItem('hebfont', v); } catch (e) {}
+    });
   });
 })();

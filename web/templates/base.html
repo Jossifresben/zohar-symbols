@@ -30,12 +30,10 @@
     <a class="lang-btn{% if lang == 'en' %} active{% endif %}" href="{{ switch_url('en') }}" hreflang="en">{{ t('lang_en') }}</a>
     <a class="lang-btn{% if lang == 'es' %} active{% endif %}" href="{{ switch_url('es') }}" hreflang="es">{{ t('lang_es') }}</a>
   </div>
-  <label class="font-pick" hidden><span class="sr-only">{{ t('font_label') }}</span>
-    <select id="hebfont" title="{{ t('font_label') }}">
-      <option value="frank">א · {{ t('font_standard') }}</option>
-      <option value="rashi">א · Rashi</option>
-    </select>
-  </label>
+  <div class="lang-switch font-pick" role="group" aria-label="{{ t('font_label') }}" hidden>
+    <button type="button" class="lang-btn" data-font="frank" aria-pressed="true"><span class="fp-alef fp-frank" lang="he">א</span>{{ t('font_standard') }}</button>
+    <button type="button" class="lang-btn" data-font="rashi" aria-pressed="false"><span class="fp-alef fp-rashi" lang="he">א</span>Rashi</button>
+  </div>
 </header>
 <main>
 {% block content %}{% endblock %}

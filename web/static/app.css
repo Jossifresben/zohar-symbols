@@ -9,7 +9,9 @@ a:hover{text-decoration:underline}
 html[data-hebfont="rashi"]{--heb-font:'Noto Rashi Hebrew','Frank Ruhl Libre',serif}
 .heb{font-family:var(--heb-font);direction:rtl}
 .wm-heb{font-family:'Frank Ruhl Libre',serif}
-.font-pick select{min-height:44px;background:var(--ground);color:var(--muted);border:1px solid var(--border);border-radius:6px;padding:4px 8px;font:inherit;font-size:13px}
+.font-pick .lang-btn{background:none;border:0;cursor:pointer;font:inherit;font-size:13px;gap:6px}
+.font-pick .lang-btn[aria-pressed="true"]{background:var(--surface);color:var(--gold)}
+.fp-alef{font-size:18px;line-height:1}.fp-frank{font-family:'Frank Ruhl Libre',serif}.fp-rashi{font-family:'Noto Rashi Hebrew',serif}
 .site-header{display:flex;align-items:center;gap:32px;padding:16px 32px;border-bottom:1px solid var(--border);flex-wrap:wrap}
 .wordmark{display:flex;align-items:center;gap:10px;color:var(--text)}
 .wm-mark{display:block;flex:none}
