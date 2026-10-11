@@ -101,3 +101,26 @@ def test_unclosed_variant_raises():
     with pytest.raises(SegmentError) as e:
         _seg(_sec('א (נ"א ב\n\nג) ד'))
     assert "variant" in str(e.value)
+
+
+def test_small_wrapped_variant_reading_is_dropped():
+    wt = '<קטע התחלה=דף א ב/>\nאמר ואמר (<small>נ"א, ומה אדמה לך</small>), בכל יומא.\n<קטע סוף=דף א ב/>\n'
+    [p] = segment_page(wt, 1, "X", "t")
+    assert "נ\"א" not in p.text_ar and "בכל יומא" in p.text_ar
+
+
+def test_overlay_sections_are_ignored_and_stripped():
+    wt = ('<קטע התחלה=דף א א/>\n<קטע התחלה=בראשית א א/>\nטקסט\n<קטע סוף=בראשית א א/>\n'
+          '<קטע התחלה=שבועות 1/>עוד<קטע סוף=שבועות 1/>\n<קטע סוף=דף א א/>\n')
+    [p] = segment_page(wt, 1, "X", "t")
+    assert "קטע" not in p.text_ar and "טקסט" in p.text_ar
+
+
+def test_stray_duplicate_start_tag_only_for_listed_label():
+    wt = '<קטע התחלה=דף א א/>\n==כותרת==\n<קטע התחלה=דף א א/>טקסט\n<קטע סוף=דף א א/>\n'
+    import pytest
+    from pipeline.segment import SegmentError
+    with pytest.raises(SegmentError):
+        segment_page(wt, 1, "X", "t")
+    [p] = segment_page(wt, 1, "X", "זוהר חלק א")
+    assert p.text_ar == "טקסט"

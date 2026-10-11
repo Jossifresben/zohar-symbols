@@ -10,12 +10,16 @@ BOOKS = {"בראשית": "Genesis", "שמות": "Exodus", "ויקרא": "Levitic
 _NUM = r"([א-ת\"׳״]+)"
 _START = re.compile(r"<\s*קטע\s+התחלה\s*=\s*דף\s+" + _NUM + r"\s+([אב])\s*/\s*>")
 _END = re.compile(r"<\s*קטע\s+סוף\s*=\s*דף\s+" + _NUM + r"\s+([אב])\s*/\s*>")
-_RAW_START = re.compile(r"<\s*קטע\s+התחלה\s*=")
+# Folio sections only: the page also carries overlay sections (e.g. "שבועות 1",
+# "בראשית א א") that mark verses/readings, not Mantua folios.
+_RAW_START = re.compile(r"<\s*קטע\s+התחלה\s*=\s*דף")
+_SECTION_TAG = re.compile(r"<\s*קטע\s+(?:התחלה|סוף)\s*=[^>]*/>")
 _MM = re.compile(r"\{\{ממ\|([^|}]+)\|([א-ת]+)(?:\|([א-ת]+))?\}\}")
 _TZ = re.compile(r"\{\{צ\|([^|{}]*)(?:\|[^{}]*)?\}\}")
 _SHIN = re.compile(r"\{\{ש\}\}")
 _ANY_TEMPLATE = re.compile(r"\{\{[^{}]*\}\}")
-_VARIANT_OPEN = r"\((?:נ\"א|ס\"א|נ״א|ס״א)"
+# Real markup also wraps the reading: (<small>נ"א, ...</small>)
+_VARIANT_OPEN = r"\((?:<small>\s*)?(?:נ\"א|ס\"א|נ״א|ס״א)"
 # Known limit: a variant reading containing nested parentheses is not handled.
 _VARIANT = re.compile(_VARIANT_OPEN + r"[^)\n]*\)")
 _VARIANT_LEFT = re.compile(_VARIANT_OPEN)
@@ -26,6 +30,11 @@ _LINK = re.compile(r"\[\[(?:[^\]|]*\|)?([^\]]*)\]\]")
 _TAG = re.compile(r"</?(?:small|big|br|ref|span|div)[^>]*>")
 _BOLD = re.compile(r"'''?")
 _WS = re.compile(r"[ \t]+")
+
+
+# One-off Wikisource typos: (page_title, label) whose start tag is duplicated
+# (a stray tag before the heading, then the real one). The stray tag is skipped.
+_LABEL_FIXES = {("זוהר חלק א", "א א")}
 
 
 class SegmentError(Exception):
@@ -62,6 +71,7 @@ def _verse_ref(block: str) -> str | None:
 def clean_wikitext(s: str) -> str:
     s = _COMMENT.sub("", s)
     s = _REF.sub("", s)
+    s = _SECTION_TAG.sub("", s)
     s = _VARIANT.sub("", s)
     s = _TZ.sub(lambda m: m.group(1), s)
     s = _SHIN.sub("\n\n", s)
@@ -109,6 +119,11 @@ def segment_page(wikitext: str, volume: int, parasha: str, page_title: str) -> l
         label = f"{m.group(1)} {m.group(2)}"
         e = _END.search(wikitext, m.end())
         nxt = _START.search(wikitext, m.end())
+        if (e and nxt and nxt.start() < e.start() and (page_title, label) in _LABEL_FIXES
+                and (nxt.group(1), nxt.group(2)) == (m.group(1), m.group(2))):
+            n_matched += 1  # stray duplicate start tag: accounted for, then skipped
+            pos = nxt.start()
+            continue
         if not e or (nxt and nxt.start() < e.start()):
             raise SegmentError(page_title, label, "unclosed section")
         if (e.group(1), e.group(2)) != (m.group(1), m.group(2)):
