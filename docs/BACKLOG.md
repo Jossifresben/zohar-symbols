@@ -8,7 +8,8 @@ A plain-language EN/ES interpretation under each translated passage, 120–200 w
 
 - **Built:** `pipeline/commentary.py` caches the Sefaria text (public domain, Hebrew) of Ohr HaChamah and Mikdash Melekh for the folio-sides of the translated passages under `work/commentary/` (not committed, not displayed). 471 of the 678 translated passages have commentary on their folio-side (Ohr HaChamah 344 of 422 folio-sides, Mikdash Melekh 294). `pipeline/interpret.py` (prompt `i1`) builds one request per passage returning both languages.
 - **Pilot done:** 10 passages, each in two variants (commentary as unseen background vs. without), $1.31. Blind A/B page: `work/interpret/pilot_review.html` (rebuild with `python -m pipeline.interpret review pilot`); the key is `work/interpret/pilot_key.json`. All 20 well-formed; no later-Kabbalah terms, no commentator names. Length ran 201–238 words: tighten in `i2`.
-- **Next:** Jossi reviews the pilot (blind), picks a variant → tighten the prompt → full run (about $49 grounded-where-available, $32 plain) → export to `data/interpretations.v*.jsonl` with the translations' provenance and staleness check → `interpretation` table → section under the translation on the passage page.
+- **Review (2026-10-11):** Jossi chose A; A was grounded in 7 of 10 (plain in 3). Weak signal (possible position bias): the variants are close. Decision: grounded where commentary exists, plain otherwise.
+- **Next:** tighten the prompt → full run (about $49 grounded-where-available, $32 plain) → export to `data/interpretations.v*.jsonl` with the translations' provenance and staleness check → `interpretation` table → section under the translation on the passage page.
 - **Budget:** needs about $60 of API headroom (org monthly spend limit, Console → Billing).
 
 ## Text and segmentation
