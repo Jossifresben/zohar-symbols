@@ -1,0 +1,140 @@
+id	label_en	label_es	label_ar	kind	node	aliases_surface	aliases_root	states	seed_source
+ein_sof	Ein Sof	Ein Sof	אין סוף	quality	ein_sof	אין סוף;אינסוף			added
+atika_kadisha	Holy Ancient One	Anciano Santo	עתיקא קדישא	person	keter	עתיקא קדישא;עתיקא;עתיק יומין;עתיקא דעתיקין;עתיקא דכל עתיקין			zohar_usage
+arikh_anpin	Long Face	Rostro Largo	אריך אנפין	person	keter	אריך אנפין;אריכא דאנפין;אריך אפין			zohar_usage
+skull	Skull	Cráneo	גלגלתא	object	keter	גלגלתא;גולגלתא;גלגלתא חוורא			zohar_usage
+hidden_brain	Hidden Brain	Cerebro oculto	מוחא סתימאה	object	keter	מוחא סתימאה;מוחא סתימא;מוחא			zohar_usage
+forehead	Forehead	Frente	מצחא	object	keter	מצחא;מצח;מצחין;מצחא דרעוא;רעוא דרעוין			zohar_usage
+beard	Beard	Barba	דיקנא	object	keter	דיקנא;דקנא;דיקנא קדישא			zohar_usage
+beard_tikkunim	Thirteen Tikkunim of the Beard	Trece tikunim de la barba	תליסר תקונין	object	keter	תליסר תקונין;תליסר תקוני דיקנא;תלת עשר תקונין;תליסר תקונוי			zohar_usage
+supernal_point	Supernal Point	Punto supremo	נקודה עלאה	object	keter	נקודה עלאה;נקודא עלאה;נקודה חדא עלאה			zohar_usage
+ayin	Nothingness	La Nada	אין	quality	keter	מאין;אַיִן			gikatilla
+abba	Father	Padre	אבא	person	hokhmah	אבא;אבא עלאה			zohar_usage
+point	Point	Punto	נקודה	object	hokhmah	נקודה;נקודא;נקודה חדא			zohar_usage
+reshit	Beginning	Principio	ראשית	quality	hokhmah	ראשית;שירותא			cordovero_23
+primordial_light	Primordial Light	Luz primordial	נהורא קדמאה	object	hokhmah	נהורא קדמאה;אור הגנוז;אור גנוז;אור הראשון;נהורא גניזא;אור קדמאה			zohar_usage
+hidden_eden	Hidden Eden	Edén oculto	עדן	object	hokhmah	עדן;עדן עלאה;עדן עלאה סתימאה			zohar_usage
+seed	Seed	Simiente	זרעא	object	hokhmah	זרעא;זרע			zohar_usage
+thought	Thought	Pensamiento	מחשבה	quality	hokhmah	מחשבה;מחשבתא;מחשבה עלאה;מחשבה סתימאה			cordovero_23
+imma	Mother	Madre	אימא	person	binah	אימא;אמא;אימא עלאה;אם הבנים			zohar_usage
+river	River	Río	נהר	object	binah	נהרא;נהר			cordovero_23
+river_from_eden	River from Eden	Río que sale del Edén	נהר יוצא מעדן	object	binah	נהר יוצא מעדן;נהרא דנפיק מעדן;נהרא דנגיד;נהרא דנפיק			cordovero_23
+womb	Womb	Vientre	רחמא	object	binah	רחמא;רחם;מעהא			zohar_usage
+palace	Palace	Palacio	היכלא	object	binah	היכלא;היכל;היכלין			zohar_usage
+fifty_gates	Fifty Gates	Cincuenta puertas	חמשין תרעין	object	binah	חמשין תרעין;נ׳ תרעין;חמשים שערי;נ׳ שערי;חמשין תרעי;חמשים שערים			cordovero_23
+teshuvah	Return	Retorno	תשובה	quality	binah	תשובה;תיובתא			cordovero_23
+upper_sea	Upper Sea	Mar superior	ימא עלאה	object	binah	ימא עלאה			gikatilla
+jubilee	Jubilee	Jubileo	יובלא	object	binah	יובלא;יובל			cordovero_23
+leah	Leah	Lea	לאה	person	binah	לאה			zohar_usage
+upper_shekhinah	Upper Shekhinah	Shejiná superior	שכינתא עלאה	person	binah	שכינתא עלאה;שכינה עלאה			zohar_usage
+heart	Heart	Corazón	לבא	object	binah	לבא;ליבא;לב			cordovero_23
+world_to_come	World to Come	Mundo venidero	עלמא דאתי	object	binah	עלמא דאתי;העולם הבא;עולם הבא			cordovero_23
+upper_world	Upper World	Mundo superior	עלמא עלאה	object	binah	עלמא עלאה;עלמין עלאין			added
+right	Right	Derecha	ימינא	quality	hesed	ימינא			cordovero_23
+right_arm	Right Arm	Brazo derecho	דרועא ימינא	object	hesed	דרועא ימינא;דרועא דימינא;דרוע ימינא			zohar_usage
+abraham	Abraham	Abraham	אברהם	person	hesed	אברהם;אברם			cordovero_23
+water	Water	Agua	מיא	object	hesed	מיא;מים;מיין			cordovero_23
+white	White	Blanco	חוורא	quality	hesed	חוורא;חוור;חוורתא;לבן			cordovero_23
+silver	Silver	Plata	כספא	object	hesed	כספא;כסף			cordovero_23
+milk	Milk	Leche	חלבא	object	hesed	חלבא;חלב			cordovero_23
+south	South	Sur	דרומא	quality	hesed	דרומא;דרום			cordovero_23
+morning	Morning	Mañana	צפרא	quality	hesed	צפרא;בקר;בוקר			cordovero_23
+priest	Priest	Sacerdote	כהנא	person	hesed	כהנא;כהן;כהנא רבא;כהן גדול			cordovero_23
+love	Love	Amor	רחימותא	quality	hesed	רחימותא;רחימו;אהבה			added
+left	Left	Izquierda	שמאלא	quality	gevurah	שמאלא			cordovero_23
+left_arm	Left Arm	Brazo izquierdo	דרועא שמאלא	object	gevurah	דרועא שמאלא;דרועא דשמאלא;דרוע שמאלא			zohar_usage
+isaac	Isaac	Isaac	יצחק	person	gevurah	יצחק			cordovero_23
+fear_of_isaac	Fear of Isaac	Temor de Isaac	פחד יצחק	quality	gevurah	פחד יצחק;דחילו;יראה			added
+fire	Fire	Fuego	אשא	object	gevurah	אשא;נורא;אש			cordovero_23
+red	Red	Rojo	סומקא	quality	gevurah	סומקא;סומק;סומקתא			cordovero_23
+gold	Gold	Oro	דהבא	object	gevurah	דהבא;זהב			cordovero_23
+wine	Wine	Vino	חמרא	object	gevurah	חמרא;יינא;יין;יין המשומר			cordovero_23
+north	North	Norte	צפונא	quality	gevurah	צפונא;צפון			cordovero_23
+din	Judgement	Juicio	דינא	quality	gevurah	דינא;דינין;דינא קשיא;דינא תקיפא			cordovero_23
+sword	Sword	Espada	חרבא	object	gevurah	חרבא;חרב			zohar_usage
+night_gevurah	Night (Gevurah)	Noche (Guevurá)	ליליא	quality	gevurah	ליליא;לילה			cordovero_23
+king	King	Rey	מלכא	person	tiferet	מלכא			zohar_usage
+holy_one	Holy One blessed be He	El Santo, bendito sea	קודשא בריך הוא	person	tiferet	קודשא בריך הוא;קב״ה;הקב״ה;הקדוש ברוך הוא			zohar_usage
+sun	Sun	Sol	שמשא	object	tiferet	שמשא			cordovero_23
+jacob	Jacob / Israel	Jacob / Israel	יעקב	person	tiferet	יעקב;ישראל;ישראל סבא			cordovero_23
+written_torah	Written Torah	Torá escrita	אורייתא דבכתב	object	tiferet	אורייתא דבכתב;תורה שבכתב;אורייתא			cordovero_23
+tree_of_life	Tree of Life	Árbol de la Vida	אילנא דחיי	object	tiferet	אילנא דחיי;עץ החיים;עץ חיים;אילנא רברבא			cordovero_23
+middle_pillar	Middle Pillar	Pilar central	עמודא דאמצעיתא	object	tiferet	עמודא דאמצעיתא;עמודא באמצעיתא;עמודא דאמצעי;קו האמצעי			zohar_usage
+body	Body	Cuerpo	גופא	object	tiferet	גופא;גוף			zohar_usage
+heaven	Heaven	Cielo	שמיא	object	tiferet	שמיא;שמים			cordovero_23
+firmament	Firmament	Firmamento	רקיעא	object	tiferet	רקיעא;רקיע			zohar_usage
+bridegroom	Bridegroom	Novio	חתנא	person	tiferet	חתנא;חתן			zohar_usage
+voice	Voice	Voz	קלא	quality	tiferet	קלא;קול			cordovero_23
+mercy	Mercy	Misericordia	רחמי	quality	tiferet	רחמי;רחמין;רחמים			cordovero_23
+zeir_anpin	Ze'eir Anpin	Zeír Anpín	זעיר אנפין	person	tiferet	זעיר אנפין;זעירא דאנפין;זעיר אפין			zohar_usage
+two_thighs	Two Thighs	Dos muslos	תרין ירכין	object	netzah	תרין ירכין;ירכין;ירכא;תרין שוקין			zohar_usage
+two_pillars	Two Pillars	Dos pilares	תרין עמודין	object	netzah	תרין עמודין;עמודין;יכין ובעז			zohar_usage
+moses	Moses	Moisés	משה	person	netzah	משה;משה רעיא מהימנא			cordovero_23
+aaron	Aaron	Aarón	אהרן	person	hod	אהרן;אהרון			cordovero_23
+two_olives	Two Olives	Dos olivos	תרין זיתים	object	netzah	תרין זיתים;תרין זיתין;שני זיתים;זיתים;זיתא			cordovero_23
+kidneys	Kidneys	Riñones	כוליין	object	netzah	כוליין;כליות;כלייתא			cordovero_23
+tzaddik	Tzaddik	Tzadik	צדיק	person	yesod	צדיק;צדיקא			cordovero_23
+covenant	Covenant	Pacto	ברית	object	yesod	ברית;בריתא;ברית קדישא;קיימא קדישא			cordovero_23
+sign	Sign	Signo	אות	object	yesod	אות;אות ברית;אות קיימא			cordovero_23
+joseph	Joseph	José	יוסף	person	yesod	יוסף;יוסף הצדיק			cordovero_23
+mouth_of_river	Mouth of the River	Boca del río	פומא דנהרא	object	yesod	פומא דנהרא;פי הנהר			zohar_usage
+shalom	Peace	Paz	שלום	quality	yesod	שלום;שלמא			cordovero_23
+end_of_body	End of the Body	Extremo del cuerpo	סיומא דגופא	object	yesod	סיומא דגופא;סיום הגוף;סיומא			zohar_usage
+living_god	Living God	Dios viviente	אל חי	person	yesod	אל חי;חי עלמין;חי העולמים;חי עלמא			cordovero_23
+pillar_of_world	Pillar of the World	Pilar del mundo	עמודא דעלמא	object	yesod	עמודא דעלמא;עמוד עולם;יסוד עולם;יסודא דעלמא			cordovero_23
+rainbow	Rainbow	Arco iris	קשתא	object	yesod	קשתא;קשת			zohar_usage
+matronita	Matronita	Matronita	מטרוניתא	person	malkhut	מטרוניתא		exile:גלו,תרך|union:זוג,חבק,נשק	zohar_usage
+shekhinah	Shekhinah	Shejiná	שכינתא	person	malkhut	שכינתא;שכינה		exile:גלו,תרך|union:זוג,חבק,נשק	zohar_usage
+nukba	Female	Lo Femenino	נוקבא	person	malkhut	נוקבא;נוקביה			added
+knesset_yisrael	Knesset Yisra'el	Knéset Israel	כנסת ישראל	person	malkhut	כנסת ישראל			cordovero_23
+moon	Moon	Luna	סיהרא	object	malkhut	סיהרא;לבנה	סהר	full:שלם,מלא,שבת|diminished:זער,מעט,גלות	cordovero_23
+sea	Sea	Mar	ימא	object	malkhut	ימא;ים			cordovero_23
+apple_orchard	Apple Orchard	Huerto de manzanos	חקל תפוחין	object	malkhut	חקל תפוחין;תפוחין			zohar_usage
+rose	Rose	Rosa	שושנה	object	malkhut	שושנה;שושנא			zohar_usage
+bride	Bride	Novia	כלה	person	malkhut	כלה;כלתא			cordovero_23
+garden	Garden	Jardín	גנתא	object	malkhut	גנתא;גן;גן עדן;גנתא דעדן			cordovero_23
+well	Well	Pozo	בירא	object	malkhut	בירא;באר;בארא			cordovero_23
+lamp	Lamp	Lámpara	שרגא	object	malkhut	שרגא;נר			cordovero_23
+dove	Dove	Paloma	יונה	object	malkhut	יונה;יונתא;יונתי			zohar_usage
+deer	Hind	Cierva	אילתא	object	malkhut	אילתא;איילתא;אילת השחר;אילת אהבים			zohar_usage
+earth	Earth	Tierra	ארעא	object	malkhut	ארעא;ארץ			cordovero_23
+jerusalem	Jerusalem	Jerusalén	ירושלם	object	malkhut	ירושלם;ירושלים			cordovero_23
+zion	Zion	Sion	ציון	object	malkhut	ציון			cordovero_23
+temple	Temple	Templo	מקדשא	object	malkhut	מקדשא;בי מקדשא;בית המקדש;מקדש			cordovero_23
+ark	Ark	Arca	ארונא	object	malkhut	ארונא;ארון			cordovero_23
+sabbath	Sabbath	Sábado	שבת	object	malkhut	שבת;שבתא			cordovero_23
+night_malkhut	Night (Malkhut)	Noche (Maljut)	ליליא	quality	malkhut	ליליא;לילה			cordovero_23
+oral_torah	Oral Torah	Torá oral	אורייתא דבעל פה	object	malkhut	אורייתא דבעל פה;תורה שבעל פה			cordovero_23
+king_david	King David	Rey David	דוד מלכא	person	malkhut	דוד;דוד מלכא;דוד המלך			cordovero_23
+rachel	Rachel	Raquel	רחל	person	malkhut	רחל			zohar_usage
+daughter	Daughter	Hija	ברתא	person	malkhut	ברתא;בת			cordovero_23
+lower_eden	Lower Eden	Edén inferior	עדן תתאה	object	malkhut	עדן תתאה;עדן דלתתא			zohar_usage
+lower_point	Lower Point	Punto inferior	נקודה תתאה	object	malkhut	נקודה תתאה;נקודא תתאה;נקודה לתתא;נקודה דלתתא			zohar_usage
+lower_mother	Lower Mother	Madre inferior	אימא תתאה	person	malkhut	אימא תתאה;אמא תתאה			zohar_usage
+lower_world	Lower World	Mundo inferior	עלמא תתאה	object	malkhut	עלמא תתאה;עלמין תתאין			added
+gate	Gate	Puerta	תרעא	object	malkhut	תרעא;שער;שער השמים			cordovero_23
+field	Field	Campo	חקלא	object	malkhut	חקלא;שדה			zohar_usage
+cloud_of_glory	Cloud of Glory	Nube de gloria	ענני יקר	object	malkhut	ענני יקר;ענן יקר;ענן הכבוד;ענני כבוד;עננא			zohar_usage
+mirror	Mirror that does not shine	Espejo que no brilla	אספקלריא דלא נהרא	object	malkhut	אספקלריא דלא נהרא;אספקלריאה דלא נהרא;אספקלריא שאינה מאירה;אספקלריא דלא נהיר			zohar_usage
+throne	Throne	Trono	כורסיא	object	malkhut	כורסיא;כורסייא;כורסי;כסא			zohar_usage
+crown	Crown	Corona	עטרה	object	malkhut	עטרה;עטרא			cordovero_23
+tree_of_knowledge	Tree of Knowledge	Árbol del Conocimiento	אילנא דטוב ורע	object	malkhut	אילנא דטוב ורע;עץ הדעת;אילנא דמותא			zohar_usage
+serpent	Serpent	Serpiente	חויא	person	sitra_ahra	חויא;נחש			zohar_usage
+sitra_ahra	Other Side	El Otro Lado	סטרא אחרא	quality	sitra_ahra	סטרא אחרא;סטרא אחרא בישא			added
+samael	Samael	Samael	סמאל	person	sitra_ahra	סמאל			zohar_usage
+lilith	Lilith	Lilit	לילית	person	sitra_ahra	לילית			zohar_usage
+kelipah	Shell	Cáscara	קליפה	object	sitra_ahra	קליפה;קליפין;קליפא;קליפות			zohar_usage
+dross_of_gold	Dross of Gold	Escoria del oro	סוספיתא דדהבא	object	sitra_ahra	סוספיתא דדהבא;סוספיתא			zohar_usage
+esau	Esau / Edom	Esaú / Edom	עשו	person	sitra_ahra	עשו;אדום			zohar_usage
+dog	Dog	Perro	כלבא	object	sitra_ahra	כלבא;כלב;כלבין			zohar_usage
+dregs_of_wine	Dregs of Wine	Heces del vino	שמרי חמרא	object	sitra_ahra	שמרי חמרא;דורדייא;דורדיא;שמרים			zohar_usage
+evil_inclination	Evil Inclination	Inclinación al mal	יצר הרע	person	sitra_ahra	יצר הרע;יצרא בישא			added
+coupling	Coupling	Unión	זווגא	event	malkhut	זווגא;זווגין	זוג		zohar_usage
+yihuda	Unification	Unificación	יחודא	event	malkhut	יחודא;יחוד;ייחודא			zohar_usage
+nehora	Light	Luz	נהורא	event	hesed	נהורא;נהורין			zohar_usage
+shefa	Flow	Flujo	שפע	event	yesod	שפע;שפעא	שפע		zohar_usage
+kiss	Kiss	Beso	נשיקה	event	malkhut	נשיקה;נשיקין;נשיקא	נשק		zohar_usage
+embrace	Embrace	Abrazo	חבוקא	event	malkhut	חבוקא;חבוקין;חיבוק	חבק		zohar_usage
+exile	Exile	Exilio	גלותא	event	malkhut	גלותא;גלות			zohar_usage
+feminine_waters	Feminine Waters	Aguas femeninas	מיין נוקבין	event	malkhut	מיין נוקבין;מים נוקבין;מיין נוקבא			zohar_usage
+sweetening	Sweetening of Judgement	Endulzamiento del juicio	בסימו דדינא	event	gevurah	בסימו דדינא;אתבסמו דינין;בסימו	בסם		zohar_usage
