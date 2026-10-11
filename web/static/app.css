@@ -1,4 +1,4 @@
-:root{--ground:#12131C;--surface:#1B1D2A;--border:#2A2C3B;--text:#ECE6D8;--muted:#A39E90;--gold:#D9B36A;--blue:#7FA7C9;--red:#C98A7F;--moon:#E8E4F0}
+:root{--ground:#12131C;--surface:#1B1D2A;--border:#2A2C3B;--text:#ECE6D8;--muted:#A39E90;--gold:#D9B36A;--blue:#7FA7C9;--red:#C98A7F;--moon:#E8E4F0;--red-dim:rgba(201,138,127,.35)}
 *{box-sizing:border-box}
 html{background:var(--ground)}
 body{margin:0;background:var(--ground);color:var(--text);font-family:'Source Sans 3',system-ui,sans-serif;font-size:16px;line-height:1.5}
@@ -63,7 +63,7 @@ main{max-width:1200px;margin:0 auto;padding:32px}
 .cols .col{padding:0 16px}.cols .col:first-child{padding-left:0}
 .cols .col+.col{border-left:1px solid var(--border)}.cols .chips{margin-top:0}
 .cols h3 .heb{font-size:16px}
-.cluster-sitra{border-color:#3A2A2E}.cluster-sitra h2 .heb{color:var(--red)}
+.cluster-sitra{border-color:var(--red-dim)}.cluster-sitra h2 .heb{color:var(--red)}
 .orient-card{color:var(--text)}.orient-card:hover{text-decoration:none;border-color:var(--gold)}
 .orient-card h3{font-size:22px;font-weight:500;margin:0 0 6px}.orient-card p{margin:0;font-size:14px}
 body[data-kind="person"] .chip:not([data-kind="person"]),
@@ -76,3 +76,5 @@ body[data-kind="event"] .chip:not([data-kind="event"]){display:none}
   .cols .col{padding:12px 0}.cols .col+.col{border-left:0;border-top:1px solid var(--border)}
   .hero h1{font-size:32px}
 }
+.chip,.kind-filter button,.search button{min-height:44px;display:inline-flex;align-items:center}
+.kind-filter button[hidden]{display:none}

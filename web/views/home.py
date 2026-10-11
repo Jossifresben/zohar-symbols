@@ -1,6 +1,7 @@
 from flask import g, render_template, request
 
 from .. import queries
+from ..i18n import get_string
 from . import bp
 
 TOP_N = 20
@@ -26,7 +27,8 @@ def build_clusters(lang: str) -> list[dict]:
     out = []
     for key, span, ids, title, blurb in CLUSTERS:
         if key == "events":
-            parts = [dict(node=None, label=None, label_ar=None, chips=events, more=0, total=len(events))]
+            parts = [dict(node=None, label=None, label_ar=None, chips=events[:TOP_N],
+                          more=max(0, len(events) - TOP_N), total=len(events))]
         else:
             parts = []
             for nid in ids:
@@ -38,8 +40,8 @@ def build_clusters(lang: str) -> list[dict]:
     return out
 
 
-def _page(q: str = "", results=None):
-    return render_template("home.html", clusters=build_clusters(g.lang), q=q, results=results)
+def _page(q: str = "", results=None, heading: str | None = None):
+    return render_template("home.html", clusters=build_clusters(g.lang), q=q, results=results, heading=heading)
 
 
 @bp.route("/")
@@ -49,12 +51,10 @@ def home():
 
 @bp.route("/search")
 def search():
+    kind = request.args.get("kind", "")
+    if kind in queries.KINDS:
+        return _page(kind, queries.by_kind(kind, g.lang), heading=get_string(f"kind_{kind}", g.lang))
     q = request.args.get("q", "").strip()
     if not q:
         return _page()
     return _page(q, queries.search(q, g.lang))
-
-
-@bp.route("/ask")
-def ask():  # stub until the Ask feature lands
-    return render_template("ask.html")

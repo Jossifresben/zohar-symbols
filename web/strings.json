@@ -105,7 +105,7 @@
   },
   "home_intro": {
     "en": "Every symbol below is a figure the Zohar returns to again and again. Larger means more passages. Choose one to see where it appears and what it is paired with.",
-    "es": "Cada símbolo de abajo es una figura a la que el Zohar vuelve una y otra vez. Cuanto mayor, más pasajes. Elige uno para ver dónde aparece y con qué se asocia."
+    "es": "Cada símbolo de abajo es una figura a la que el Zohar vuelve una y otra vez. Cuanto mayor es el nombre, en más pasajes aparece. Elige uno para ver dónde aparece y con qué se asocia."
   },
   "search_placeholder": {
     "en": "Search a symbol: moon, king, sea…",
@@ -168,7 +168,7 @@
     "es": "El Rey"
   },
   "cluster_tiferet_blurb": {
-    "en": "The holy blessed One as he shows himself: the husband of the Shekhinah, the centre of the Tree.",
+    "en": "The Holy One, blessed be he, as he shows himself: the husband of the Shekhinah, the centre of the Tree.",
     "es": "El Santo, bendito sea, tal como se manifiesta: esposo de la Shejiná, centro del Árbol."
   },
   "cluster_binah_title": {
@@ -209,11 +209,11 @@
   },
   "orientation_tree_body": {
     "en": "Drawn later than the Zohar, useful anyway. Labelled as such.",
-    "es": "Dibujado después del Zohar, pero útil igualmente. Y señalado como tal."
+    "es": "Se dibujó siglos después del Zohar, pero sigue siendo útil. Aquí se señala como tal."
   },
   "orientation_read_title": {
     "en": "Open the Zohar, symbols lit",
-    "es": "Abrir el Zohar con los símbolos iluminados"
+    "es": "Abre el Zohar con los símbolos resaltados"
   },
   "orientation_read_body": {
     "en": "Read a passage with every symbol marked, in Hebrew and in translation.",
@@ -229,6 +229,18 @@
   },
   "ask_coming": {
     "en": "Ask is coming soon.",
-    "es": "Preguntar llegará pronto."
+    "es": "Pronto podrás hacer preguntas."
+  },
+  "coming_soon": {
+    "en": "Coming soon.",
+    "es": "Próximamente."
+  },
+  "symbols_count_one": {
+    "en": "1 symbol",
+    "es": "1 símbolo"
+  },
+  "not_found": {
+    "en": "Nothing here. Try the home page.",
+    "es": "Aquí no hay nada. Prueba la página de inicio."
   }
 }

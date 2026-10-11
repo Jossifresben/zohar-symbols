@@ -11,21 +11,21 @@
 </head>
 <body>
 <header class="site-header">
-  <a class="wordmark" href="/">
+  <a class="wordmark" href="{{ lang_url('home') }}">
     <span class="display wm-latin">Zohar</span>
-    <span class="heb wm-heb">זֹהַר</span>
+    <span class="heb wm-heb" lang="he" dir="rtl">זֹהַר</span>
     <span class="wm-sub">Symbols · Símbolos</span>
   </a>
   <nav class="site-nav">
-    <a href="#">{{ t('nav_symbols') }}</a>
-    <a href="#">{{ t('nav_sefirot') }}</a>
-    <a href="#">{{ t('nav_read') }}</a>
-    <a href="#">{{ t('nav_ask') }}</a>
-    <a href="/scholars">{{ t('nav_scholars') }}</a>
+    <a href="{{ lang_url('home') }}">{{ t('nav_symbols') }}</a>
+    <a href="{{ lang_url('tree') }}">{{ t('nav_sefirot') }}</a>
+    <a href="{{ lang_url('passage', pid=first_passage_id) }}">{{ t('nav_read') }}</a>
+    <a href="{{ lang_url('ask') }}">{{ t('nav_ask') }}</a>
+    <a href="{{ lang_url('scholars') }}">{{ t('nav_scholars') }}</a>
   </nav>
   <div class="lang-switch">
-    <a class="lang-btn{% if lang == 'en' %} active{% endif %}" href="#">{{ t('lang_en') }}</a>
-    <a class="lang-btn{% if lang == 'es' %} active{% endif %}" href="#">{{ t('lang_es') }}</a>
+    <a class="lang-btn{% if lang == 'en' %} active{% endif %}" href="{{ switch_url('en') }}" hreflang="en">{{ t('lang_en') }}</a>
+    <a class="lang-btn{% if lang == 'es' %} active{% endif %}" href="{{ switch_url('es') }}" hreflang="es">{{ t('lang_es') }}</a>
   </div>
 </header>
 <main>

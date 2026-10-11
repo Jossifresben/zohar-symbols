@@ -146,6 +146,16 @@ def search(q: str, lang: str, k: int = 10) -> list[dict]:
                  count_passages=r["count_passages"]) for r in rs]
 
 
+KINDS = ("person", "object", "quality", "event")
+
+
+def by_kind(kind: str, lang: str) -> list[dict]:
+    rs = rows("""select id,label_en,label_es,label_ar,kind,node,count_passages from symbol
+                 where kind=? order by count_passages desc, id""", (kind,))
+    return [dict(id=r["id"], label=_lab(r, lang), label_ar=r["label_ar"], kind=r["kind"], node=r["node"],
+                 count_passages=r["count_passages"]) for r in rs]
+
+
 def nearest_symbols(q: str, lang: str, k: int = 3) -> list[dict]:
     names: dict[str, str] = {}
     labels: dict[str, str] = {}

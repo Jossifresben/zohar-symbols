@@ -2,7 +2,7 @@
 import json
 from pathlib import Path
 
-from flask import g
+from flask import g, request, url_for
 
 STRINGS_PATH = Path(__file__).parent / "strings.json"
 
@@ -22,7 +22,18 @@ def init_i18n(app) -> None:
     def _ctx():
         return {"lang": g.get("lang", "en")}
 
-    app.jinja_env.globals["t"] = t
+    def lang_url(endpoint: str, **values) -> str:
+        """Absolute endpoint in the current language's blueprint (works on 404 pages too)."""
+        return url_for(("site_es." if g.get("lang") == "es" else "site.") + endpoint, **values)
+
+    def switch_url(lang: str) -> str:
+        """The current page in `lang`; falls back to the home page when there is no matching endpoint."""
+        ep = request.endpoint
+        if ep and ep.split(".")[0] in ("site", "site_es"):
+            return url_for(("site_es." if lang == "es" else "site.") + ep.split(".")[-1], **(request.view_args or {}))
+        return "/es/" if lang == "es" else "/"
+
+    app.jinja_env.globals.update(t=t, lang_url=lang_url, switch_url=switch_url)
 
 
 _CACHE: dict = {}
