@@ -31,8 +31,8 @@
     <a class="lang-btn{% if lang == 'es' %} active{% endif %}" href="{{ switch_url('es') }}" hreflang="es">{{ t('lang_es') }}</a>
   </div>
   <div class="lang-switch font-pick" role="group" aria-label="{{ t('font_label') }}" hidden>
-    <button type="button" class="lang-btn" data-font="frank" aria-pressed="true"><span class="fp-alef fp-frank" lang="he">א</span>{{ t('font_standard') }}</button>
-    <button type="button" class="lang-btn" data-font="rashi" aria-pressed="false"><span class="fp-alef fp-rashi" lang="he">א</span>Rashi</button>
+    <button type="button" class="lang-btn" data-font="frank" aria-pressed="true" title="{{ t('font_standard') }}"><span class="fp-alef fp-frank" lang="he">א</span><span class="fp-word">{{ t('font_standard') }}</span></button>
+    <button type="button" class="lang-btn" data-font="rashi" aria-pressed="false" title="Rashi"><span class="fp-alef fp-rashi" lang="he">א</span><span class="fp-word">Rashi</span></button>
   </div>
 </header>
 <main>

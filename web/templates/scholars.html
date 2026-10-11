@@ -28,11 +28,11 @@
 <section class="card" id="pairs"><h2 class="label">{{ t('sch_pairs_h') }}</h2>
   <p class="muted">{{ t('sch_pairs_note') }}</p>
   {%- if pairs %}
-  <table class="pairs"><thead><tr><th>{{ t('sch_col_a') }}</th><th>{{ t('sch_col_b') }}</th><th>{{ t('sch_col_together') }}</th><th>PMI</th></tr></thead><tbody>
+  <div class="table-scroll"><table class="pairs"><thead><tr><th>{{ t('sch_col_a') }}</th><th>{{ t('sch_col_b') }}</th><th>{{ t('sch_col_together') }}</th><th>PMI</th></tr></thead><tbody>
   {%- for p in pairs %}
     <tr><td><a href="{{ lang_url('symbol', sid=p.a) }}">{{ p.a_label }}</a> <span class="heb pair-ar" lang="arc" dir="rtl">{{ p.a_ar }}</span></td><td><a href="{{ lang_url('symbol', sid=p.b) }}">{{ p.b_label }}</a> <span class="heb pair-ar" lang="arc" dir="rtl">{{ p.b_ar }}</span></td><td>{{ p.passages_together|num }}</td><td>{{ '%.4f'|format(p.pmi) }}</td></tr>
   {%- endfor %}
-  </tbody></table>
+  </tbody></table></div>
   {%- else %}<p class="muted">{{ t('sch_no_pairs') }}</p>{%- endif %}
 </section>
 <section class="card" id="exports"><h2 class="label">{{ t('sch_exports_h') }}</h2>
