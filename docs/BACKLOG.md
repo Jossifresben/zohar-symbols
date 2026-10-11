@@ -20,7 +20,7 @@ A plain-language EN/ES interpretation under each translated passage, 120–200 w
 ## Content
 
 - Review table of all 139 symbol labels, EN and ES (after the Teshuvah correction).
-- Symbol glosses and Ask (spec §8: strict cited answer first, then a visibly marked model reading).
+- Symbol glosses and Ask (spec §7: strict cited answer first, then a visibly marked model reading). Parked 2026-10-11 for budget. Ask is the only live model call: about $0.15–0.30 per uncached question with Fable (both layers), about a day of work. Needs an API key on Render: use a separate Console workspace and key with its own monthly spend limit (e.g. $20); when spent, Ask falls back to the retrieved links. Consider a cheaper model for Layer 1. Do the interpretations first.
 - `/read` contents page (parashot and folios).
 - Scholarly spot-checks: strata boundaries (Midrash ha-Ne'lam, addenda), seed sefirah assignments marked "Zohar usage".
 
