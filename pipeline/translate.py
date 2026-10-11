@@ -20,7 +20,7 @@ DB = ROOT / "data" / "zohar.sqlite"
 WORK = ROOT / "work" / "translate"
 
 MODEL = "claude-fable-5-1"
-PROMPT_VERSION = "t2"
+PROMPT_VERSION = "t3"
 EFFORT = "medium"
 CONTEXT_RADIUS = 2   # neighbouring paragraphs on each side, same folio side
 LANGS = {"en": "English", "es": "Spanish"}
@@ -36,6 +36,7 @@ How to translate:
 - Translate faithfully and readably. Prefer clear modern prose over word-for-word calques, but do not paraphrase away the content.
 - Keep the Zohar's images as images. Do not decode them: "the Moon" stays "the Moon", never "Malkhut" or "the Shekhinah" unless the text itself says so. Showing the images is the purpose of the site.
 - Render every word listed in the glossary below with its glossary label, consistently, in the target language. Write glossary labels as ordinary words in normal case ("gold", "the beard", "the moon" / "oro", "la barba", "la luna"); capitalise only proper names (Abraham, Jacob, Matronita).
+- Teshuvah (תשובה, תיובתא) is a term of art: the Zohar reads it as tashuv-he, "the return of the he" (the lower he returning to the upper he). Keep the word, Teshuvah / Teshuvá, and on its first occurrence in a passage add "the return of the he" / "el retorno de la he". Never render it simply as "return", "repentance", "retorno" or "arrepentimiento".
 - Translate biblical quotations and mark them with quotation marks.
 - Use the conventional forms of the sages' names (Rabbi Shimon, Rabbi Abba / Rabí Shimón, Rabí Abba).
 - Add a transliteration in square brackets only where a technical term would otherwise be lost, and sparingly.
@@ -220,6 +221,10 @@ def main(argv=None) -> None:
     p.add_argument("--efforts", default="medium,high")
     p.add_argument("--submit", action="store_true")
     sub.add_parser("prewarm")
+    rs = sub.add_parser("retranslate", help="re-run the translated passages that mention a symbol")
+    rs.add_argument("--symbol", required=True)
+    rs.add_argument("--name", required=True)
+    rs.add_argument("--submit", action="store_true")
     f = sub.add_parser("full")
     f.add_argument("--name", required=True)
     f.add_argument("--range", default="0:")
@@ -253,6 +258,18 @@ def main(argv=None) -> None:
         reqs = all_reqs[int(lo or 0): int(hi) if hi else None]
         (WORK / f"{a.name}_requests.json").write_text(json.dumps(reqs, ensure_ascii=False), encoding="utf-8")
         print(f"{len(reqs)} of {len(all_reqs)} requests -> {a.name}")
+        if a.submit:
+            bid = submit(reqs)
+            (WORK / f"{a.name}_batch_id").write_text(bid)
+            print(f"submitted batch {bid}")
+    elif a.cmd == "retranslate":
+        system = system_blocks(conn, cache=False)
+        ids = [r[0] for r in conn.execute(
+            "select distinct m.passage_id from mention m join surfaced s on s.passage_id = m.passage_id "
+            "where m.symbol_id = ? order by m.passage_id", (a.symbol,))]
+        reqs = [build_request(conn, pid, lang, EFFORT, system) for pid in ids for lang in LANGS]
+        (WORK / f"{a.name}_requests.json").write_text(json.dumps(reqs, ensure_ascii=False), encoding="utf-8")
+        print(f"{len(reqs)} requests ({len(ids)} passages) -> {a.name}")
         if a.submit:
             bid = submit(reqs)
             (WORK / f"{a.name}_batch_id").write_text(bid)
