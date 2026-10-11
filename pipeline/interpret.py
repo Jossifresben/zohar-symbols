@@ -225,6 +225,34 @@ def ingest(chunk: int, model: str = MODEL) -> dict:
     return {"chunk": chunk, "accepted": len(ok), "failed": failed}
 
 
+def export(names: list[str], created_at: str = "2026-10-12") -> str:
+    """Write the committed interpretations file: one row per (passage, language), from cc_results and the
+    named batch result sets; a row must pass check(). Later sources override earlier ones."""
+    from .version import TABLES_VERSION
+    rows, rejected = {}, {}
+    sources = [WORK / "cc_results.jsonl"] + [WORK / f"{n}_results.jsonl" for n in names]
+    for path in sources:
+        for line in path.open(encoding="utf-8"):
+            r = json.loads(line)
+            if r["status"] != "succeeded" or r.get("stop_reason") != "end_turn" or not r.get("text"):
+                rejected[r["passage_id"]] = r.get("stop_reason") or r["status"]
+                continue
+            why = check(r["text"])
+            if why:
+                rejected[r["passage_id"]] = why
+                continue
+            rejected.pop(r["passage_id"], None)
+            for lg, text in split_langs(r["text"]).items():
+                rows[(r["passage_id"], lg)] = dict(passage_id=r["passage_id"], lang=lg, text=text, model=r["model"],
+                                                  prompt_version=r["prompt_version"], source_hash=r["source_hash"],
+                                                  created_at=created_at)
+    out = ROOT / "data" / f"interpretations.v{TABLES_VERSION}.jsonl"
+    with out.open("w", encoding="utf-8") as f:
+        for k in sorted(rows):
+            f.write(json.dumps(rows[k], ensure_ascii=False, sort_keys=True) + "\n")
+    return f"{len(rows)} interpretations -> {out}; rejected: {rejected}"
+
+
 def main(argv=None) -> None:
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -236,8 +264,13 @@ def main(argv=None) -> None:
     c.add_argument("--name", default="pilot")
     r = sub.add_parser("review")
     r.add_argument("name")
+    fu = sub.add_parser("full", help="plain requests for every surfaced passage not yet in cc_results.jsonl")
+    fu.add_argument("--name", default="full")
+    fu.add_argument("--submit", action="store_true")
     ch = sub.add_parser("chunks")
     ch.add_argument("--size", type=int, default=20)
+    ex = sub.add_parser("export")
+    ex.add_argument("names", nargs="*", default=["full"])
     ig = sub.add_parser("ingest")
     ig.add_argument("chunk", type=int)
     a = ap.parse_args(argv)
@@ -270,6 +303,18 @@ def main(argv=None) -> None:
         (WORK / f"{a.name}_summary.json").write_text(json.dumps(summary, indent=1), encoding="utf-8")
         json.dump(summary, sys.stdout, indent=1)
         print()
+    elif a.cmd == "full":
+        done = {json.loads(l)["passage_id"] for l in (WORK / "cc_results.jsonl").open(encoding="utf-8")} \
+            if (WORK / "cc_results.jsonl").exists() else set()
+        reqs = [build_request(conn, pid, "plain") for pid in surfaced_ids(conn) if pid not in done]
+        (WORK / f"{a.name}_requests.json").write_text(json.dumps(reqs, ensure_ascii=False), encoding="utf-8")
+        print(f"{len(reqs)} requests ({len(done)} already done) -> {a.name}")
+        if a.submit:
+            bid = submit(reqs)
+            (WORK / f"{a.name}_batch_id").write_text(bid)
+            print(f"submitted batch {bid}")
+    elif a.cmd == "export":
+        print(export(a.names))
     elif a.cmd == "chunks":
         print(f"{write_chunks(conn, a.size)} chunks -> {CHUNKS}")
     elif a.cmd == "ingest":

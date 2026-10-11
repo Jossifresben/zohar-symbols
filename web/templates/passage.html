@@ -30,6 +30,18 @@
     <p class="heb pc-ar" lang="arc" dir="rtl">{{ q.text_ar|highlight(q.mentions) }}</p>
     {%- if q.id == p.id %}
     {{ translation(q.id, q.translation, q.translation_model) }}
+    {%- if q.interpretation %}
+    <section class="interp" aria-labelledby="interp-h">
+      <h2 id="interp-h" class="label">{{ t('interp_title') }}</h2>
+      {%- for para in q.interpretation.split('\n') if para.strip() %}
+      <p class="pc-tr" data-kind="interpretation" lang="{{ lang }}">{{ para }}</p>
+      {%- endfor %}
+      <p class="attribution muted">
+        {%- if q.interpretation_model == 'human-correction' %}{{ t('corrected_by_hand') }}{% else %}{{ t('interp_by', model=model_name(q.interpretation_model)) }}{% endif %}
+        · <a href="{{ report_url(q.id, 'interpretation') }}" rel="nofollow">{{ t('report_problem') }}</a>
+      </p>
+    </section>
+    {%- endif %}
     {%- endif %}
   </article>
   {%- endfor %}

@@ -116,10 +116,12 @@ def passage(pid: str, lang: str) -> dict | None:
     ms = rows("""select m.position, m.symbol_id, m.matched_form, s.label_en, s.label_es from mention m
                  join symbol s on s.id=m.symbol_id where m.passage_id=? order by m.position""", (pid,))
     tr = one("select text, model_id from translation where passage_id=? and lang=?", (pid, lang))
+    it = one("select text, model_id from interpretation where passage_id=? and lang=?", (pid, lang))
     return dict(id=p["id"], citation=cite.citation(p["volume"], p["folio"], p["side"]), volume=p["volume"], folio=p["folio"],
                 side=p["side"], para=p["para"], parasha=p["parasha"], stream=p["stream"], stratum=p["stratum"],
                 text_ar=p["text_ar"], verse_ref=p["verse_ref"], token_count=p["token_count"],
                 translation=tr["text"] if tr else None, translation_model=tr["model_id"] if tr else None,
+                interpretation=it["text"] if it else None, interpretation_model=it["model_id"] if it else None,
                 mentions=[dict(position=m["position"], symbol_id=m["symbol_id"], matched_form=m["matched_form"], label=_lab(m, lang)) for m in ms])
 
 

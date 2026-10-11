@@ -152,3 +152,19 @@ def test_passage_keys_reading_order_and_sources(app):
         assert keys and all(k["source"] in q.SEED_SOURCES and k["count"] >= 1 and k["forms"] for k in keys)
         assert len({k["id"] for k in keys}) == len(keys)
         assert q.passage_keys("9.999z.999", "en") == []
+
+
+def test_interpretation_section_with_attribution(app, fixture_db):
+    import sqlite3
+    con = sqlite3.connect(fixture_db)
+    con.execute("insert or replace into interpretation values ('1.020b.002','en','First idea.\nSecond idea.','claude-fable-5-1','i2','2026-10-12')")
+    con.execute("insert or replace into interpretation values ('1.020b.002','es','Primera idea.','claude-fable-5-1','i2','2026-10-12')")
+    con.commit(); con.close()
+    html = app.test_client().get("/passage/1.020b.002").get_data(as_text=True)
+    assert "What this passage means" in html and html.count('data-kind="interpretation"') == 2
+    assert "Interpretation inferred by Claude Fable 5.1" in html and "labels=interpretation" in html
+    es = app.test_client().get("/es/passage/1.020b.002").get_data(as_text=True)
+    assert "Qué significa este pasaje" in es and "Interpretación inferida por Claude Fable 5.1" in es
+    other = app.test_client().get("/passage/1.020b.001").get_data(as_text=True)
+    assert "What this passage means" not in other
+    con = sqlite3.connect(fixture_db); con.execute("delete from interpretation"); con.commit(); con.close()

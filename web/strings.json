@@ -930,5 +930,13 @@
   "footer_author": {
     "en": "By Jose Fresco Benaim",
     "es": "Por Jose Fresco Benaim"
+  },
+  "interp_title": {
+    "en": "What this passage means",
+    "es": "Qué significa este pasaje"
+  },
+  "interp_by": {
+    "en": "Interpretation inferred by {model}: not a traditional commentary, not reviewed by specialists",
+    "es": "Interpretación inferida por {model}: no es un comentario tradicional ni la han revisado especialistas"
   }
 }

@@ -12,7 +12,7 @@ def source_hash(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()[:16]
 
 
-def load(path: Path, overrides_path: Path, passages: list[dict]) -> tuple[list[tuple], dict]:
+def load(path: Path, overrides_path: Path, passages: list[dict], kind: str = "translations") -> tuple[list[tuple], dict]:
     """Rows for the `translation` table and counts for the build report.
 
     A model translation is kept only if its source_hash matches the passage's current text
@@ -39,5 +39,5 @@ def load(path: Path, overrides_path: Path, passages: list[dict]) -> tuple[list[t
                                                          OVERRIDE_MODEL, r.get("note", "") or "", r.get("date", "") or "")
                     overridden += 1
     rows = [out[k] for k in sorted(out)]
-    return rows, {"translations": len(rows), "translations stale (source changed)": stale,
-                  "translations for unknown passages": unknown, "translations corrected by hand": overridden}
+    return rows, {kind: len(rows), f"{kind} stale (source changed)": stale,
+                  f"{kind} for unknown passages": unknown, f"{kind} corrected by hand": overridden}

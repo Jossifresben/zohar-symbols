@@ -44,6 +44,10 @@ CREATE TABLE translation (
   passage_id TEXT NOT NULL, lang TEXT NOT NULL, text TEXT NOT NULL, model_id TEXT NOT NULL,
   prompt_hash TEXT NOT NULL, created_at TEXT NOT NULL, PRIMARY KEY (passage_id, lang)
 );
+CREATE TABLE interpretation (
+  passage_id TEXT NOT NULL, lang TEXT NOT NULL, text TEXT NOT NULL, model_id TEXT NOT NULL,
+  prompt_hash TEXT NOT NULL, created_at TEXT NOT NULL, PRIMARY KEY (passage_id, lang)
+);
 CREATE TABLE gloss (
   symbol_id TEXT NOT NULL, source TEXT NOT NULL, locus TEXT NOT NULL,
   summary_en TEXT NOT NULL, summary_es TEXT NOT NULL, PRIMARY KEY (symbol_id, source, locus)

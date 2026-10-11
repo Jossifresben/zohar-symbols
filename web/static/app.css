@@ -140,6 +140,9 @@ a.bar-row:hover{text-decoration:none}a.bar-row:hover .bar-label{color:var(--gold
 .para:target{scroll-margin-top:80px}
 .stream-h{margin:24px 0 8px}
 .folio-symbols{margin-top:32px}
+.interp{margin:20px 0 4px;padding:16px 20px;border-inline-start:2px solid var(--blue);background:var(--ground);border-radius:0 8px 8px 0}
+.interp h2{margin:0 0 8px}
+.interp p.pc-tr{margin:0 0 10px;line-height:1.6}
 .keys{margin-top:32px;max-width:920px}
 .keys-intro{font-size:15px;line-height:1.5;margin:4px 0 14px;max-width:720px}
 .keys-list{list-style:none;padding:0;margin:0}

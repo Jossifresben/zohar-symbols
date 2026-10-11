@@ -119,14 +119,14 @@ def register(app) -> None:
 
     app.jinja_env.globals["passage_url"] = passage_url
 
-    def report_url(pid: str) -> str:
-        """A prefilled GitHub issue for a translation problem (no backend, no accounts)."""
+    def report_url(pid: str, kind: str = "translation") -> str:
+        """A prefilled GitHub issue for a translation or interpretation problem (no backend, no accounts)."""
         from urllib.parse import urlencode
         lang = g.get("lang", "en")
         body = (f"Passage: {pid}\nLanguage: {lang}\nPage: https://zohar.digital{passage_url(pid)}\n\n"
                 "What is wrong, and what should it say?\n")
         return "https://github.com/Jossifresben/zohar-symbols/issues/new?" + urlencode(
-            {"title": f"Translation: {pid} ({lang})", "labels": "translation", "body": body})
+            {"title": f"{kind.capitalize()}: {pid} ({lang})", "labels": kind, "body": body})
 
     app.jinja_env.globals["report_url"] = report_url
     app.jinja_env.globals["model_name"] = lambda m: MODEL_NAMES.get(m, m)
