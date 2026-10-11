@@ -6,7 +6,7 @@ def test_scholars_page(client):
     assert "PMI" in html and "tables_version" in html.lower()
     assert "We are not scholars" in html
     assert "/api/pairs.csv" in html and "/api/meta.json" in html
-    assert "DOI pending" in html and "doi =" not in html
+    assert "10.5281/zenodo.23305097" in html and "DOI pending" not in html
     assert html.count('data-copy=') == 3 and "app.js" in html
     assert "data/SOURCES.md" in html and "CC BY-SA 4.0" in html
 

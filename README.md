@@ -1,6 +1,6 @@
 # Zohar Symbols · zohar.digital
 
-**[zohar.digital](https://zohar.digital)** · DOI: see [Cite](#cite--citar)
+**[zohar.digital](https://zohar.digital)** &nbsp; [![DOI](https://zenodo.org/badge/1414585373.svg)](https://doi.org/10.5281/zenodo.23305097)
 
 **EN.** A computed dictionary of the Zohar's symbols (*kinnuyim*), for curious readers. The Zohar speaks in images: the moon, the river, the bride, gold, the beard. Each image points to a sefirah. Deterministic code reads the Aramaic text of *Sefer ha-Zohar*, finds every image, counts where it appears and what it appears with, and shows you the passages. Bilingual English/Spanish, open access.
 
@@ -74,7 +74,7 @@ uv run --no-sync flask --app web run --port 5055   # http://localhost:5055
 
 ## Cite / Citar
 
-Fresco Benaim, Jose. (2026). *Zohar Symbols: a computed dictionary of the Zohar's kinnuyim* (v0.1.0). Zenodo. DOI pending.
+Fresco Benaim, Jose. (2026). *Zohar Symbols: a computed dictionary of the Zohar's kinnuyim* (v0.1.0). Zenodo. https://doi.org/10.5281/zenodo.23305097
 
 See also [CITATION.cff](CITATION.cff). The concept DOI always resolves to the latest version.
 

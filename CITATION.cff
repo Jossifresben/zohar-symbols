@@ -12,4 +12,4 @@ url: "https://zohar.digital"
 repository-code: "https://github.com/Jossifresben/zohar-symbols"
 license: MIT
 notes: "Code is MIT. The computed data is licensed CC BY-SA 4.0; see LICENSE-DATA.md."
-# doi: pending Zenodo deposit
+doi: 10.5281/zenodo.23305097

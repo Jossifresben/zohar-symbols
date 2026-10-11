@@ -102,7 +102,7 @@ def test_cite():
         cite.roman(4)
     assert cite.citation(1, 20, "a") == "Zohar I:20a" and cite.roman(3) == "III"
     f = cite.formats({"tables_version": "0.1.0"})
-    assert "zohar.digital" in f["bibtex"] and "DOI pending" in f["chicago"]
-    assert "doi =" not in f["bibtex"] and "note = {DOI pending}" in f["bibtex"]
+    assert "zohar.digital" in f["bibtex"] and "https://doi.org/10.5281/zenodo.23305097" in f["chicago"]
+    assert "doi = {10.5281/zenodo.23305097}" in f["bibtex"]
     es = cite.formats({"tables_version": "0.1.0"}, "es")
     assert "Versión 0.1.0" in es["chicago"] and "Versión 0.1.0" in es["sbl"] and "Version" not in es["chicago"]
