@@ -82,5 +82,4 @@ def test_events_cap_links_to_kind_search(app):
 
 
 def test_stubs_have_no_english_in_es(client):
-    assert "Próximamente" in client.get("/es/tree").get_data(as_text=True)
     assert "Pronto podrás" in client.get("/es/ask").get_data(as_text=True)

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}{{ t('tree_title') }} · Zohar{% endblock %}
+{% block content %}
+<section class="tree-page">
+  <h1 class="display">{{ t('tree_title') }}</h1>
+  <figure class="tree-figure">
+    {% include "_tree.svg" %}
+    <figcaption class="muted">{{ t('tree_other_side') }}. {{ t('tree_provenance') }}</figcaption>
+  </figure>
+</section>
+{% endblock %}

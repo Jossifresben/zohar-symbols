@@ -470,5 +470,89 @@
   "unmarked_one": {
     "en": "1 passage without a state marker",
     "es": "1 pasaje sin marca de estado"
+  },
+  "node_intro_keter": {
+    "en": "The hidden head of the divine structure, called Atika Kadisha and Arikh Anpin. It is named mostly in the Idrot, and rarely elsewhere in the Zohar.",
+    "es": "La cabeza oculta de la estructura divina, llamada Atika Kadisha y Arij Anpin. Se nombra sobre todo en las Idrot, y rara vez en el resto del Zohar."
+  },
+  "node_intro_hokhmah": {
+    "en": "Abba, the Father: the point from which everything unfolds, and Reshit, the beginning. It stands at the head of the right pillar.",
+    "es": "Abba, el Padre: el punto del que todo se despliega, y Reshit, el principio. Encabeza la columna derecha."
+  },
+  "node_intro_binah": {
+    "en": "Imma, the Mother: the river that flows out of Eden and the palace. She is the womb of the seven sefirot below her. She stands at the head of the left pillar.",
+    "es": "Imma, la Madre: el río que sale del Edén y el palacio. Es el vientre de las siete sefirot que están debajo. Encabeza la columna izquierda."
+  },
+  "node_intro_hesed": {
+    "en": "The Right, associated with Abraham, with water and with white. It is the sefirah of lovingkindness.",
+    "es": "La Derecha, asociada con Abraham, con el agua y con el blanco. Es la sefirá de la bondad amorosa."
+  },
+  "node_intro_gevurah": {
+    "en": "The Left, associated with Isaac, with fire and with red. It is the sefirah of judgement.",
+    "es": "La Izquierda, asociada con Isaac, con el fuego y con el rojo. Es la sefirá del juicio."
+  },
+  "node_intro_tiferet": {
+    "en": "The King, the Sun, Jacob who is called Israel, and the written Torah. It stands on the middle pillar, between Right and Left, and is the Shekhinah's partner.",
+    "es": "El Rey, el Sol, Jacob que se llama Israel, y la Torá escrita. Está en la columna central, entre la Derecha y la Izquierda, y es la pareja de la Shejiná."
+  },
+  "node_intro_netzah": {
+    "en": "One of the two thighs of the divine body, the pillars from which the prophets draw. In Cordovero's scheme it corresponds to Moses.",
+    "es": "Uno de los dos muslos del cuerpo divino, las columnas de las que beben los profetas. En el esquema de Cordovero corresponde a Moisés."
+  },
+  "node_intro_hod": {
+    "en": "The other thigh, paired with Netzaḥ. In Cordovero's scheme it corresponds to Aaron.",
+    "es": "El otro muslo, emparejado con Netzaj. En el esquema de Cordovero corresponde a Aarón."
+  },
+  "node_intro_yesod": {
+    "en": "The Tzaddik, the Righteous One, who is the sign of the covenant and is linked with Joseph. It is the channel through which the upper sefirot flow into Malkhut.",
+    "es": "El Tzadik, el Justo, que es la señal del pacto y se vincula con José. Es el canal por el que las sefirot superiores fluyen hacia Maljut."
+  },
+  "node_intro_malkhut": {
+    "en": "The tenth sefirah: the divine presence in the world, called the Shekhinah, the Matronita, the Moon, the Sea, the Earth and Knesset Yisra'el. Her story is exile and union, and most of the Zohar is about her.",
+    "es": "La décima sefirá: la presencia divina en el mundo, llamada la Shejiná, la Matronita, la Luna, el Mar, la Tierra y Knesset Yisra'el. Su historia es el exilio y la unión, y la mayor parte del Zohar trata de ella."
+  },
+  "node_intro_sitra_ahra": {
+    "en": "The Other Side: the serpent, Samael and Lilith, and the husk that surrounds the holy. It is fed by excess of judgement.",
+    "es": "El Otro Lado: la serpiente, Samael y Lilit, y la cáscara que rodea lo santo. Se alimenta del exceso de juicio."
+  },
+  "node_intro_ein_sof": {
+    "en": "The Infinite, beyond the sefirot. It is named only by negation: what it is not.",
+    "es": "El Infinito, más allá de las sefirot. Solo se lo nombra por negación: lo que no es."
+  },
+  "pillar_right": {
+    "en": "Right pillar",
+    "es": "Columna derecha"
+  },
+  "pillar_left": {
+    "en": "Left pillar",
+    "es": "Columna izquierda"
+  },
+  "pillar_middle": {
+    "en": "Middle pillar",
+    "es": "Columna central"
+  },
+  "partner_nodes": {
+    "en": "Appears alongside",
+    "es": "Aparece junto a"
+  },
+  "tree_title": {
+    "en": "The Tree of Life as a map",
+    "es": "El Árbol de la Vida como mapa"
+  },
+  "tree_provenance": {
+    "en": "Drawn later than the Zohar (14th-century ilanot; this layout Kircher, 1652). Useful for orientation; not the Zohar's own map, which speaks in pillars, body and family.",
+    "es": "Dibujado después del Zohar (ilanot del siglo XIV; esta disposición es de Kircher, 1652). Sirve para orientarse, pero no es el mapa del propio Zohar, que habla de columnas, cuerpo y familia."
+  },
+  "tree_other_side": {
+    "en": "The Other Side, mirrored below",
+    "es": "El Otro Lado, reflejado abajo"
+  },
+  "node_not_found": {
+    "en": "No such sefirah. The twelve are:",
+    "es": "No existe esa sefirá. Las doce son:"
+  },
+  "node_no_symbols": {
+    "en": "No symbols tagged here.",
+    "es": "No hay símbolos etiquetados aquí."
   }
 }

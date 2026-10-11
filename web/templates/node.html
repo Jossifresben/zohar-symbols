@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% from "_chips.html" import chips with context %}
+{% block title %}{{ n.label }} · {{ n.label_ar }} · Zohar{% endblock %}
+{% block content %}
+<section class="sym-head node-head">
+  <h1 class="display">{{ n.label }} <span class="heb gold" lang="he" dir="rtl">{{ n.label_ar }}</span></h1>
+  <div class="sym-chips"><span class="chip">{{ t('pillar_' ~ n.pillar) }}</span></div>
+  <p class="intro">{{ t('node_intro_' ~ n.node) }}</p>
+</section>
+<section class="grid node-symbols">
+{%- for k in kinds %}
+  <article class="card" data-kind="{{ k }}">
+    <h2 class="label">{{ t('kind_' ~ k) }}</h2>
+    {{ chips({'chips': n.symbols_by_kind[k]}) }}
+  </article>
+{%- else %}
+  <p class="muted">{{ t('node_no_symbols') }}</p>
+{%- endfor %}
+</section>
+{%- if n.partner_nodes %}
+<section class="card evidence node-partners">
+  <h2 class="label">{{ t('partner_nodes') }}</h2>
+  {%- set top = n.partner_nodes[0].passages_together %}
+  <ul class="bars">
+  {%- for p in n.partner_nodes %}
+    <li><a class="bar-row" href="{{ lang_url('node', nid=p.node) }}"><span class="bar-label">{{ p.label }}</span><span class="bar-track"><span class="bar bar-gold" style="width:{{ (100 * p.passages_together / top)|round|int }}%"></span></span><span class="bar-n">{{ p.passages_together }}</span></a></li>
+  {%- endfor %}
+  </ul>
+</section>
+{%- endif %}
+<p><a href="{{ lang_url('tree') }}">{{ t('orientation_tree_title') }} →</a></p>
+{% endblock %}

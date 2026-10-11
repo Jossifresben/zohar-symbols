@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="not-found">
+  <p class="intro">{{ t('node_not_found') }}</p>
+  <ul class="node-list">
+  {%- for nid in node_ids %}
+    <li><a href="{{ lang_url('node', nid=nid) }}">{{ t('node_' ~ nid) }}</a></li>
+  {%- endfor %}
+  </ul>
+</section>
+{% endblock %}

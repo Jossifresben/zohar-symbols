@@ -77,6 +77,8 @@ def register(app) -> None:
 
     @app.errorhandler(404)
     def _not_found(_e):
+        if "/sefirah/" in request.path:
+            return render_template("404_node.html", node_ids=queries.NODE_ORDER), 404
         q = request.path.rstrip("/").rsplit("/", 1)[-1]
         suggestions = queries.nearest_symbols(q, g.lang) if q and q != "es" else []
         return render_template("404.html", suggestions=suggestions), 404

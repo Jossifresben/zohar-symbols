@@ -125,8 +125,11 @@ def node(nid: str, lang: str) -> dict | None:
     if nid not in NODE_ORDER:
         return None
     by_kind: dict[str, list] = {}
+    cm = one("select max(count_passages) as m from symbol")
+    cmax = (cm["m"] if cm else 1) or 1
     for r in rows("select id,label_en,label_es,label_ar,kind,count_passages from symbol where node=? order by count_passages desc, id", (nid,)):
-        by_kind.setdefault(r["kind"], []).append(dict(id=r["id"], label=_lab(r, lang), label_ar=r["label_ar"], count_passages=r["count_passages"]))
+        by_kind.setdefault(r["kind"], []).append(dict(id=r["id"], label=_lab(r, lang), label_ar=r["label_ar"], kind=r["kind"],
+                                                      count_passages=r["count_passages"], size=_size(r["count_passages"], cmax)))
     pn = rows("""select s2.node as other, count(distinct m1.passage_id) as n
                  from mention m1 join symbol s1 on s1.id=m1.symbol_id
                  join mention m2 on m2.passage_id=m1.passage_id join symbol s2 on s2.id=m2.symbol_id

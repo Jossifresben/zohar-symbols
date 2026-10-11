@@ -1,0 +1,24 @@
+<svg class="tree-svg" viewBox="0 0 600 880" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="{{ t('tree_title') }}">
+  <g class="tree-paths" stroke="var(--border)" stroke-width="2" fill="none">
+  {%- for a, b in lines %}
+    <line x1="{{ a.x }}" y1="{{ a.y }}" x2="{{ b.x }}" y2="{{ b.y }}"/>
+  {%- endfor %}
+  </g>
+  <a href="{{ lang_url('node', nid=ein_sof.id) }}" class="tree-node tree-ein-sof">
+    <title>{{ t('node_ein_sof') }}</title>
+    <text x="{{ ein_sof.x }}" y="{{ ein_sof.y }}" text-anchor="middle" font-size="15" fill="var(--muted)">{{ t('node_ein_sof') }} · <tspan font-family="'Frank Ruhl Libre',serif" fill="var(--gold)" direction="rtl">{{ ein_sof.ar }}</tspan></text>
+  </a>
+  {%- for p in pts %}
+  <a href="{{ lang_url('node', nid=p.id) }}" class="tree-node">
+    <title>{{ t('node_' ~ p.id) }}</title>
+    <circle cx="{{ p.x }}" cy="{{ p.y }}" r="34" fill="var(--surface)" stroke="var(--border)" stroke-width="2"/>
+    <text x="{{ p.x }}" y="{{ p.y + 5 }}" text-anchor="middle" font-size="14" fill="var(--text)">{{ t('node_' ~ p.id) }}</text>
+    <text x="{{ p.x }}" y="{{ p.y + 56 }}" text-anchor="middle" font-size="18" font-family="'Frank Ruhl Libre',serif" fill="var(--gold)" direction="rtl">{{ p.ar }}</text>
+  </a>
+  {%- endfor %}
+  <a href="{{ lang_url('node', nid=shadow.id) }}" class="tree-node tree-shadow" opacity=".6">
+    <title>{{ t('node_sitra_ahra') }} — {{ t('tree_other_side') }}</title>
+    <circle cx="{{ shadow.x }}" cy="{{ shadow.y }}" r="34" fill="none" stroke="var(--red)" stroke-width="2" stroke-dasharray="6 5"/>
+    <text x="{{ shadow.x }}" y="{{ shadow.y + 5 }}" text-anchor="middle" font-size="13" fill="var(--red)">{{ t('node_sitra_ahra') }}</text>
+  </a>
+</svg>

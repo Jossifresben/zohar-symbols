@@ -1,8 +1,13 @@
-from flask import render_template
+from flask import abort, g, render_template
 
+from .. import queries
 from . import bp
 
 
 @bp.route("/sefirah/<nid>")
-def node(nid):  # placeholder, replaced in Task 4
-    return render_template("stub.html")
+def node(nid):
+    n = queries.node(nid, g.lang)
+    if n is None:
+        abort(404)
+    kinds = [k for k in queries.KINDS if k in n["symbols_by_kind"]]
+    return render_template("node.html", n=n, kinds=kinds)

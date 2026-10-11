@@ -1,0 +1,10 @@
+{% macro chips(part, ev=False) %}
+<div class="chips">
+{%- for s in part.chips %}
+  <a class="chip" data-kind="{{ s.kind }}" title="{{ s.label_ar }}" href="{{ url_for('.symbol', sid=s.id) }}" style="font-size:{{ s.size }}px">{{ s.label }}</a>
+{%- endfor %}
+  {%- if part.more %}
+  <a class="more" href="{{ url_for('.node', nid=part.node) if part.node else lang_url('search', kind='event') }}">{{ t('cluster_more', n=part.more) }}</a>
+  {%- endif %}
+</div>
+{% endmacro %}

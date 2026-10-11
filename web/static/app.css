@@ -112,3 +112,14 @@ a.bar-row:hover{text-decoration:none}a.bar-row:hover .bar-label{color:var(--gold
 .pc-tr{margin:0}.attribution{font-size:12px;margin:6px 0 0}
 .cite{font-size:13px}
 @media (max-width:760px){.sym-head h1{font-size:36px}.claim{font-size:22px}}
+
+/* node + tree pages */
+.node-head .intro{max-width:720px}
+.node-symbols{display:grid;gap:16px;margin-bottom:24px}
+.node-partners{max-width:520px;margin-bottom:24px}
+.node-list{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:8px 18px}
+.tree-figure{margin:0;max-width:560px}
+.tree-svg{width:100%;height:auto;display:block}
+.tree-node:hover circle{stroke:var(--gold)}
+.tree-node:hover{text-decoration:none}
+.tree-figure figcaption{font-size:14px;margin-top:12px}
