@@ -127,3 +127,9 @@ def test_stray_duplicate_start_tag_only_for_listed_label():
         segment_page(wt, 1, "X", "t")
     [p] = segment_page(wt, 1, "X", "זוהר חלק א")
     assert p.text_ar == "טקסט"
+
+
+def test_repeated_section_with_identical_text_raises():
+    with pytest.raises(SegmentError) as e:
+        _seg(_sec("x") + "\n=== h ===\n" + _sec("x"))
+    assert "duplicate text in repeated section" in str(e.value)

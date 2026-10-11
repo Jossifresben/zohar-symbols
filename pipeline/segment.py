@@ -107,12 +107,18 @@ def _num(s: str) -> int:
     return heb_to_int(re.sub(r"[\"׳״]", "", s))
 
 
+def passage_id(volume: int, folio: int, side: str, para: int) -> str:
+    return f"{volume}.{folio:03d}{side}.{para:02d}"
+
+
 def segment_page(wikitext: str, volume: int, parasha: str, page_title: str,
                  stats: dict | None = None) -> list[Passage]:
     """A repeated (folio, side) on one page continues paragraph numbering;
     stats['continued'] counts such repeats."""
     passages: list[Passage] = []
     seen: dict[tuple[int, str], int] = {}
+    texts: dict[tuple[int, str], set[str]] = {}
+    nsec: dict[tuple[int, str], int] = {}
     pos = 0
     n_matched = 0
     while True:
@@ -135,15 +141,22 @@ def segment_page(wikitext: str, volume: int, parasha: str, page_title: str,
         block = wikitext[m.end():e.start()]
         folio = _num(m.group(1))
         side = "a" if m.group(2) == "א" else "b"
-        base = seen.get((folio, side), 0)
+        key = (folio, side)
+        base = seen.get(key, 0)
+        nsec[key] = nsec.get(key, 0) + 1
         if base and stats is not None:
             stats["continued"] = stats.get("continued", 0) + 1
+            stats.setdefault("continued_keys", {})[f"{volume}.{folio:03d}{side}"] = nsec[key]
         vref = _verse_ref(block)
+        prior = set(texts.get(key, ()))
         for i, text in enumerate(_paragraphs(block, page_title, label), start=base + 1):
+            if base and text in prior:
+                raise SegmentError(page_title, label, "duplicate text in repeated section")
             passages.append(Passage(
-                id=f"{volume}.{folio:03d}{side}.{i:02d}", volume=volume, folio=folio,
+                id=passage_id(volume, folio, side, i), volume=volume, folio=folio,
                 side=side, para=i, parasha=parasha, text_ar=text, verse_ref=vref))
-            seen[(folio, side)] = i
+            texts.setdefault(key, set()).add(text)
+            seen[key] = i
         pos = e.end()
     n_raw = len(_RAW_START.findall(wikitext))
     if n_raw != n_matched:
