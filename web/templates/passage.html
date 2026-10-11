@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% from "_chips.html" import chips %}
+{% from "_translation.html" import translation with context %}
 {% block title %}{{ p.citation }} · Zohar{% endblock %}
 {% block content %}
 {% macro folio_nav(pos) %}
@@ -28,12 +29,7 @@
   <article class="para{% if q.id == p.id %} focus{% endif %}" id="p{{ q.para }}">
     <p class="heb pc-ar" lang="arc" dir="rtl">{{ q.text_ar|highlight(q.mentions) }}</p>
     {%- if q.id == p.id %}
-    {%- if q.translation %}
-    <p class="pc-tr" lang="{{ lang }}">{{ q.translation }}</p>
-    <p class="attribution muted">{{ t('translated_by', model=q.translation_model) }}</p>
-    {%- else %}
-    <p class="pc-tr"><span class="muted">{{ t('not_translated') }}</span></p>
-    {%- endif %}
+    {{ translation(q.id, q.translation, q.translation_model) }}
     {%- endif %}
   </article>
   {%- endfor %}

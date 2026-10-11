@@ -14,6 +14,10 @@
 | state rows | 257 |
 | state rows stale vs seed (marker_roots empty) | 0 |
 | declared states | 6 |
+| translations | 1356 |
+| translations stale (source changed) | 0 |
+| translations for unknown passages | 0 |
+| translations corrected by hand | 0 |
 
 # fetch
 

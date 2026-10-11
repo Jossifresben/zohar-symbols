@@ -12,6 +12,7 @@ from ..i18n import get_string
 bp = Blueprint("site", __name__)
 
 
+MODEL_NAMES = {"claude-fable-5-1": "Claude Fable 5.1"}
 BOOKS = ("Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy")
 
 
@@ -117,6 +118,18 @@ def register(app) -> None:
         return url_for(("site_es." if g.get("lang") == "es" else "site.") + "passage", pid=pid) + f"#p{para}"
 
     app.jinja_env.globals["passage_url"] = passage_url
+
+    def report_url(pid: str) -> str:
+        """A prefilled GitHub issue for a translation problem (no backend, no accounts)."""
+        from urllib.parse import urlencode
+        lang = g.get("lang", "en")
+        body = (f"Passage: {pid}\nLanguage: {lang}\nPage: https://zohar.digital{passage_url(pid)}\n\n"
+                "What is wrong, and what should it say?\n")
+        return "https://github.com/Jossifresben/zohar-symbols/issues/new?" + urlencode(
+            {"title": f"Translation: {pid} ({lang})", "labels": "translation", "body": body})
+
+    app.jinja_env.globals["report_url"] = report_url
+    app.jinja_env.globals["model_name"] = lambda m: MODEL_NAMES.get(m, m)
     app.jinja_env.globals["first_passage_id"] = row["id"] if row else ""
 
     @app.before_request

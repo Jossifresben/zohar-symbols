@@ -124,3 +124,14 @@ def test_verse_ref_book_localised_in_spanish(app):
         from flask import g
         g.lang = "en"
         assert verse_ref("Exodus 23:17") == "Exodus 23:17"
+
+
+def test_translation_shows_attribution_and_report_link(app, fixture_db):
+    import sqlite3
+    con = sqlite3.connect(fixture_db)
+    con.execute("insert or replace into translation values ('1.020b.002','en','The King and the Matronita','claude-fable-5-1','t2','2026-10-11')")
+    con.commit(); con.close()
+    html = app.test_client().get("/passage/1.020b.002").get_data(as_text=True)
+    assert "The King and the Matronita" in html and "Claude Fable 5.1" in html
+    assert "github.com/Jossifresben/zohar-symbols/issues/new?" in html and "Report a problem" in html
+    con = sqlite3.connect(fixture_db); con.execute("delete from translation"); con.commit(); con.close()

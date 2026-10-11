@@ -1,0 +1,11 @@
+{% macro translation(pid, text, model) %}
+{%- if text %}
+<p class="pc-tr" lang="{{ lang }}">{{ text }}</p>
+<p class="attribution muted">
+  {%- if model == 'human-correction' %}{{ t('corrected_by_hand') }}{% else %}{{ t('translated_by', model=model_name(model)) }}{% endif %}
+  · <a href="{{ report_url(pid) }}" rel="nofollow">{{ t('report_problem') }}</a>
+</p>
+{%- else %}
+<p class="pc-tr"><span class="muted">{{ t('not_translated') }}</span></p>
+{%- endif %}
+{% endmacro %}

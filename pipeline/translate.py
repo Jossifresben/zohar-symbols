@@ -194,6 +194,24 @@ def prewarm(conn) -> dict:
     return r.usage.to_dict()
 
 
+def export(names: list[str], created_at: str = "2026-10-11") -> str:
+    """Write the committed translations file: one row per (passage, language), sorted."""
+    from .version import TABLES_VERSION
+    rows = {}
+    for n in names:
+        for line in (WORK / f"{n}_results.jsonl").open(encoding="utf-8"):
+            r = json.loads(line)
+            if r["status"] == "succeeded" and r.get("stop_reason") == "end_turn" and r.get("text"):
+                rows[(r["passage_id"], r["lang"])] = dict(
+                    passage_id=r["passage_id"], lang=r["lang"], text=r["text"], model=r["model"],
+                    prompt_version=r["prompt_version"], source_hash=r["source_hash"], created_at=created_at)
+    out = ROOT / "data" / f"translations.v{TABLES_VERSION}.jsonl"
+    with out.open("w", encoding="utf-8") as f:
+        for k in sorted(rows):
+            f.write(json.dumps(rows[k], ensure_ascii=False, sort_keys=True) + "\n")
+    return f"{len(rows)} translations -> {out}"
+
+
 def main(argv=None) -> None:
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -207,6 +225,8 @@ def main(argv=None) -> None:
     f.add_argument("--range", default="0:")
     f.add_argument("--submit", action="store_true")
     f.add_argument("--no-cache", action="store_true")
+    e = sub.add_parser("export")
+    e.add_argument("names", nargs="+", help="result sets to export, e.g. full_a full_b")
     c = sub.add_parser("collect")
     c.add_argument("batch_id")
     c.add_argument("--name", default="pilot")
@@ -237,6 +257,8 @@ def main(argv=None) -> None:
             bid = submit(reqs)
             (WORK / f"{a.name}_batch_id").write_text(bid)
             print(f"submitted batch {bid}")
+    elif a.cmd == "export":
+        print(export(a.names))
     else:
         rows = collect(a.batch_id, conn)
         with (WORK / f"{a.name}_results.jsonl").open("w", encoding="utf-8") as fh:

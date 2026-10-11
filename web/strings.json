@@ -340,8 +340,8 @@
     "es": "sin traducir aún"
   },
   "translated_by": {
-    "en": "Translated by {model}",
-    "es": "Traducido por {model}"
+    "en": "Translated by {model}, not reviewed by specialists",
+    "es": "Traducido por {model}, sin revisión de especialistas"
   },
   "where_in_book": {
     "en": "Where in the book",
@@ -894,5 +894,13 @@
   "book_deuteronomy": {
     "en": "Deuteronomy",
     "es": "Deuteronomio"
+  },
+  "corrected_by_hand": {
+    "en": "Translation corrected by hand",
+    "es": "Traducción corregida a mano"
+  },
+  "report_problem": {
+    "en": "Report a problem",
+    "es": "Señalar un error"
   }
 }

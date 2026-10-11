@@ -7,6 +7,7 @@ from pathlib import Path
 from .lemmatise import tokenize
 from .report import headline, read_report, write_sections
 from .tag import Symbol, load_kinnuyim
+from . import translations
 from .version import TABLES_VERSION
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -31,7 +32,8 @@ def count_stale_states(computed: dict, symbols: list[Symbol]) -> int:
 
 
 def build(raw: dict, tokens: list[dict], mentions: list[dict], computed: dict,
-          symbols: list[Symbol], out_sqlite: Path, out_json: Path) -> None:
+          symbols: list[Symbol], out_sqlite: Path, out_json: Path,
+          translations: list[tuple] | None = None) -> None:
     out_sqlite.parent.mkdir(parents=True, exist_ok=True)
     if out_sqlite.exists():
         out_sqlite.unlink()
@@ -62,6 +64,7 @@ def build(raw: dict, tokens: list[dict], mentions: list[dict], computed: dict,
         for s in computed["states"]])
     con.executemany("insert into surfaced values (?,?,?)", [
         (sid, i, pid) for sid, pids in computed["surfaced"].items() for i, pid in enumerate(pids)])
+    con.executemany("insert into translation values (?,?,?,?,?,?)", translations or [])
     con.executemany("insert into meta values (?,?)", [
         ("tables_version", TABLES_VERSION),
         ("built_at", datetime.now(timezone.utc).isoformat(timespec="seconds")),
@@ -88,7 +91,10 @@ def main(argv=None) -> None:
     computed = json.loads((work / "computed.json").read_text(encoding="utf-8"))
     syms = load_kinnuyim(ROOT / "seeds" / "kinnuyim.tsv")
     out_sqlite = ROOT / "data" / "zohar.sqlite"
-    build(raw, tokens, mentions, computed, syms, out_sqlite, ROOT / "data" / f"tables.v{TABLES_VERSION}.json")
+    tr_rows, tr_stats = translations.load(ROOT / "data" / f"translations.v{TABLES_VERSION}.jsonl",
+                                          ROOT / "data" / "translation_overrides.tsv", raw["passages"])
+    build(raw, tokens, mentions, computed, syms, out_sqlite, ROOT / "data" / f"tables.v{TABLES_VERSION}.json",
+          translations=tr_rows)
     build_rows = [
         ("passages", len(raw["passages"])), ("tokens", len(tokens)), ("mentions", len(mentions)),
         ("symbols", len(syms)), ("pairs", len(computed["cooccurrence"])),
@@ -99,6 +105,7 @@ def main(argv=None) -> None:
         ("state rows", len(computed["states"])),
         ("state rows stale vs seed (marker_roots empty)", count_stale_states(computed, syms)),
         ("declared states", sum(len(s.states) for s in syms)),
+        *tr_stats.items(),
     ]
     # raw/ and work/ are not committed: their headline rows travel with the tables in data/report.md
     stages = [ROOT / "raw" / "report.md", work / "lemmatise.report.md", work / "tag.report.md",
