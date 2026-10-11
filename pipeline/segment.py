@@ -44,12 +44,13 @@ _LABEL_FIXES = {("זוהר חלק א", "א א"), ("זוהר חלק ג", "נט ב
 _TEXT_FIXES = {
     # variant reading "(ס"א נחש זוטא" is never closed; the reading is two words
     ("זוהר חלק י", 'נחש אחרא (ס"א נחש זוטא,'): 'נחש אחרא (ס"א נחש זוטא),',
-    # editor's note {{הערה| opened but never closed; it ends before the Aramaic resumes
+    # editor's Hebrew note {{הערה| is never closed; it ends at "(המתוק מדבש)}}" and the
+    # Aramaic Zohar text resumes with "הא אינון קדישין" (III 146b)
+    ("זוהר חלק כה", "(המתוק מדבש)}} - הא אינון קדישין"): "(המתוק מדבש)}}}} - הא אינון קדישין",
     # single-brace typo inside a gematria template (an angel name that must stay)
     ("זוהר חלק יז", '{{גמט דגש{גדרי"ה}}'): '{{גמט דגש|גדרי"ה}}',
     # editor's note closed with "))" instead of "}}"
     ("זוהר חלק יז", 'עיי"ש]))'): 'עיי"ש]}}',
-    ("זוהר חלק כה", "ליתוסף קדושה על קדושתיה. ועל דא לא יטול"): "ליתוסף קדושה על קדושתיה.}} ועל דא לא יטול",
     # template closed with "PP" instead of "}}"
     ("זוהר חלק יז", "ויחר אפי בהם ואכלםPP,"): "ויחר אפי בהם ואכלם}},",
 }
@@ -88,7 +89,7 @@ def _verse_ref(block: str) -> str | None:
 
 # Templates that carry Zohar text: name -> index of the argument that is the text.
 # Every other template (notes, citations, layout marks) is dropped with its content.
-_KEEP_ARG = {"צ": 0, "גמט": 0, "גמט דגש": 0, "קו תחתי": 0, "גדול": 0, "מר": 0, "עוגן": 0,
+_KEEP_ARG = {"צ": 0, "גמט": 0, "גמט דגש": 0, "קו תחתי": 0, "גדול": 0, "מר": 0,
              "ב": 0, "קיצור": 0, "תיקון גירסה": 0, "תיקון": 0, 'קו"כ': 0, 'כו"ק': 0, "מצ": 3}
 
 

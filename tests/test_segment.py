@@ -154,12 +154,20 @@ def test_folio_label_with_parasha_suffix():
 
 def test_known_typo_fix_must_match_exactly_once():
     from pipeline.segment import _TEXT_FIXES
-    (title, old), new = next(iter(_TEXT_FIXES.items()))
-    with pytest.raises(SegmentError, match="known typo"):
-        segment_page(_sec("nothing here"), 1, "X", title)
+    for (title, old) in _TEXT_FIXES:
+        with pytest.raises(SegmentError, match="known typo"):
+            segment_page(_sec("nothing here"), 1, "X", title)
+        with pytest.raises(SegmentError, match="known typo"):
+            segment_page(_sec(old + " " + old), 1, "X", title)
 
 
-def test_stray_duplicate_start_tag_in_label_fixes():
-    wt = "<קטע התחלה=דף נט ב/>\n<קטע התחלה=דף נט ב/>text<קטע סוף=דף נט ב/>"
-    ps = segment_page(wt, 1, "Noach", "זוהר חלק ג")
-    assert [p.id for p in ps] == ["1.059b.01"]
+def test_unclosed_note_fix_keeps_resuming_zohar_text():
+    wt = _sec("א{{הערה|הנה {{צ|כי לי (המתוק מדבש)}} - הא אינון קדישין. וכתיב בהו בלוים")
+    ps = segment_page(wt, 1, "X", "זוהר חלק כה")
+    assert "הערה" not in ps[0].text_ar and "הנה" not in ps[0].text_ar
+    assert ps[0].text_ar == "א - הא אינון קדישין. וכתיב בהו בלוים"
+
+
+def test_anchor_template_dropped_and_tikkun_girsa_keeps_printed_reading():
+    assert clean_wikitext("{{עוגן|בריך שמיה}} אמר") == "אמר"
+    assert clean_wikitext("{{תיקון גירסה|מטיבו|משיכו}} דיינא") == "מטיבו דיינא"

@@ -42,7 +42,7 @@ surface	root	stem	note
 יהו״ה		 	abbreviation, non-lexical (no root)
 ר״ש		 	abbreviation, non-lexical (no root)
 ד״א		 	abbreviation, non-lexical (no root)
-וגו׳		 	abbreviation "ve-gomer" (and so on), non-lexical
+וגו׳		 	"abbreviation ""ve-gomer"" (and so on), non-lexical"
 דא			function word, non-lexical (no root)
 לא			function word, non-lexical (no root)
 ליה			function word, non-lexical (no root)
@@ -74,14 +74,14 @@ surface	root	stem	note
 בתר			function word, non-lexical (no root)
 תמן			function word, non-lexical (no root)
 השתא			function word, non-lexical (no root)
-ממש			function word, non-lexical (no root)
+ממש	משש		lexical
 אוף			function word, non-lexical (no root)
-יאות			function word, non-lexical (no root)
+יאות	יאי		proper
 אשר			function word, non-lexical (no root)
 אנא			function word, non-lexical (no root)
 אני			function word, non-lexical (no root)
 מניה			function word, non-lexical (no root)
-עליה			function word, non-lexical (no root)
+עליה	על		upon him (matches עלייהו)
 עמיה			function word, non-lexical (no root)
 מנייהו			function word, non-lexical (no root)
 קמיה			function word, non-lexical (no root)
@@ -115,7 +115,7 @@ surface	root	stem	note
 ב׳			letter name or numeral, non-lexical
 ג׳			letter name or numeral, non-lexical
 ד׳			letter name or numeral, non-lexical
-ה׳			letter name or numeral, non-lexical
+ה׳			Tetragrammaton abbreviation in verse quotations / letter name
 ו׳			letter name or numeral, non-lexical
 ז׳			letter name or numeral, non-lexical
 ח׳			letter name or numeral, non-lexical
@@ -134,7 +134,7 @@ surface	root	stem	note
 אמרו	אמר		to say
 תימא	אמר		to say
 כדקאמרן	אמר		to say
-חד	חד		one
+חד	אחד		one
 תרין	תרי		two
 תלת	תלת		three
 ארבע	רבע		four
@@ -159,7 +159,7 @@ surface	root	stem	note
 בעי	בעי		to want
 אשתכח	שכח		to be found
 אתחזי	חזי		to see
-חמא	חזי		to see
+חמא	חמי		to see
 אחזאה	חזי		to see
 אתער	עור		to awaken
 אתערא	עור		to awaken
@@ -176,7 +176,7 @@ surface	root	stem	note
 עלמא	עלם		world
 רזא	רז		secret
 יתיר	יתר		more
-שעתא	שעה		hour
+שעתא	שעי		hour
 גופא	גוף		body
 היכלא	היכל		palace
 דרגא	דרג		degree
@@ -197,11 +197,11 @@ surface	root	stem	note
 יצחק	יצחק		proper name (name used as root)
 אברהם	אברהם		proper name (name used as root)
 משה	משה		proper name (name used as root)
-אדם	אדם		proper name (name used as root)
+אדם	אדם		common noun 'man' in the Zohar; also the name
 דוד	דוד		proper name (name used as root)
 יוסף	יוסף		proper name (name used as root)
 יוסי	יוסי		proper name (name used as root)
-אבא	אבא		proper name (name used as root)
+אבא	אב		Rabbi Abba AND the partzuf Abba — tagging follow-up
 אלעזר	אלעזר		proper name (name used as root)
 חזקיה	חזקיה		proper name (name used as root)
 פנחס	פנחס		proper name (name used as root)
@@ -209,4 +209,4 @@ surface	root	stem	note
 ירושלם	ירושלם		proper name (name used as root)
 ישעיה	ישעיה		proper name (name used as root)
 תהלים	תהלים		proper name (name used as root)
-שכל	שכל		intellect; guards against the proclitic-stripped match of כל
+ל			function word, non-lexical (no root)

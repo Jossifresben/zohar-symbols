@@ -117,6 +117,8 @@ def main(argv=None) -> None:
     low = Counter(t["surface"] for t in toks if t["confidence"] < 0.5)
     rows = [("tokens", len(toks)),
             ("with root", sum(1 for t in toks if t["root"])),
+            ("non-lexical by override (empty root)", sum(1 for t in toks if not t["root"] and t["source"] == "override")),
+            ("no root, unknown", sum(1 for t in toks if not t["root"] and t["source"] != "override")),
             ("override", sum(1 for t in toks if t["source"] == "override")),
             ("confidence ≥ 0.8", sum(1 for t in toks if t["confidence"] >= 0.8)),
             ("confidence < 0.5", sum(1 for t in toks if t["confidence"] < 0.5))]

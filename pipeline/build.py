@@ -84,6 +84,9 @@ def main(argv=None) -> None:
         ("passages", len(raw["passages"])), ("tokens", len(tokens)), ("mentions", len(mentions)),
         ("symbols", len(syms)), ("pairs", len(computed["cooccurrence"])),
         ("tokens with root", sum(1 for t in tokens if t["root"])),
+        ("non-lexical by override (empty root)", sum(1 for t in tokens if not t["root"] and t["source"] == "override")),
+        ("no root, unknown", sum(1 for t in tokens if not t["root"] and t["source"] != "override")),
+        ("confidence ≥ 0.8", sum(1 for t in tokens if t["confidence"] >= 0.8)),
         ("state rows", len(computed["states"])),
         ("state rows stale vs seed (marker_roots empty)", count_stale_states(computed, syms)),
     ])
