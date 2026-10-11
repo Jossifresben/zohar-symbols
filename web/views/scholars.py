@@ -6,11 +6,11 @@ from . import bp
 
 @bp.route("/scholars")
 def scholars():
-    meta = queries.meta()
-    shares = queries.token_shares()
-    counts = dict(shares, **queries.passage_totals(), symbols=len(queries.symbols_table(g.lang)), aliases=queries.alias_count())
+    meta = queries.cached("meta")
+    counts = dict(queries.cached("token_shares"), **queries.cached("passage_totals"),
+                  symbols=len(queries.symbols_table(g.lang)), aliases=queries.cached("alias_count"))
     return render_template("scholars.html", meta=meta, counts=counts, formats=cite.formats(meta),
-                           revids=", ".join(str(r) for r in _revids(meta)), pairs=queries.scholars_pairs(lang=g.lang))
+                           revids=", ".join(str(r) for r in _revids(meta)), pairs=queries.cached("scholars_pairs", g.lang))
 
 
 @bp.route("/about")

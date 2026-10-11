@@ -266,3 +266,32 @@ def symbols_table(lang: str) -> list[dict]:
 def all_pairs() -> list[dict]:
     return [dict(symbol_a=r["symbol_a"], symbol_b=r["symbol_b"], passages_together=r["passages_together"], pmi=r["pmi"])
             for r in rows("select symbol_a, symbol_b, passages_together, pmi from cooccurrence order by pmi desc, symbol_a, symbol_b")]
+
+
+LANGS = ("en", "es")
+
+
+def warm(app) -> None:
+    """Compute the expensive page data once; the DB never changes between deploys, so the cache is immutable.
+
+    Call inside an app context. Stores `app.config["CACHE"]` (key -> value, or key -> {lang: value}) and
+    `app.config["CACHE_WARM_MS"]`.
+    """
+    import time
+    t0 = time.perf_counter()
+    app.config["CACHE"] = {
+        "meta": meta(),
+        "nodes_with_symbols": {lang: nodes_with_symbols(lang) for lang in LANGS},
+        "token_shares": token_shares(),
+        "passage_totals": passage_totals(),
+        "alias_count": alias_count(),
+        "scholars_pairs": {lang: scholars_pairs(lang=lang) for lang in LANGS},
+    }
+    app.config["CACHE_WARM_MS"] = round((time.perf_counter() - t0) * 1000, 1)
+
+
+def cached(key: str, lang: str | None = None):
+    """A warmed value; KeyError for an unknown key (or language). Treat the result as read-only."""
+    from flask import current_app
+    v = current_app.config["CACHE"][key]
+    return v if lang is None else v[lang]

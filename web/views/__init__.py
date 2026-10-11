@@ -94,7 +94,7 @@ def register(app) -> None:
     @app.route("/healthz")
     def healthz():
         row = db.one("select value from meta where key='tables_version'")
-        return jsonify(ok=True, tables_version=row["value"] if row else None)
+        return jsonify(ok=True, tables_version=row["value"] if row else None, cache_warm_ms=app.config["CACHE_WARM_MS"])
 
     app.register_blueprint(bp)
     app.register_blueprint(bp, url_prefix="/es", name="site_es")

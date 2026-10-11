@@ -42,4 +42,4 @@ def symbol(sid):
     return render_template("symbol.html", s=s, partners=partners, also_with=partners[1:1 + ALSO_WITH],
                            states=st, strata=strata,
                            cards=queries.surfaced(sid, g.lang), also=also,
-                           citation=cite.formats(queries.meta())["chicago"])
+                           citation=cite.formats(queries.cached("meta"))["chicago"])

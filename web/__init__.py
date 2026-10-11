@@ -22,4 +22,8 @@ def create_app(db_path: str | None = None) -> Flask:
 
     from .views import register
     register(app)
+
+    from . import queries
+    with app.app_context():
+        queries.warm(app)
     return app

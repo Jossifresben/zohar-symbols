@@ -9,7 +9,7 @@ from . import bp
 
 
 def _version() -> str | None:
-    return queries.meta().get("tables_version")
+    return queries.cached("meta").get("tables_version")
 
 
 def _csv(name: str, header: list[str], rows: list[list]) -> Response:
@@ -58,5 +58,5 @@ def api_symbols_json():
 
 @bp.route("/api/meta.json")
 def api_meta_json():
-    m = queries.meta()
+    m = queries.cached("meta")
     return jsonify(tables_version=m.get("tables_version"), meta=m)

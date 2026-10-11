@@ -21,7 +21,7 @@ CLUSTERS = [
 
 
 def build_clusters(lang: str) -> list[dict]:
-    nodes = {n["node"]: n for n in queries.nodes_with_symbols(lang)}
+    nodes = {n["node"]: n for n in queries.cached("nodes_with_symbols", lang)}
     events = sorted((s for n in nodes.values() for s in n["symbols"] if s["kind"] == "event"),
                     key=lambda s: (-s["count_passages"], s["id"]))
     out = []
