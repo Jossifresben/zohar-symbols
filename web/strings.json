@@ -271,10 +271,6 @@
     "en": "{n} passages",
     "es": "{n} pasajes"
   },
-  "all_strata": {
-    "en": "Across the strata",
-    "es": "En todos los estratos"
-  },
   "appears_alongside": {
     "en": "Appears alongside",
     "es": "Aparece junto a"
@@ -293,14 +289,14 @@
   },
   "passages_together_n": {
     "en": "{n} passages together",
-    "es": "{n} pasajes juntos"
+    "es": "juntos en {n} pasajes"
   },
   "also_with": {
     "en": "Also with",
     "es": "También con"
   },
   "no_partners": {
-    "en": "No companions yet.",
+    "en": "No partners yet.",
     "es": "Aún sin compañeros."
   },
   "states": {
@@ -353,7 +349,7 @@
   },
   "where_in_book": {
     "en": "Where in the book",
-    "es": "Dónde en el libro"
+    "es": "Dónde aparece en el libro"
   },
   "for_scholars": {
     "en": "For scholars",
@@ -450,5 +446,29 @@
   "stratum_idra_zuta": {
     "en": "Idra Zuta",
     "es": "Idra Zuta"
+  },
+  "strata_n": {
+    "en": "Across {n} strata",
+    "es": "En {n} estratos"
+  },
+  "strata_one": {
+    "en": "Only in {name}",
+    "es": "Solo en {name}"
+  },
+  "breadcrumb": {
+    "en": "Breadcrumb",
+    "es": "Ruta"
+  },
+  "passages_one": {
+    "en": "1 passage",
+    "es": "1 pasaje"
+  },
+  "passages_together_one": {
+    "en": "1 passage together",
+    "es": "juntos en 1 pasaje"
+  },
+  "unmarked_one": {
+    "en": "1 passage without a state marker",
+    "es": "1 pasaje sin marca de estado"
   }
 }

@@ -9,6 +9,7 @@ from .i18n import get_string
 NODE_ORDER = ["keter", "hokhmah", "binah", "hesed", "gevurah", "tiferet", "netzah", "hod", "yesod", "malkhut", "sitra_ahra", "ein_sof"]
 NODE_AR = {"keter": "כתר", "hokhmah": "חכמה", "binah": "בינה", "hesed": "חסד", "gevurah": "גבורה", "tiferet": "תפארת",
            "netzah": "נצח", "hod": "הוד", "yesod": "יסוד", "malkhut": "מלכות", "sitra_ahra": "סטרא אחרא", "ein_sof": "אין סוף"}
+STATE_ORDER = ["full", "diminished", "union", "exile"]  # display order; undeclared labels follow alphabetically
 PILLAR = {"hesed": "right", "netzah": "right", "hokhmah": "right", "gevurah": "left", "hod": "left", "binah": "left"}
 
 
@@ -78,7 +79,9 @@ def symbol(sid: str, lang: str) -> dict | None:
 
 
 def states(sid: str) -> dict:
-    decl = rows("select state_label, marker_roots from state_decl where symbol_id=? order by state_label", (sid,))
+    decl = sorted(rows("select state_label, marker_roots from state_decl where symbol_id=?", (sid,)),
+                  key=lambda d: (STATE_ORDER.index(d["state_label"]) if d["state_label"] in STATE_ORDER else len(STATE_ORDER),
+                                 d["state_label"]))
     counts = {r["state_label"]: r["n"] for r in rows(
         "select state_label, count(*) n from state where symbol_id=? group by state_label", (sid,))}
     marked = one("select count(distinct passage_id) n from state where symbol_id=?", (sid,))["n"]

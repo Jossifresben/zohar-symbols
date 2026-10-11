@@ -4,7 +4,7 @@
     {%- if p.parasha %} <span class="muted">· {{ p.parasha }}</span>{% endif %}
     {%- if p.stream != 'main' %} <span class="muted">· {{ t('stream_' ~ p.stream) }}</span>{% endif %}
   </header>
-  <p class="heb pc-ar" lang="arc" dir="rtl">{{ p.text_ar|highlight(p.mentions) }}</p>
+  <p class="heb pc-ar" lang="arc" dir="rtl">{{ p.text_ar|highlight(p.mentions, s.id if s is defined else none) }}</p>
   {%- if p.translation %}
   <p class="pc-tr">{{ p.translation }}</p>
   <p class="attribution muted">{{ t('translated_by', model=p.translation_model) }}</p>

@@ -14,7 +14,7 @@ from .version import TABLES_VERSION
 ROOT = Path(__file__).resolve().parent.parent
 _HEB = "\u05d0-\u05ea"
 _HEB_RE = re.compile(f"[{_HEB}]")
-_SPLIT = re.compile(r"[\s.,:;?!—…־()\[\]\"'\u05f4\u05f3]+")
+SPLIT = re.compile(r"[\s.,:;?!—…־()\[\]\"'\u05f4\u05f3]+")
 # a quote mark flanked by Hebrew letters is intra-word (gershayim); a single
 # trailing geresh after a Hebrew letter (ר', ר׳) belongs to the word too
 _GERSHAYIM = re.compile(f"(?<=[{_HEB}])[\"\u05f4](?=[{_HEB}])")
@@ -23,15 +23,24 @@ _PROCLITICS = "ודבלכמש"
 FINALS = str.maketrans("ךםןףץ", "כמנפצ")
 
 
+def protect_gershayim(text: str) -> str:
+    """Intra-word gershayim/geresh → private-use placeholders (one char each, so offsets are kept) that survive SPLIT."""
+    return _GERESH.sub("\ue001", _GERSHAYIM.sub("\ue000", text))
+
+
+def is_word(piece: str) -> bool:
+    """A SPLIT piece that `tokenize` keeps as a token."""
+    return bool(piece and _HEB_RE.search(piece))
+
+
 def tokenize(text: str) -> list[str]:
     """Split into words; keep Hebrew abbreviation marks (gershayim/geresh) inside words,
     normalised to ״ and ׳; drop tokens with no Hebrew letter."""
-    text = _GERSHAYIM.sub("\ue000", text)  # private-use placeholders survive the split
-    text = _GERESH.sub("\ue001", text)
+    text = protect_gershayim(text)
     out = []
-    for w in _SPLIT.split(text):
+    for w in SPLIT.split(text):
         w = w.replace("\ue000", "\u05f4").replace("\ue001", "\u05f3")
-        if w and _HEB_RE.search(w):
+        if is_word(w):
             out.append(w)
     return out
 

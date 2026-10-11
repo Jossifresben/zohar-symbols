@@ -87,3 +87,71 @@ def test_partners_return_node(app):
     with app.app_context():
         ps = queries.partners("moon", "en")
     assert ps and all("node" in p for p in ps)
+
+
+def _fixture_texts(app):
+    from web import db
+    with app.app_context():
+        return [r["text_ar"] for r in db.all("select text_ar from passage")]
+
+
+def test_highlight_reproduces_text_without_mentions(app):
+    from markupsafe import escape
+    from web.views import highlight
+    texts = _fixture_texts(app)
+    assert texts
+    for text in texts:
+        assert highlight(text, []) == escape(text)
+
+
+def test_highlight_reproduces_real_passages():
+    import sqlite3
+    from pathlib import Path
+    from markupsafe import escape
+    from web.views import highlight
+    import pytest
+    path = Path(__file__).resolve().parents[2] / "data" / "zohar.sqlite"
+    if not path.exists():
+        pytest.skip("real database not built")
+    con = sqlite3.connect(path)
+    texts = [r[0] for r in con.execute("select text_ar from passage order by random() limit 50")]
+    for text in texts:
+        assert highlight(text, []) == escape(text)
+
+
+def test_highlight_positions_match_tokenize_on_real_text(app):
+    """Every mention's wrapped text is the pipeline's matched token (positions agree with tokenize)."""
+    from web import queries
+    from web.views import highlight
+    from pipeline.lemmatise import tokenize
+    with app.app_context():
+        for pid in ("1.020a.001", "1.020a.002", "1.020b.001", "1.020b.002", "1.020b.003"):
+            p = queries.passage(pid, "en")
+            toks = tokenize(p["text_ar"])
+            out = str(highlight(p["text_ar"], p["mentions"]))
+            assert out.count('class="mention"') == len({m["position"] for m in p["mentions"]})
+            for m in p["mentions"]:
+                assert f'>{toks[m["position"]]}</a>' in out or toks[m["position"]].replace("״", '"') in out
+
+
+def test_highlight_keeps_punctuation_and_ignores_out_of_range():
+    from web.views import highlight
+    text = "כי הוא חלקך בחיים-- דא הוא שמשא, בסיהרא (שם ב יא). ר' אבא"
+    out = str(highlight(text, [dict(position=7, symbol_id="moon", matched_form="סיהרא"),
+                               dict(position=99, symbol_id="sun", matched_form="x")]))
+    assert 'שמשא, <a class="mention" href="/symbol/moon">בסיהרא</a> (שם ב יא).' in out
+    assert "/symbol/sun" not in out and "ר&#39; אבא" in out
+
+
+def test_highlight_prefers_page_symbol_on_cotagged_token():
+    from web.views import highlight
+    ms = [dict(position=0, symbol_id="zz", matched_form="a"), dict(position=0, symbol_id="moon", matched_form="a")]
+    assert 'href="/symbol/moon"' in str(highlight("סיהרא", ms))          # first by id
+    assert 'href="/symbol/zz"' in str(highlight("סיהרא", ms, prefer="zz"))
+
+
+def test_states_order_and_strata_chip(client):
+    html = client.get("/symbol/moon").get_data(as_text=True)
+    assert html.index(">full<") < html.index(">diminished<")
+    assert "Across 2 strata" in html or "Across 3 strata" in html or "Only in" in html
+    assert 'aria-label="Breadcrumb"' in html

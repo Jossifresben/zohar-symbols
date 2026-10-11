@@ -2,30 +2,53 @@
 from flask import Blueprint, g, has_request_context, jsonify, render_template, request, url_for
 from markupsafe import Markup, escape
 
-from pipeline.lemmatise import tokenize
+from pipeline.lemmatise import SPLIT, is_word, protect_gershayim
 
 from .. import db, queries
 
 bp = Blueprint("site", __name__)
 
 
-def highlight(text_ar: str, mentions: list[dict]) -> Markup:
-    """The passage text with each mentioned token wrapped in a link to its symbol.
+def highlight(text_ar: str, mentions: list[dict], prefer: str | None = None) -> Markup:
+    """The passage text, reproduced exactly, with each mentioned token wrapped in a link to its symbol.
 
-    Re-tokenises with the pipeline's own `tokenize`, whose indices are what `mention.position` counts, and
-    re-joins with single spaces. The pipeline normalised whitespace, so this reproduces the text except that
-    punctuation-only tokens (dropped by `tokenize`) and punctuation glued to words outside Hebrew letters are lost.
+    Splits with the pipeline's own separator pattern (`SPLIT`, on gershayim-protected text so offsets match)
+    and counts only the pieces `tokenize` keeps, so the counter equals `mention.position`. Separators and
+    non-word pieces are emitted verbatim (escaped). A position tagged with several symbols links to `prefer`
+    (the page's own symbol) when present, else to the first by symbol id. Positions past the end are ignored.
     """
     if not text_ar:
         return Markup("")
-    at = {m["position"]: m["symbol_id"] for m in mentions}
-    out = []
-    for i, tok in enumerate(tokenize(text_ar)):
-        if i in at:
-            out.append(Markup('<a class="mention" href="{}">{}</a>').format(_symbol_href(at[i]), tok))
+    at: dict[int, list[str]] = {}
+    for m in mentions:
+        at.setdefault(m["position"], []).append(m["symbol_id"])
+    out, pos = [], 0
+    protected = protect_gershayim(text_ar)
+    for kind, a, b in _pieces(protected):
+        orig = text_ar[a:b]
+        if kind == "word":
+            ids = at.get(pos)
+            if ids:
+                sid = prefer if prefer in ids else min(ids)
+                out.append(Markup('<a class="mention" href="{}">{}</a>').format(_symbol_href(sid), orig))
+            else:
+                out.append(escape(orig))
+            pos += 1
         else:
-            out.append(escape(tok))
-    return Markup(" ").join(out)
+            out.append(escape(orig))
+    return Markup("").join(out)
+
+
+def _pieces(protected: str):
+    """(kind, start, end) spans covering `protected` exactly: 'sep' for SPLIT matches, 'word'/'other' between."""
+    i = 0
+    for m in SPLIT.finditer(protected):
+        if m.start() > i:
+            yield ("word" if is_word(protected[i:m.start()]) else "other", i, m.start())
+        yield ("sep", m.start(), m.end())
+        i = m.end()
+    if i < len(protected):
+        yield ("word" if is_word(protected[i:]) else "other", i, len(protected))
 
 
 def _symbol_href(sid: str) -> str:

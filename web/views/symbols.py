@@ -6,7 +6,6 @@ from . import bp
 
 TOP_GOLD = 3          # evidence strip: the first three partners are gold
 ALSO_WITH = 4         # "How it moves": partners listed after the top one
-ALL_STRATA_MIN = 3    # strata chip says "across strata" from this many on
 
 
 def _pct(n: int, total: int) -> int:
@@ -41,6 +40,6 @@ def symbol(sid):
         x["width"] = _pct(x["count"], n)
     also = [a for a in s["aliases_surface"] if a != s["label_ar"]]
     return render_template("symbol.html", s=s, partners=partners, also_with=partners[1:1 + ALSO_WITH],
-                           states=st, strata=strata, all_strata=len(strata) >= ALL_STRATA_MIN,
+                           states=st, strata=strata,
                            cards=queries.surfaced(sid, g.lang), also=also,
                            citation=cite.formats(queries.meta())["chicago"])
