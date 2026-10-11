@@ -8,7 +8,7 @@ from pathlib import Path
 
 from aramaic_core.characters import hebrew_to_syriac
 
-from .lemmatise import _FINALS
+from .lemmatise import FINALS
 from .lemmatise import proclitic_candidates as strip_proclitics  # one proclitic rule for both stages
 from .report import write_report
 
@@ -17,7 +17,11 @@ NODES = {"ein_sof", "keter", "hokhmah", "binah", "hesed", "gevurah", "tiferet",
          "netzah", "hod", "yesod", "malkhut", "sitra_ahra"}
 KINDS = {"person", "object", "quality", "event"}
 # a word right after one of these is a sage's name (רבי אבא, ר׳ יצחק), not a symbol
-_TITLES = {"רבי", "ר׳"}
+_TITLES = {"רבי", "ר׳", "א״ר", "רב"}
+# a double proclitic is only stripped when it is a real sequence; anything else (של+ים, מש+לבן) eats root letters
+_DOUBLE_PROCLITICS = {"וד", "וב", "ול", "וכ", "ומ", "דב", "דל", "דכ", "דמ", "וש"}
+# only these single proclitics may leave a two-letter remainder (בים, דגן — but not מגן)
+_SHORT_OK = set("ובדל")
 _NON_WORD_EDGES = re.compile(r"^[^א-ת]+|[^א-ת׳״]+$")
 
 __all__ = ["Symbol", "SeedError", "load_kinnuyim", "strip_proclitics", "tag", "main"]
@@ -59,7 +63,7 @@ def _parse_states(s: str) -> dict[str, list[str]]:
 
 def _root_key(heb: str) -> str:
     """Hebrew-script root -> the Atlas's canonical Syriac key (finals folded first)."""
-    return hebrew_to_syriac(heb.translate(_FINALS))
+    return hebrew_to_syriac(heb.translate(FINALS))
 
 
 def load_kinnuyim(path: Path) -> list[Symbol]:
@@ -91,8 +95,21 @@ def _clean(surface: str) -> str:
     return _NON_WORD_EDGES.sub("", surface)
 
 
+def _candidates(surface: str) -> list[str]:
+    """strip_proclitics, minus readings that would strip root letters."""
+    out = []
+    for c in strip_proclitics(surface):
+        k = len(surface) - len(c)
+        if k == 2 and (surface[:2] not in _DOUBLE_PROCLITICS or len(c) < 3):
+            continue
+        if k == 1 and len(c) < 3 and surface[0] not in _SHORT_OK:
+            continue
+        out.append(c)
+    return out
+
+
 def _is_title(surface: str) -> bool:
-    return any(c in _TITLES for c in strip_proclitics(_clean(surface)))
+    return any(c in _TITLES for c in _candidates(_clean(surface)))
 
 
 def tag(tokens: list[dict], symbols: list[Symbol]) -> list[dict]:
@@ -119,18 +136,24 @@ def tag(tokens: list[dict], symbols: list[Symbol]) -> list[dict]:
         surfaces = [_clean(t["surface"]) for t in toks]
         covered: set[int] = set()  # token indices inside a multi-word match
         for i, t in enumerate(toks):
-            cands = strip_proclitics(surfaces[i])
-            for words, sid in multi:
-                n = len(words)
-                if words[0] in cands and surfaces[i + 1:i + n] == words[1:]:
+            if i in covered:  # no match starts inside a longer one already found
+                continue
+            cands = _candidates(surfaces[i])
+            hits = [(words, sid) for words, sid in multi
+                    if words[0] in cands and surfaces[i + 1:i + len(words)] == words[1:]]
+            if not hits:
+                continue
+            n = max(len(w) for w, _ in hits)  # longest alias at this start wins
+            for words, sid in hits:
+                if len(words) == n:
                     mentions.append(dict(symbol_id=sid, passage_id=pid, position=t["position"],
                                          matched_form=" ".join(words), via="surface"))
-                    covered.update(range(i, i + n))
+            covered.update(range(i, i + n))
         for i, t in enumerate(toks):
             if i in covered or (i > 0 and _is_title(surfaces[i - 1])):
                 continue
             # the longest reading wins: שמיא is Heaven, not ש+מיא
-            c = next((c for c in strip_proclitics(surfaces[i]) if c in single), None)
+            c = next((c for c in _candidates(surfaces[i]) if c in single), None)
             if c is not None:
                 for sid in single[c]:
                     mentions.append(dict(symbol_id=sid, passage_id=pid, position=t["position"],
@@ -138,7 +161,7 @@ def tag(tokens: list[dict], symbols: list[Symbol]) -> list[dict]:
             elif t.get("root") and t["root"] in by_root:
                 for sid in by_root[t["root"]]:
                     mentions.append(dict(symbol_id=sid, passage_id=pid, position=t["position"],
-                                         matched_form=t["surface"], via="root"))
+                                         matched_form=surfaces[i], via="root"))
     mentions.sort(key=lambda m: (m["passage_id"], m["position"], m["symbol_id"]))
     return mentions
 

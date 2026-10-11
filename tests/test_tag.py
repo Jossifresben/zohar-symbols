@@ -20,7 +20,8 @@ def test_seed_loads_and_validates():
     assert len(ids) == len(set(ids))
     assert all(s.aliases_surface for s in syms)
     moon = next(s for s in syms if s.id == "moon")
-    assert moon.states["diminished"] == ["זער", "מעט", "גלות"]
+    assert moon.states["diminished"] == ["זער", "מעט", "גלו"]
+    assert moon.states["full"] == ["שלם", "מלא"]
 
 
 def test_proclitic_forms_match():
@@ -79,8 +80,8 @@ def test_tokens_inside_multiword_match_not_tagged_singly():
 
 def test_rabbi_names_not_tagged():
     syms = load_kinnuyim(SEEDS)
-    m = tag(_toks("p", "רבי אבא ור׳ יצחק אבא"), syms)
-    assert [(x["position"], x["symbol_id"]) for x in m] == [(4, "abba")]
+    m = tag(_toks("p", "רבי אבא ור׳ יצחק א״ר יצחק רב יוסף אבא"), syms)
+    assert [(x["position"], x["symbol_id"]) for x in m] == [(8, "abba")]
 
 
 def test_trailing_punctuation_ignored():
@@ -88,3 +89,30 @@ def test_trailing_punctuation_ignored():
     toks = [dict(passage_id="p", position=0, surface="סיהרא?!", root=None, stem=None,
                  confidence=0.0, source="none")]
     assert [x["symbol_id"] for x in tag(toks, syms)] == ["moon"]
+
+
+def test_proclitic_stripping_does_not_eat_root_letters():
+    syms = load_kinnuyim(SEEDS)
+    assert tag(_toks("p", "שלים ששים לשאבא למרחם משלבן מגן"), syms) == []
+
+
+def test_allowed_proclitics_still_strip():
+    syms = load_kinnuyim(SEEDS)
+    m = tag(_toks("p", "ודסיהרא ובגנתא דגן עדן"), syms)
+    assert [(x["position"], x["symbol_id"]) for x in m] == [(0, "moon"), (1, "garden"), (2, "garden")]
+
+
+def test_longest_multiword_wins_at_same_start():
+    syms = load_kinnuyim(SEEDS)
+    m = tag(_toks("p", "סטרא אחרא בישא"), syms)
+    assert [(x["symbol_id"], x["matched_form"]) for x in m] == [("sitra_ahra", "סטרא אחרא בישא")]
+    m = tag(_toks("p", "נקודה חדא עלאה"), syms)
+    assert [x["symbol_id"] for x in m] == ["supernal_point"]
+
+
+def test_root_hit_stores_cleaned_surface():
+    syms = load_kinnuyim(SEEDS)
+    from aramaic_core.characters import hebrew_to_syriac
+    toks = [dict(passage_id="p", position=0, surface="בזווגייהו?", root=hebrew_to_syriac("זוג"),
+                 stem=None, confidence=0.9, source="aramaic_core")]
+    assert tag(toks, syms)[0]["matched_form"] == "בזווגייהו"

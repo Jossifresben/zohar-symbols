@@ -20,7 +20,7 @@ _SPLIT = re.compile(r"[\s.,:;()\[\]\"'\u05f4\u05f3]+")
 _GERSHAYIM = re.compile(f"(?<=[{_HEB}])[\"\u05f4](?=[{_HEB}])")
 _GERESH = re.compile(f"(?<=[{_HEB}])['\u05f3](?![{_HEB}])")
 _PROCLITICS = "ודבלכמש"
-_FINALS = str.maketrans("ךםןףץ", "כמנפצ")
+FINALS = str.maketrans("ךםןףץ", "כמנפצ")
 
 
 def tokenize(text: str) -> list[str]:
@@ -54,7 +54,7 @@ def load_overrides(path: Path) -> dict[str, tuple[str | None, str | None]]:
             surface = r["surface"].strip()
             if surface in out:
                 raise ValueError(f"duplicate override surface: {surface!r}")
-            raw_root = (r.get("root") or "").strip().translate(_FINALS)
+            raw_root = (r.get("root") or "").strip().translate(FINALS)
             root = hebrew_to_syriac(raw_root) if raw_root else None
             if root is not None and not all("\u0700" <= ch <= "\u074f" for ch in root):
                 raise ValueError(f"override root for {surface!r} is not pure Syriac: {raw_root!r}")
