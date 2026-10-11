@@ -18,7 +18,7 @@ def main(argv=None) -> None:
     fetch.main(["--only", str(a.only)] if a.only else [])
     lemmatise.main([])
     tag.main([])
-    compute.main()
+    compute.main([])
     build.main([])
 
 

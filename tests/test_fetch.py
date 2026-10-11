@@ -65,3 +65,14 @@ def test_within_page_continuation_listed_in_report():
     out = build_raw([("זוהר חלק ב", 1, "Bereshit", PageText("זוהר חלק ב", 1, "t", wt))])
     assert [p["id"] for p in out["passages"]] == ["1.020a.01", "1.020a.02"]
     assert dict(report_rows(out))["continued: 1.020a"] == 2
+
+
+def test_sources_md_is_stable_across_runs(tmp_path: Path):
+    from pipeline.fetch import write_sources_md
+    fix = (Path(__file__).parent / "fixtures" / "bereshit_20a.wikitext").read_text(encoding="utf-8")
+    pages = [("זוהר חלק ב", 1, "Bereshit", PageText("זוהר חלק ב", 5, "2026-10-01T00:00:00Z", fix))]
+    a, b = tmp_path / "a.md", tmp_path / "b.md"
+    write_sources_md(build_raw(pages), a)
+    write_sources_md(build_raw(pages), b)
+    assert a.read_text() == b.read_text()
+    assert "Source revisions as of 2026-10-01T00:00:00Z" in a.read_text()

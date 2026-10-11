@@ -7,3 +7,4 @@ raw/
 work/
 !tests/fixtures/
 *.egg-info/
+data/zohar.sqlite

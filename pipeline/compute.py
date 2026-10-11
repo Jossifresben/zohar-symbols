@@ -151,7 +151,7 @@ def resolve_counts(mentions: list[dict], cooc: list[dict], symbols: list[Symbol]
     return {s.id: dict(raw=raw[s.id], resolved=resolved[s.id], passages=len(passages[s.id])) for s in symbols}
 
 
-def main() -> None:
+def main(argv=None) -> None:
     work = ROOT / "work"
     raw = json.loads((ROOT / "raw" / f"zohar.v{TABLES_VERSION}.json").read_text(encoding="utf-8"))
     tokens = [json.loads(l) for l in (work / "tokens.jsonl").open(encoding="utf-8")]

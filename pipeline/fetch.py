@@ -4,7 +4,6 @@ import argparse
 import csv
 import json
 from dataclasses import asdict
-from datetime import datetime, timezone
 from pathlib import Path
 
 from .report import write_report
@@ -30,7 +29,6 @@ def build_raw(pages: list[tuple[str, int, str, PageText]]) -> dict:
     the later page's paragraphs continue the numbering (recorded in split_detail).
     Within-page repeats are recorded in continued_detail."""
     out = {"tables_version": TABLES_VERSION,
-           "fetched_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
            "pages": [], "passages": [], "split_folios": 0, "continued_folios": 0,
            "split_detail": {}, "continued_detail": {}}
     max_para: dict[tuple[int, int, str], int] = {}
@@ -63,11 +61,12 @@ def build_raw(pages: list[tuple[str, int, str, PageText]]) -> dict:
             first_page.setdefault(key, title)
         out["passages"] += passages
     out["split_folios"] = len(out["split_detail"])
+    out["sources_as_of"] = max((p["timestamp"] for p in out["pages"]), default="")
     return out
 
 
 def write_sources_md(out: dict, path: Path) -> None:
-    lines = ["# Sources", "", f"Fetched {out['fetched_at']} from https://he.wikisource.org (CC BY-SA 4.0).", "",
+    lines = ["# Sources", "", f"Source revisions as of {out['sources_as_of']} from https://he.wikisource.org (CC BY-SA 4.0).", "",
              "| page | revid | timestamp |", "|---|---|---|"]
     lines += [f"| {p['title']} | {p['revid']} | {p['timestamp']} |" for p in out["pages"]]
     lines += ["", "`parasha` is a page-level label: a Wikisource parasha page may cover several parashot "

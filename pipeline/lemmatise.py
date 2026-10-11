@@ -14,7 +14,7 @@ from .version import TABLES_VERSION
 ROOT = Path(__file__).resolve().parent.parent
 _HEB = "\u05d0-\u05ea"
 _HEB_RE = re.compile(f"[{_HEB}]")
-_SPLIT = re.compile(r"[\s.,:;()\[\]\"'\u05f4\u05f3]+")
+_SPLIT = re.compile(r"[\s.,:;?!—…־()\[\]\"'\u05f4\u05f3]+")
 # a quote mark flanked by Hebrew letters is intra-word (gershayim); a single
 # trailing geresh after a Hebrew letter (ר', ר׳) belongs to the word too
 _GERSHAYIM = re.compile(f"(?<=[{_HEB}])[\"\u05f4](?=[{_HEB}])")

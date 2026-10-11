@@ -49,7 +49,7 @@ def build(raw: dict, tokens: list[dict], mentions: list[dict], computed: dict,
     con.executemany("insert into cooccurrence values (?,?,?,?,?)", [
         (c["a"], c["b"], c["passages_together"], c["pmi"], TABLES_VERSION) for c in computed["cooccurrence"]])
     sym = {s.id: s for s in symbols}
-    con.executemany("insert or ignore into state values (?,?,?,?)", [
+    con.executemany("insert into state values (?,?,?,?)", [
         (s["symbol_id"], s["state_label"], _marker_roots(sym, s) or "", s["passage_id"])
         for s in computed["states"]])
     con.executemany("insert into surfaced values (?,?,?)", [
@@ -59,6 +59,9 @@ def build(raw: dict, tokens: list[dict], mentions: list[dict], computed: dict,
         ("built_at", datetime.now(timezone.utc).isoformat(timespec="seconds")),
         ("source_revids", json.dumps([p["revid"] for p in raw["pages"]])),
     ])
+    bad = con.execute("pragma foreign_key_check").fetchall()
+    if bad:
+        raise ValueError(f"foreign key violations: {bad[:5]} ({len(bad)} total)")
     con.commit()
     con.close()
     j = dict(computed)

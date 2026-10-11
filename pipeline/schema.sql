@@ -21,10 +21,12 @@ CREATE TABLE mention (
 );
 CREATE INDEX mention_symbol ON mention(symbol_id);
 CREATE INDEX mention_passage ON mention(passage_id);
+CREATE INDEX passage_folio ON passage(volume, folio, side);
 CREATE TABLE cooccurrence (
   symbol_a TEXT NOT NULL, symbol_b TEXT NOT NULL, passages_together INTEGER NOT NULL,
   pmi REAL NOT NULL, tables_version TEXT NOT NULL, PRIMARY KEY (symbol_a, symbol_b)
 );
+CREATE INDEX cooccurrence_b ON cooccurrence(symbol_b);
 CREATE TABLE state (
   symbol_id TEXT NOT NULL, state_label TEXT NOT NULL, marker_roots TEXT NOT NULL,
   passage_id TEXT NOT NULL, PRIMARY KEY (symbol_id, state_label, passage_id)

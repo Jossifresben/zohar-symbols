@@ -1,4 +1,5 @@
 import json, sqlite3
+import pytest
 from pathlib import Path
 from pipeline.build import build
 from pipeline.tag import load_kinnuyim
@@ -51,3 +52,11 @@ def test_build_tolerates_stale_state(tmp_path):
     build(raw, tokens, mentions, computed, syms, tmp_path / "z.sqlite", tmp_path / "t.json")
     con = sqlite3.connect(tmp_path / "z.sqlite")
     assert con.execute("select marker_roots from state").fetchone() == ("",)
+
+
+def test_build_fails_on_dangling_foreign_key(tmp_path):
+    raw, tokens, mentions, computed = _tiny()
+    mentions = mentions + [dict(symbol_id="sun", passage_id="9.999z.99", position=0, matched_form="x", via="alias")]
+    syms = load_kinnuyim(SEEDS / "kinnuyim.tsv")
+    with pytest.raises(ValueError, match="foreign key"):
+        build(raw, tokens, mentions, computed, syms, tmp_path / "z.sqlite", tmp_path / "t.json")
