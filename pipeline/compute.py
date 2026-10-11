@@ -1,6 +1,5 @@
 # pipeline/compute.py
 """Deterministic tables: co-occurrence, states, strata, surfaced passages, resolved counts."""
-import argparse
 import csv
 import json
 import math
@@ -49,9 +48,10 @@ def _symbols_by_passage(mentions: list[dict]) -> dict[str, set[str]]:
     return d
 
 
-def cooccurrence(mentions: list[dict]) -> list[dict]:
+def cooccurrence(mentions: list[dict], n_passages: int) -> list[dict]:
+    """Pairs of symbols mentioned in the same passage; PMI over ALL passages (n_passages)."""
     sbp = _symbols_by_passage(mentions)
-    n = len(sbp)
+    n = n_passages
     single = Counter()
     pair = Counter()
     for syms in sbp.values():
@@ -61,8 +61,8 @@ def cooccurrence(mentions: list[dict]) -> list[dict]:
             pair[(a, b)] += 1
     out = []
     for (a, b), c in sorted(pair.items()):
-        pmi = math.log2((c / n) / ((single[a] / n) * (single[b] / n))) if n else 0.0
-        out.append(dict(a=a, b=b, passages_together=c, pmi=round(pmi, 4)))
+        pmi = math.log2(c * n / (single[a] * single[b])) if n else 0.0  # integers until the one float op
+        out.append(dict(a=a, b=b, passages_together=c, pmi=round(pmi, 4) + 0.0))  # + 0.0 folds -0.0
     return out
 
 
@@ -75,7 +75,9 @@ def detect_states(mentions: list[dict], tokens: list[dict], symbols: list[Symbol
     seen = set()
     out = []
     for m in mentions:
-        s = sym[m["symbol_id"]]
+        s = sym.get(m["symbol_id"])
+        if s is None:                       # mention of a symbol no longer in the seed: skipped, counted in main
+            continue
         for label, roots in s.states_syriac.items():
             if (s.id, label, m["passage_id"]) in seen:
                 continue
@@ -97,12 +99,13 @@ def surfaced_passages(symbol_id: str, mentions: list[dict], cooc: list[dict],
                       tokens_by_passage: dict[str, list[dict]], strata: dict[str, str], k: int = 6) -> list[str]:
     partners = set(_top_partners(symbol_id, cooc))
     score = Counter()
+    cands = set()                           # passages where the symbol itself is mentioned
     for m in mentions:
         if m["symbol_id"] == symbol_id:
             score[m["passage_id"]] += 2
+            cands.add(m["passage_id"])
         elif m["symbol_id"] in partners:
             score[m["passage_id"]] += 1
-    cands = [pid for pid in score if any(m["symbol_id"] == symbol_id and m["passage_id"] == pid for m in mentions)]
     dens = {pid: score[pid] / max(1, len(tokens_by_passage.get(pid, []))) for pid in cands}
     ranked = sorted(cands, key=lambda pid: (-dens[pid], pid))
     chosen, used_strata = [], set()
@@ -122,38 +125,41 @@ def surfaced_passages(symbol_id: str, mentions: list[dict], cooc: list[dict],
 
 
 def resolve_counts(mentions: list[dict], cooc: list[dict], symbols: list[Symbol]) -> dict:
-    sym = {s.id: s for s in symbols}
-    # alias word -> symbols sharing it
-    shared = defaultdict(set)
-    for s in symbols:
-        for a in s.aliases_surface:
-            shared[a].add(s.id)
-    support = defaultdict(int)             # (symbol, passage) -> partner support
+    """`cooc` is kept for interface stability; the rule below no longer uses it.
+    raw = all mentions; resolved drops a mention when a rival symbol tagged on the same token
+    (same passage_id, position) has strictly more same-node support in that passage. Ties keep.
+    support(s, pid) = distinct other symbols in pid with s's node, excluding s and the rivals."""
+    node = {s.id: s.node for s in symbols}
+    at = defaultdict(set)                   # (passage_id, position) -> symbols tagged there
+    for m in mentions:
+        at[(m["passage_id"], m["position"])].add(m["symbol_id"])
     sbp = _symbols_by_passage(mentions)
-    pt = {(c["a"], c["b"]): c["passages_together"] for c in cooc}
-    for pid, syms in sbp.items():
-        for s in syms:
-            support[(s, pid)] = sum(pt.get(tuple(sorted((s, o))), 0) for o in syms if o != s)
+
+    def support(s: str, pid: str, rivals: set[str]) -> int:
+        return sum(1 for o in sbp[pid] - rivals - {s} if node.get(o) is not None and node.get(o) == node.get(s))
+
     raw, resolved, passages = Counter(), Counter(), defaultdict(set)
     for m in mentions:
-        s = m["symbol_id"]
+        s, pid = m["symbol_id"], m["passage_id"]
         raw[s] += 1
-        passages[s].add(m["passage_id"])
-        rivals = shared.get(m["matched_form"], set()) - {s}
-        if rivals and any(support[(r, m["passage_id"])] > support[(s, m["passage_id"])] for r in rivals):
+        passages[s].add(pid)
+        group = at[(pid, m["position"])]
+        rivals = group - {s}
+        if rivals and any(support(r, pid, group) > support(s, pid, group) for r in rivals):
             continue
         resolved[s] += 1
     return {s.id: dict(raw=raw[s.id], resolved=resolved[s.id], passages=len(passages[s.id])) for s in symbols}
 
 
-def main(argv=None) -> None:
+def main() -> None:
     work = ROOT / "work"
     raw = json.loads((ROOT / "raw" / f"zohar.v{TABLES_VERSION}.json").read_text(encoding="utf-8"))
     tokens = [json.loads(l) for l in (work / "tokens.jsonl").open(encoding="utf-8")]
     mentions = [json.loads(l) for l in (work / "mentions.jsonl").open(encoding="utf-8")]
     syms = load_kinnuyim(ROOT / "seeds" / "kinnuyim.tsv")
+    seed_ids = {s.id for s in syms}
     strata = assign_strata(raw["passages"], load_strata(ROOT / "seeds" / "strata.tsv"))
-    cooc = cooccurrence(mentions)
+    cooc = cooccurrence(mentions, len(raw["passages"]))
     tbp = defaultdict(list)
     for t in tokens:
         tbp[t["passage_id"]].append(t)
@@ -169,6 +175,7 @@ def main(argv=None) -> None:
     write_report(work / "compute.report.md", "compute", [
         ("pairs", len(cooc)), ("states", len(out["states"])),
         ("strata", dict(Counter(strata.values()))),
+        ("mentions of symbols not in seed (skipped)", sum(1 for m in mentions if m["symbol_id"] not in seed_ids)),
         ("symbols with < 6 surfaced", sum(1 for v in out["surfaced"].values() if len(v) < 6)),
     ])
 
