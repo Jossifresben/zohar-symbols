@@ -24,10 +24,10 @@ def test_symbol_and_partners(app):
         s = q.symbol("moon", "es")
         assert s["label"] == "Luna" and s["label_other"] == "Moon" and s["node"] == "malkhut"
         assert s["aliases_surface"] == ["סיהרא", "לבנה"] and s["aliases_root"] == ["סהר"]
-        assert s["gloss"] == "Luna: aparece en 4 pasajes del Zohar, casi siempre junto a Sol."
+        assert s["gloss"] == "Luna: aparece en 4 pasajes del Zohar; su compañero más frecuente es Sol (3 pasajes juntos)."
         p = q.partners("moon", "en")
         # moon-sun are together in 1.020a.001, 1.020b.001, 1.020b.003
-        assert p[0]["id"] == "sun" and p[0]["passages_together"] == 3 and p[0]["label"] == "Sun"
+        assert p[0]["id"] == "sun" and p[0]["passages_together"] == 3 and p[0]["label"] == "Sun" and "pmi" not in p[0]
         assert q.partners("moon", "es")[0]["label"] == "Sol"
 
 
@@ -65,7 +65,7 @@ def test_node(app):
         n = q.node("malkhut", "en")
         assert n["pillar"] == "middle"
         assert any("moon" == s["id"] for ss in n["symbols_by_kind"].values() for s in ss)
-        assert n["partner_nodes"][0] == {"node": "tiferet", "label": "Tif'eret", "passages_together": 5}  # moon-sun 3 + matronita-king 1 + coupling-king 1
+        assert n["partner_nodes"][0] == {"node": "tiferet", "label": "Tif'eret", "passages_together": 4}  # distinct passages: a.001, b.001, b.003 (moon+sun) + b.002 (matronita+king)
         assert q.node("hesed", "en")["pillar"] == "right" and q.node("nope", "en") is None
 
 
@@ -76,12 +76,17 @@ def test_search_and_nearest(app):
         assert q.search("סיהרא", "en")[0]["id"] == "moon"
         assert q.search("זווגין", "en")[0]["id"] == "coupling"
         assert q.search("סהר", "en") == []  # root part of aliases is not searched
-        assert "moon" in [x["id"] for x in q.nearest_symbols("mooon")]
+        assert "moon" in [x["id"] for x in q.nearest_symbols("mooon", "en")]
+        assert q.nearest_symbols("mooon", "es")[0]["label"] == "Luna"
+        assert "river" in [x["id"] for x in q.search("RIO", "es")]  # seed label "Río"
+        assert "hidden_eden" in [x["id"] for x in q.search("eden", "en")]  # "Edén oculto"
 
 
 def test_scholars_pairs(app):
     with app.app_context():
         assert q.scholars_pairs(min_together=3)[0]["passages_together"] == 3
+        p = q.scholars_pairs(min_together=3, lang="es")[0]
+        assert {p["a_label"], p["b_label"]} == {"Luna", "Sol"} and "pmi" in p
         assert q.scholars_pairs(min_together=99) == []
 
 
@@ -92,6 +97,9 @@ def test_unknowns_return_none(app):
 
 def test_cite():
     from web import cite
+    import pytest
+    with pytest.raises(ValueError):
+        cite.roman(4)
     assert cite.citation(1, 20, "a") == "Zohar I:20a" and cite.roman(3) == "III"
     f = cite.formats({"tables_version": "0.1.0"})
     assert "zohar.digital" in f["bibtex"] and "[DOI pending]" in f["chicago"]

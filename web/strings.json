@@ -88,8 +88,8 @@
     "es": "Ein Sof"
   },
   "gloss_fallback": {
-    "en": "{label}: appears in {n} passages of the Zohar, most often alongside {partner}.",
-    "es": "{label}: aparece en {n} pasajes del Zohar, casi siempre junto a {partner}."
+    "en": "{label}: appears in {n} passages of the Zohar; its commonest companion is {partner} ({m} passages together).",
+    "es": "{label}: aparece en {n} pasajes del Zohar; su compañero más frecuente es {partner} ({m} pasajes juntos)."
   },
   "gloss_fallback_alone": {
     "en": "{label}: appears in {n} passages of the Zohar.",

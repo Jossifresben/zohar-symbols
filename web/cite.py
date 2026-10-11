@@ -8,6 +8,8 @@ DOI = "[DOI pending]"
 
 
 def roman(volume: int) -> str:
+    if volume not in _ROMAN:
+        raise ValueError(f"volume must be 1, 2 or 3, got {volume!r}")
     return _ROMAN[volume]
 
 

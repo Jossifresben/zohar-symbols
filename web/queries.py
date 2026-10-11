@@ -3,7 +3,7 @@ import difflib
 import math
 
 from . import cite
-from .db import one, all as rows
+from .db import fold, one, all as rows
 from .i18n import get_string
 
 NODE_ORDER = ["keter", "hokhmah", "binah", "hesed", "gevurah", "tiferet", "netzah", "hod", "yesod", "malkhut", "sitra_ahra", "ein_sof"]
@@ -49,7 +49,7 @@ def partners(sid: str, lang: str, k: int = 7) -> list[dict]:
     ids = [r["other"] for r in ps]
     labels = {r["id"]: _lab(r, lang) for r in rows(
         f"select id,label_en,label_es from symbol where id in ({','.join('?' * len(ids))})", tuple(ids))}
-    return [dict(id=r["other"], label=labels[r["other"]], passages_together=r["passages_together"], pmi=r["pmi"]) for r in ps]
+    return [dict(id=r["other"], label=labels[r["other"]], passages_together=r["passages_together"]) for r in ps]
 
 
 def symbol(sid: str, lang: str) -> dict | None:
@@ -57,7 +57,7 @@ def symbol(sid: str, lang: str) -> dict | None:
     if not s:
         return None
     other = "es" if lang == "en" else "en"
-    surface, _, roots = s["aliases"].partition("|")
+    surface, _, roots = (s["aliases"] or "").partition("|")
     label = _lab(s, lang)
     gloss = s[f"gloss_{lang}"]
     if not gloss:
@@ -66,7 +66,7 @@ def symbol(sid: str, lang: str) -> dict | None:
         if n == 0:
             gloss = get_string("gloss_fallback_none", lang, label=label)
         elif top:
-            gloss = get_string("gloss_fallback", lang, label=label, n=n, partner=top[0]["label"])
+            gloss = get_string("gloss_fallback", lang, label=label, n=n, partner=top[0]["label"], m=top[0]["passages_together"])
         else:
             gloss = get_string("gloss_fallback_alone", lang, label=label, n=n)
     return dict(id=s["id"], label=label, label_ar=s["label_ar"], label_other=_lab(s, other), kind=s["kind"], node=s["node"],
@@ -123,11 +123,11 @@ def node(nid: str, lang: str) -> dict | None:
     by_kind: dict[str, list] = {}
     for r in rows("select id,label_en,label_es,label_ar,kind,count_passages from symbol where node=? order by count_passages desc, id", (nid,)):
         by_kind.setdefault(r["kind"], []).append(dict(id=r["id"], label=_lab(r, lang), label_ar=r["label_ar"], count_passages=r["count_passages"]))
-    pn = rows("""select o.node as other, sum(c.passages_together) as n
-                 from cooccurrence c join symbol a on a.id=c.symbol_a join symbol b on b.id=c.symbol_b
-                 join symbol o on o.id = case when a.node=? then b.id else a.id end
-                 where (a.node=? or b.node=?) and a.node != b.node
-                 group by o.node order by n desc, o.node""", (nid, nid, nid))
+    pn = rows("""select s2.node as other, count(distinct m1.passage_id) as n
+                 from mention m1 join symbol s1 on s1.id=m1.symbol_id
+                 join mention m2 on m2.passage_id=m1.passage_id join symbol s2 on s2.id=m2.symbol_id
+                 where s1.node=? and s2.node<>s1.node
+                 group by s2.node order by n desc, s2.node""", (nid,))
     return dict(node=nid, label=t_node(nid, lang), label_ar=NODE_AR[nid], pillar=PILLAR.get(nid, "middle"),
                 symbols_by_kind=by_kind,
                 partner_nodes=[dict(node=r["other"], label=t_node(r["other"], lang), passages_together=r["n"]) for r in pn])
@@ -137,30 +137,35 @@ def search(q: str, lang: str, k: int = 10) -> list[dict]:
     q = q.strip()
     if not q:
         return []
-    ql = q.lower()
+    qf = fold(q)
     rs = rows("""select id,label_en,label_es,label_ar,kind,node,count_passages from symbol
-                 where instr(lower(label_en),?)>0 or instr(lower(label_es),?)>0 or instr(label_ar,?)>0
+                 where instr(fold(label_en),?)>0 or instr(fold(label_es),?)>0 or instr(label_ar,?)>0
                     or instr(substr(aliases,1,instr(aliases||'|','|')-1),?)>0
-                 order by count_passages desc, id limit ?""", (ql, ql, q, q, k))
+                 order by count_passages desc, id limit ?""", (qf, qf, q, q, k))
     return [dict(id=r["id"], label=_lab(r, lang), label_ar=r["label_ar"], kind=r["kind"], node=r["node"],
                  count_passages=r["count_passages"]) for r in rs]
 
 
-def nearest_symbols(q: str, k: int = 3) -> list[dict]:
+def nearest_symbols(q: str, lang: str, k: int = 3) -> list[dict]:
     names: dict[str, str] = {}
+    labels: dict[str, str] = {}
     for r in rows("select id,label_en,label_es from symbol"):
+        labels[r["id"]] = _lab(r, lang)
         for cand in (r["id"], r["label_en"], r["label_es"]):
-            names.setdefault(cand.lower(), r["id"])
+            names.setdefault(fold(cand), r["id"])
     out: list[str] = []
-    for m in difflib.get_close_matches(q.strip().lower(), list(names), n=k * 3, cutoff=0.6):
+    for m in difflib.get_close_matches(fold(q.strip()), list(names), n=k * 3, cutoff=0.6):
         if names[m] not in out:
             out.append(names[m])
-    return [dict(id=i) for i in out[:k]]
+    return [dict(id=i, label=labels[i]) for i in out[:k]]
 
 
-def scholars_pairs(min_together: int = 5, limit: int = 200) -> list[dict]:
-    return [dict(a=r["symbol_a"], b=r["symbol_b"], a_label=r["la"], b_label=r["lb"], passages_together=r["passages_together"], pmi=r["pmi"])
-            for r in rows("""select c.symbol_a, c.symbol_b, a.label_en la, b.label_en lb, c.passages_together, c.pmi
+def scholars_pairs(min_together: int = 5, limit: int = 200, lang: str = "en") -> list[dict]:
+    return [dict(a=r["symbol_a"], b=r["symbol_b"], a_label=_lab({"label_en": r["ae"], "label_es": r["as_"]}, lang),
+                 b_label=_lab({"label_en": r["be"], "label_es": r["bs"]}, lang),
+                 passages_together=r["passages_together"], pmi=r["pmi"])
+            for r in rows("""select c.symbol_a, c.symbol_b, a.label_en ae, a.label_es as_, b.label_en be, b.label_es bs,
+                                    c.passages_together, c.pmi
                              from cooccurrence c join symbol a on a.id=c.symbol_a join symbol b on b.id=c.symbol_b
                              where c.passages_together >= ? order by c.pmi desc, c.symbol_a, c.symbol_b limit ?""",
                           (min_together, limit))]
