@@ -91,10 +91,13 @@ def test_unbalanced_braces_raise():
     assert "unbalanced" in str(e.value)
 
 
-def test_duplicate_folio_raises():
-    with pytest.raises(SegmentError) as e:
-        _seg(_sec("x") + "\n" + _sec("y"))
-    assert "duplicate" in str(e.value)
+def test_repeated_folio_continues_numbering():
+    stats = {}
+    wt = _sec("x\n\nw") + "\n=== heading ===\n" + _sec("y\n\nz")
+    ps = segment_page(wt, 1, "X", "t", stats)
+    assert [p.id for p in ps] == ["1.020a.01", "1.020a.02", "1.020a.03", "1.020a.04"]
+    assert [p.para for p in ps] == [1, 2, 3, 4]
+    assert stats["continued"] == 1
 
 
 def test_unclosed_variant_raises():

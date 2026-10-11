@@ -8,8 +8,8 @@ SEEDS = Path(__file__).parent.parent / "seeds" / "parashot.tsv"
 
 def test_parashot_seed_is_consistent():
     rows = load_parashot(SEEDS)
-    # 29 numbered pages (the index has no "חלק טז") + the omissions page
-    assert len(rows) >= 30
+    # 29 numbered pages (the index has no "חלק טז"); זוהר השמטות excluded
+    assert len(rows) >= 29
     vol_by_book = {"Genesis": 1, "Exodus": 2, "Leviticus": 3, "Numbers": 3, "Deuteronomy": 3}
     for r in rows:
         assert r["volume"] == vol_by_book[r["book"]], r

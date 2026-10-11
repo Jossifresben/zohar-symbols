@@ -30,13 +30,15 @@ def build_raw(pages: list[tuple[str, int, str, PageText]]) -> dict:
     the later page's paragraphs continue the numbering (recorded in split_folios)."""
     out = {"tables_version": TABLES_VERSION,
            "fetched_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-           "pages": [], "passages": [], "split_folios": 0}
+           "pages": [], "passages": [], "split_folios": 0, "continued_folios": 0}
     max_para: dict[tuple[int, int, str], int] = {}
     split: set[tuple[int, int, str]] = set()
     for title, volume, parasha, pt in pages:
         out["pages"].append({"title": title, "revid": pt.revid, "timestamp": pt.timestamp,
                              "volume": volume, "parasha": parasha})
-        passages = [asdict(p) for p in segment_page(pt.wikitext, volume, parasha, title)]
+        stats: dict = {}
+        passages = [asdict(p) for p in segment_page(pt.wikitext, volume, parasha, title, stats)]
+        out["continued_folios"] += stats.get("continued", 0)
         offsets = {}
         for p in passages:
             key = (p["volume"], p["folio"], p["side"])
@@ -59,6 +61,7 @@ def write_sources_md(out: dict, path: Path) -> None:
     lines = ["# Sources", "", f"Fetched {out['fetched_at']} from https://he.wikisource.org (CC BY-SA 4.0).", "",
              "| page | revid | timestamp |", "|---|---|---|"]
     lines += [f"| {p['title']} | {p['revid']} | {p['timestamp']} |" for p in out["pages"]]
+    lines += ["", "זוהר השמטות excluded in v0.1: folios span volumes."]
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
@@ -81,6 +84,7 @@ def main(argv=None) -> None:
         ("pages", len(out["pages"])), ("folios", len(folios)), ("passages", len(out["passages"])),
         ("empty passages", sum(1 for p in out["passages"] if not p["text_ar"])),
         ("folios split across pages", out["split_folios"]),
+        ("folios continued within a page", out["continued_folios"]),
     ])
 
 
