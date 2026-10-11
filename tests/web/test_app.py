@@ -61,3 +61,11 @@ def test_t_raises_keyerror_in_testing(app):
         assert app.jinja_env.globals["t"]("nav_symbols") == "Symbols"
         with pytest.raises(KeyError):
             app.jinja_env.globals["t"]("no_such_key")
+
+
+def test_logo_and_favicon_served(client):
+    html = client.get("/").get_data(as_text=True)
+    assert 'class="wm-mark"' in html and 'rel="icon"' in html
+    for f in ("logo.svg", "favicon.svg"):
+        r = client.get(f"/static/{f}")
+        assert r.status_code == 200 and b"<svg" in r.data

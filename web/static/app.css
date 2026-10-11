@@ -7,7 +7,8 @@ a:hover{text-decoration:underline}
 .display{font-family:'Cormorant Garamond',serif}
 .heb{font-family:'Frank Ruhl Libre',serif;direction:rtl}
 .site-header{display:flex;align-items:center;gap:32px;padding:16px 32px;border-bottom:1px solid var(--border);flex-wrap:wrap}
-.wordmark{display:flex;align-items:baseline;gap:10px;color:var(--text)}
+.wordmark{display:flex;align-items:center;gap:10px;color:var(--text)}
+.wm-mark{display:block;flex:none}
 .wordmark:hover{text-decoration:none}
 .wm-latin{font-size:28px;font-weight:500}
 .wm-heb{font-size:24px;color:var(--gold)}

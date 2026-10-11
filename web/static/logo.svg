@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Zohar">
+  <circle cx="60" cy="60" r="50" fill="none" stroke="#D9B36A" stroke-opacity=".3" stroke-width="3"/>
+  <circle cx="60" cy="60" r="34" fill="none" stroke="#D9B36A" stroke-opacity=".55" stroke-width="3.5"/>
+  <circle cx="60" cy="60" r="19" fill="none" stroke="#D9B36A" stroke-opacity=".85" stroke-width="4"/>
+  <circle cx="60" cy="60" r="8" fill="#E8E4F0"/>
+</svg>
