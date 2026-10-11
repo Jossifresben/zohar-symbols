@@ -1,0 +1,15 @@
+# Build needs network access to he.wikisource.org (the pipeline fetches the pinned
+# revisions in seeds/wikisource_revisions.json). The Atlas repo on GitHub
+# (Jossifresben/aramaic-root-atlas) must contain the commit that declares
+# `aramaic_core` as a package (user action: push it); otherwise `pip install .` fails.
+# Custom domain zohar.digital is set in the Render dashboard, not here.
+services:
+  - type: web
+    name: zohar-digital
+    runtime: python
+    plan: starter
+    buildCommand: pip install . && python -m pipeline.run_all
+    startCommand: gunicorn web.wsgi:app --bind 0.0.0.0:$PORT --workers 2 --timeout 60
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11"

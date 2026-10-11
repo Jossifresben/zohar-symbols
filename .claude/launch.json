@@ -1,0 +1,1 @@
+{"version":"0.0.1","configurations":[{"name":"zohar-web","runtimeExecutable":"uv","runtimeArgs":["run","--no-sync","flask","--app","web","run","--port","5055"],"port":5055}]}
