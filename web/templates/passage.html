@@ -13,10 +13,10 @@
 </section>
 
 <section class="folio">
-  {%- set ns = namespace(seen=[]) %}
+  {%- set ns = namespace(cur=none) %}
   {%- for q in paras %}
-  {%- if q.stream != 'main' and q.stream not in ns.seen %}
-  {%- set ns.seen = ns.seen + [q.stream] %}
+  {%- if q.stream != ns.cur %}
+  {%- set ns.cur = q.stream %}
   <h2 class="stream-h label">{{ t('stream_' ~ q.stream) }}</h2>
   {%- endif %}
   <article class="para{% if q.id == p.id %} focus{% endif %}" id="p{{ q.para }}">
@@ -38,7 +38,7 @@
   {{ chips(dict(chips=symbols, more=0, node=None)) }}
 </section>
 
-<nav class="folio-nav">
+<nav class="folio-nav" aria-label="{{ t('nav_folio') }}">
   {%- if nb.prev %}<a class="prev" rel="prev" href="{{ passage_url(nb.prev.id) }}">← {{ t('previous') }} · {{ nb.prev.citation }}</a>{% endif %}
   {%- if nb.next %}<a class="next" rel="next" href="{{ passage_url(nb.next.id) }}">{{ t('next') }} · {{ nb.next.citation }} →</a>{% endif %}
 </nav>

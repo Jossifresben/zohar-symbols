@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block title %}{{ t('sch_title') }} · Zohar{% endblock %}
 {% block content %}
+{% macro sp(key, n) %}<span data-n="{{ key }}">{{ n|num }}</span>{% endmacro %}
 <section class="sym-head"><h1 class="display">{{ t('sch_title') }}</h1><p class="intro">{{ t('sch_intro') }}</p></section>
 <section class="card" id="method"><h2 class="label">{{ t('sch_method_h') }}</h2>
   {%- for k in ['corpus','lemma','tag','cooc','states','surf','resolve'] %}
@@ -10,11 +11,12 @@
 <section class="card" id="provenance"><h2 class="label">{{ t('sch_prov_h') }}</h2>
   <p>{{ t('sch_p_seed') }}</p>
   <p>{{ t('sch_p_counts',
-      passages='<span data-n="passages">%d</span>'|safe % counts.passages, sides='<span data-n="sides">%d</span>'|safe % counts.sides,
-      symbols='<span data-n="symbols">%d</span>'|safe % counts.symbols, aliases='<span data-n="aliases">%d</span>'|safe % counts.aliases,
-      tokens='<span data-n="tokens">%d</span>'|safe % counts.tokens, with_root='<span data-n="with_root">%d</span>'|safe % counts.with_root,
-      non_lexical='<span data-n="non_lexical">%d</span>'|safe % counts.non_lexical, unknown='<span data-n="unknown">%d</span>'|safe % counts.unknown,
-      conf_high='<span data-n="conf_high">%d</span>'|safe % counts.conf_high)|safe }}</p>
+      passages=sp('passages', counts.passages), sides=sp('sides', counts.sides),
+      symbols=sp('symbols', counts.symbols),
+      aliases=t('sch_forms_roots', surfaces=counts.aliases.surfaces|num, roots=counts.aliases.roots|num),
+      tokens=sp('tokens', counts.tokens), with_root=sp('with_root', counts.with_root),
+      non_lexical=sp('non_lexical', counts.non_lexical), unknown=sp('unknown', counts.unknown),
+      conf_high=sp('conf_high', counts.conf_high))|safe }}</p>
   <p>{{ t('sch_p_cav') }}</p>
 </section>
 <section class="card" id="tables"><h2 class="label">{{ t('sch_tables_h') }}</h2>
@@ -27,7 +29,7 @@
   {%- if pairs %}
   <table class="pairs"><thead><tr><th>{{ t('sch_col_a') }}</th><th>{{ t('sch_col_b') }}</th><th>{{ t('sch_col_together') }}</th><th>PMI</th></tr></thead><tbody>
   {%- for p in pairs %}
-    <tr><td><a href="{{ lang_url('symbol', sid=p.a) }}">{{ p.a_label }}</a></td><td><a href="{{ lang_url('symbol', sid=p.b) }}">{{ p.b_label }}</a></td><td>{{ p.passages_together }}</td><td>{{ '%.4f'|format(p.pmi) }}</td></tr>
+    <tr><td><a href="{{ lang_url('symbol', sid=p.a) }}">{{ p.a_label }}</a></td><td><a href="{{ lang_url('symbol', sid=p.b) }}">{{ p.b_label }}</a></td><td>{{ p.passages_together|num }}</td><td>{{ '%.4f'|format(p.pmi) }}</td></tr>
   {%- endfor %}
   </tbody></table>
   {%- else %}<p class="muted">{{ t('sch_no_pairs') }}</p>{%- endif %}

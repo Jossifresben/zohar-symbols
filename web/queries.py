@@ -4,7 +4,7 @@ import math
 
 from . import cite
 from .db import fold, one, all as rows
-from .i18n import get_string
+from .i18n import fmt_num, get_string
 
 NODE_ORDER = ["keter", "hokhmah", "binah", "hesed", "gevurah", "tiferet", "netzah", "hod", "yesod", "malkhut", "sitra_ahra", "ein_sof"]
 NODE_AR = {"keter": "כתר", "hokhmah": "חכמה", "binah": "בינה", "hesed": "חסד", "gevurah": "גבורה", "tiferet": "תפארת",
@@ -56,7 +56,7 @@ def partners(sid: str, lang: str, k: int = 7) -> list[dict]:
 
 
 def _n_passages(n: int, lang: str) -> str:
-    return get_string("passages_one" if n == 1 else "passages_n", lang, n=n)
+    return get_string("passages_one" if n == 1 else "passages_n", lang, n=fmt_num(n, lang))
 
 
 def symbol(sid: str, lang: str) -> dict | None:
@@ -239,12 +239,19 @@ def passage_totals() -> dict:
     return dict(passages=r["passages"], sides=r["sides"])
 
 
-def alias_count() -> int:
-    n = 0
+def alias_split() -> dict:
+    """Alias totals as surface forms and roots (the two kinds the tagger matches on)."""
+    forms = roots_n = 0
     for r in rows("select aliases from symbol"):
         surface, _, roots = r["aliases"].partition("|")
-        n += len([a for a in surface.split(";") if a]) + len([a for a in roots.split(";") if a])
-    return n
+        forms += len([a for a in surface.split(";") if a])
+        roots_n += len([a for a in roots.split(";") if a])
+    return dict(surfaces=forms, roots=roots_n)
+
+
+def alias_count() -> int:
+    s = alias_split()
+    return s["surfaces"] + s["roots"]
 
 
 def symbol_mentions(sid: str, lang: str) -> list[dict]:
@@ -284,7 +291,7 @@ def warm(app) -> None:
         "nodes_with_symbols": {lang: nodes_with_symbols(lang) for lang in LANGS},
         "token_shares": token_shares(),
         "passage_totals": passage_totals(),
-        "alias_count": alias_count(),
+        "alias_split": alias_split(),
         "scholars_pairs": {lang: scholars_pairs(lang=lang) for lang in LANGS},
     }
     app.config["CACHE_WARM_MS"] = round((time.perf_counter() - t0) * 1000, 1)

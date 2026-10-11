@@ -25,7 +25,7 @@
   {%- set top = n.partner_nodes[0].passages_together %}
   <ul class="bars">
   {%- for p in n.partner_nodes %}
-    <li><a class="bar-row" href="{{ lang_url('node', nid=p.node) }}"><span class="bar-label">{{ p.label }}</span><span class="bar-track"><span class="bar bar-gold" style="width:{{ (100 * p.passages_together / top)|round|int }}%"></span></span><span class="bar-n">{{ p.passages_together }}</span></a></li>
+    <li><a class="bar-row" href="{{ lang_url('node', nid=p.node) }}"><span class="bar-label">{{ p.label }}</span><span class="bar-track"><span class="bar bar-gold" style="width:{{ (100 * p.passages_together / top)|round|int }}%"></span></span><span class="bar-n">{{ p.passages_together|num }}</span></a></li>
   {%- endfor %}
   </ul>
 </section>

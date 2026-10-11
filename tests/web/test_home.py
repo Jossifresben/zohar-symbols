@@ -32,8 +32,9 @@ def test_home_es_titles(client):
     assert 'href="/es/symbol/moon"' in html
 
 
-def test_every_chip_and_card_link_resolves(client):
+def test_every_chip_and_card_link_resolves(app):
     for prefix in ("", "/es"):
+        client = app.test_client()  # fresh client (and cookie jar) per language
         html = client.get(f"{prefix}/").get_data(as_text=True)
         hrefs = set(re.findall(r'<a class="(?:chip|more|card orient-card)[^"]*"[^>]*?href="([^"]+)"', html))
         assert hrefs
@@ -59,12 +60,12 @@ def test_404_in_es_is_spanish(client):
     assert 'href="/es/ask"' in html  # header links stay in Spanish on 404
 
 
-def test_switch_url(client):
-    html = client.get("/symbol/moon").get_data(as_text=True)
+def test_switch_url(app):
+    html = app.test_client().get("/symbol/moon").get_data(as_text=True)
     assert 'href="/es/symbol/moon" hreflang="es"' in html
-    html = client.get("/es/symbol/moon").get_data(as_text=True)
+    html = app.test_client().get("/es/symbol/moon").get_data(as_text=True)
     assert 'href="/symbol/moon" hreflang="en"' in html
-    html = client.get("/es/nope").get_data(as_text=True)
+    html = app.test_client().get("/es/nope").get_data(as_text=True)
     # 404 fallback goes through /lang/ so the cookie is reset before the root (which honours it) is reached
     assert 'href="/lang/en?next=/" hreflang="en"' in html and 'href="/lang/es?next=/es/" hreflang="es"' in html
 
@@ -72,6 +73,12 @@ def test_switch_url(client):
 def test_search_by_kind(client):
     html = client.get("/search?kind=event").get_data(as_text=True)
     assert "Events" in html and "The Zohar speaks in images" in html
+    assert 'name="q" value=""' in html
+
+
+def test_search_by_kind_es_does_not_prefill(client):
+    html = client.get("/es/search?kind=event").get_data(as_text=True)
+    assert 'name="q" value=""' in html and "Sucesos" in html and 'value="event"' not in html
     assert client.get("/search?kind=bogus").status_code == 200
 
 

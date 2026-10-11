@@ -79,7 +79,14 @@ def init_i18n(app) -> None:
             response.vary.add("Cookie")
         return response
 
+    app.jinja_env.filters["num"] = lambda n: fmt_num(n, g.get("lang", "en"))
     app.jinja_env.globals.update(t=t, lang_url=lang_url, switch_url=switch_url)
+
+
+def fmt_num(n, lang: str) -> str:
+    """Thousands separators: 15,909 in English, 15.909 in Spanish."""
+    s = f"{int(n):,}"
+    return s.replace(",", ".") if lang == "es" else s
 
 
 _CACHE: dict = {}

@@ -35,7 +35,7 @@ def test_stream_passage_has_heading(client):
     assert 'id="p3"' in html and "Ra" in html
     assert 'class="stream-h label"' in html
     main = client.get("/passage/1.020b.001").get_data(as_text=True)
-    assert main.count('class="stream-h label"') == 1  # still shown for the stream paragraph in the same folio
+    assert main.count('class="stream-h label"') == 2  # main heading, then the Ra'aya Meheimna paragraph of the same folio
 
 
 def test_translation_attribution_or_not_translated(client):
@@ -68,5 +68,32 @@ def test_unknown_passage_404(client):
     r = client.get("/passage/9.999z.999")
     assert r.status_code == 404
     assert "No such passage." in r.get_data(as_text=True)
+    html = r.get_data(as_text=True)
+    assert 'href="/passage/1.020a.001"' in html and "Zohar I:20a" in html  # fallback: the first passage
+    assert "<h1" in html
     r = client.get("/es/passage/9.999z.999")
     assert "Ese pasaje no existe." in r.get_data(as_text=True)
+
+
+def test_missing_passage_in_existing_folio_suggests_siblings(client):
+    html = client.get("/passage/1.020b.099").get_data(as_text=True)
+    assert 'href="/passage/1.020b.001"' in html and 'href="/passage/1.020a.001"' in html
+    assert "Zohar I:20b" in html and "Zohar I:20a" in html
+    html = client.get("/es/passage/1.020b.099").get_data(as_text=True)
+    assert 'href="/es/passage/1.020b.001"' in html
+
+
+def test_stream_headings_on_every_change():
+    from flask import Flask
+    from jinja2 import FileSystemLoader
+    env = Flask(__name__, template_folder=str(__import__("pathlib").Path(__file__).resolve().parents[2] / "web" / "templates")).jinja_env
+    tpl = env.from_string("""{% set ns = namespace(cur=none) %}{% for q in paras %}{% if q.stream != ns.cur %}{% set ns.cur = q.stream %}[{{ q.stream }}]{% endif %}{% endfor %}""")
+    out = tpl.render(paras=[dict(stream=s) for s in ("main", "main", "raaya_meheimna", "raaya_meheimna", "main")])
+    assert out == "[main][raaya_meheimna][main]"
+
+
+def test_passage_page_headings_include_main(client):
+    html = client.get("/passage/1.020b.002").get_data(as_text=True)
+    assert html.count('class="stream-h label"') >= 2
+    assert ">Main text<" in html and ">Ra&#39;aya Meheimna<" in html or ">Ra'aya Meheimna<" in html
+    assert ">Texto principal<" in client.get("/es/passage/1.020b.002").get_data(as_text=True)

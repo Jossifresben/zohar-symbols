@@ -20,8 +20,8 @@
     "es": "Especialistas"
   },
   "footer_source": {
-    "en": "Text: Hebrew Wikisource, Zohar (public domain). Every figure on this site is computed by deterministic code.",
-    "es": "Texto: Wikisource hebreo, Zohar (dominio público). Todas las cifras de este sitio las calcula un código determinista."
+    "en": "Text: Hebrew Wikisource (CC BY-SA 4.0). Every figure on this site is computed by deterministic code.",
+    "es": "Texto: Wikisource en hebreo (CC BY-SA 4.0). Todas las cifras de este sitio las calcula un código determinista."
   },
   "footer_counts": {
     "en": "Counts are mentions in the corpus, not interpretations.",
@@ -89,7 +89,7 @@
   },
   "gloss_fallback": {
     "en": "{label}: appears in {passages} of the Zohar; its commonest companion is {partner} ({together}).",
-    "es": "{label}: aparece en {passages} del Zohar; su compañero más frecuente es {partner} ({together})."
+    "es": "{label}: aparece en {passages} del Zohar; su acompañante más frecuente es {partner} ({together})."
   },
   "gloss_fallback_alone": {
     "en": "{label}: appears in {passages} of the Zohar.",
@@ -216,16 +216,16 @@
     "es": "Abre el Zohar con los símbolos resaltados"
   },
   "orientation_read_body": {
-    "en": "Read a passage with every symbol marked, in Hebrew and in translation.",
-    "es": "Lee un pasaje con cada símbolo marcado, en hebreo y traducido."
+    "en": "Open the Zohar with its symbols highlighted, in the original Aramaic.",
+    "es": "Abre el Zohar con sus símbolos resaltados, en el arameo original."
   },
   "orientation_ask_title": {
     "en": "Why does the Zohar talk about the sea so much?",
     "es": "¿Por qué habla tanto del mar el Zohar?"
   },
   "orientation_ask_body": {
-    "en": "Answers grounded in the passages, with the count behind every claim.",
-    "es": "Respuestas basadas en los pasajes, con el recuento que respalda cada afirmación."
+    "en": "Answers grounded in the passages, with the count behind every claim. (coming soon)",
+    "es": "Respuestas basadas en los pasajes, con el recuento que respalda cada afirmación. (próximamente)"
   },
   "ask_coming": {
     "en": "Ask is coming soon.",
@@ -285,7 +285,7 @@
   },
   "partners": {
     "en": "Partners",
-    "es": "Compañeros"
+    "es": "Acompañantes"
   },
   "passages_together_n": {
     "en": "{n} passages together",
@@ -297,7 +297,7 @@
   },
   "no_partners": {
     "en": "No partners yet.",
-    "es": "Todavía no tiene compañeros."
+    "es": "Todavía no tiene acompañantes."
   },
   "states": {
     "en": "States",
@@ -613,7 +613,7 @@
   },
   "sch_m_cooc": {
     "en": "Co-occurrence and PMI. Two symbols co-occur in a passage (a folio paragraph) only when each has at least one mention on a token the other does not tag; a symbol whose tokens are a subset of the other's is a rival, not a partner. PMI = log2(c·N / (fa·fb)), where c is the number of passages where the pair co-occurs, fa and fb the passages mentioning each symbol, and N all passages. It is shown only for pairs with at least 5 passages together.",
-    "es": "Coocurrencia y PMI. Dos símbolos coocurren en un pasaje (un párrafo de folio) solo cuando cada uno tiene al menos una mención en un token que el otro no etiqueta; un símbolo cuyos tokens son un subconjunto de los del otro es un rival, no un compañero. PMI = log2(c·N / (fa·fb)), donde c es el número de pasajes en que coocurre el par, fa y fb son los pasajes que mencionan cada símbolo y N es el total de pasajes. Solo se muestra para los pares con al menos 5 pasajes en común."
+    "es": "Coocurrencia y PMI. Dos símbolos coocurren en un pasaje (un párrafo de folio) solo cuando cada uno tiene al menos una mención en un token que el otro no etiqueta; un símbolo cuyos tokens son un subconjunto de los del otro es un rival, no un acompañante. PMI = log2(c·N / (fa·fb)), donde c es el número de pasajes en que coocurre el par, fa y fb son los pasajes que mencionan cada símbolo y N es el total de pasajes. Solo se muestra para los pares con al menos 5 pasajes en común."
   },
   "sch_m_states": {
     "en": "States. A symbol's state (for example full or diminished) is detected in a passage that mentions the symbol when any one of the marker roots declared for that state occurs in the passage. The markers are declared in the seed, not inferred.",
@@ -621,7 +621,7 @@
   },
   "sch_m_surf": {
     "en": "Surfaced passages. Candidates are the passages that mention the symbol. Each is scored (2·own mentions + mentions of the symbol's top three partners) / (tokens + 20). Passages of at least 12 tokens have priority and, among them, one per stratum comes first, then the rest by score; shorter passages are used only to fill six. Ties are broken by passage id (folio order).",
-    "es": "Pasajes destacados. Los candidatos son los pasajes que mencionan el símbolo. Cada uno recibe la puntuación (2·menciones propias + menciones de los tres compañeros principales del símbolo) / (tokens + 20). Tienen prioridad los pasajes de al menos 12 tokens y, entre ellos, va primero uno por estrato y después el resto por puntuación; los más cortos solo se usan para completar seis. Los empates se resuelven por el id del pasaje (orden de folio)."
+    "es": "Pasajes destacados. Los candidatos son los pasajes que mencionan el símbolo. Cada uno recibe la puntuación (2·menciones propias + menciones de los tres acompañantes principales del símbolo) / (tokens + 20). Tienen prioridad los pasajes de al menos 12 tokens y, entre ellos, va primero uno por estrato y después el resto por puntuación; los más cortos solo se usan para completar seis. Los empates se resuelven por el id del pasaje (orden de folio)."
   },
   "sch_m_resolve": {
     "en": "Raw and resolved counts. The raw count is every tagged mention. When two or more symbols are tagged on the same token, a symbol's mention is dropped from its resolved count only when a rival on that token has strictly more support than the symbol itself; ties keep both. Support of a symbol is the number of symbols of its node present in the passage, not counting any of the symbols tagged on the shared token. Support is not normalised by node size, so nodes with many seeded symbols (Malkhut) win more often. The raw count is always shown beside the resolved one.",
@@ -636,8 +636,8 @@
     "es": "Fuentes de la semilla. Los símbolos y sus alias provienen del Pardes Rimonim de Cordovero (puerta 23), del Sha'arei Orah de Gikatilla, del uso del propio Zohar y de añadidos. Cada símbolo registra su fuente."
   },
   "sch_p_counts": {
-    "en": "The dictionary has {symbols} symbols and {aliases} aliases over {passages} passages ({sides} folio-sides). Of {tokens} tokens, {with_root} have a root, {non_lexical} are known non-lexical tokens and {unknown} are unknown; {conf_high} have lemma confidence of 0.8 or more.",
-    "es": "El diccionario tiene {symbols} símbolos y {aliases} alias en {passages} pasajes ({sides} caras de folio). De {tokens} tokens, {with_root} tienen raíz, {non_lexical} son tokens no léxicos conocidos y {unknown} son desconocidos; {conf_high} tienen una confianza de lema de 0,8 o más."
+    "en": "The dictionary has {symbols} symbols and aliases ({aliases}) over {passages} passages ({sides} folio-sides). Of {tokens} tokens, {with_root} have a root, {non_lexical} are known non-lexical tokens and {unknown} are unknown; {conf_high} have lemma confidence of 0.8 or more.",
+    "es": "El diccionario tiene {symbols} símbolos y alias ({aliases}) en {passages} pasajes ({sides} caras de folio). De {tokens} tokens, {with_root} tienen raíz, {non_lexical} son tokens no léxicos conocidos y {unknown} son desconocidos; {conf_high} tienen una confianza de lema de 0,8 o más."
   },
   "sch_p_cav": {
     "en": "Caveats. The strata ranges are conventional. Parasha is a page-level label, not a property of each passage. A scholarly spot-check of the boundaries of the Midrash ha-Ne'lam and the addenda is pending. Zohar III 116a–b is absent from Hebrew Wikisource.",
@@ -704,8 +704,8 @@
     "es": "metadatos de la compilación (JSON)"
   },
   "sch_e_symbol": {
-    "en": "Per symbol: every mention as CSV (UTF-8 with BOM, opens in Excel) or JSON, e.g. /api/symbol/moon.csv. Every export carries the tables_version.",
-    "es": "Por símbolo: todas las menciones en CSV (UTF-8 con BOM, se abre en Excel) o en JSON, p. ej. /api/symbol/moon.csv. Cada exportación incluye su tables_version."
+    "en": "Per symbol: every mention as CSV (UTF-8 with BOM, opens in Excel; the first line is a comment, # tables_version=…, so read it with pandas comment='#') or JSON, e.g. /api/symbol/moon.csv. Every export carries the tables_version.",
+    "es": "Por símbolo: todas las menciones en CSV (UTF-8 con BOM, se abre en Excel; la primera línea es un comentario, # tables_version=…, así que léela con pandas comment='#') o en JSON, p. ej. /api/symbol/moon.csv. Cada exportación incluye su tables_version."
   },
   "sch_cite_h": {
     "en": "Cite",
@@ -794,5 +794,29 @@
   "not_found_title": {
     "en": "Not found",
     "es": "No encontrado"
+  },
+  "stream_main": {
+    "en": "Main text",
+    "es": "Texto principal"
+  },
+  "nav_site": {
+    "en": "Site",
+    "es": "Sitio"
+  },
+  "nav_folio": {
+    "en": "Folio navigation",
+    "es": "Navegación de folio"
+  },
+  "back_home": {
+    "en": "Back to the home page",
+    "es": "Volver a la página de inicio"
+  },
+  "suggest_passages": {
+    "en": "Did you mean:",
+    "es": "Quizá buscabas:"
+  },
+  "sch_forms_roots": {
+    "en": "{surfaces} forms + {roots} roots",
+    "es": "{surfaces} formas + {roots} raíces"
   }
 }

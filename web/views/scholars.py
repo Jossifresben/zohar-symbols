@@ -8,8 +8,8 @@ from . import bp
 def scholars():
     meta = queries.cached("meta")
     counts = dict(queries.cached("token_shares"), **queries.cached("passage_totals"),
-                  symbols=len(queries.symbols_table(g.lang)), aliases=queries.cached("alias_count"))
-    return render_template("scholars.html", meta=meta, counts=counts, formats=cite.formats(meta),
+                  symbols=len(queries.symbols_table(g.lang)), aliases=queries.cached("alias_split"))
+    return render_template("scholars.html", meta=meta, counts=counts, formats=cite.formats(meta, g.lang),
                            revids=", ".join(str(r) for r in _revids(meta)), pairs=queries.cached("scholars_pairs", g.lang))
 
 

@@ -11,7 +11,7 @@ dependencies = [
     "requests>=2.31",
     "flask>=3.0",
     "gunicorn>=22.0",
-    "aramaic-root-atlas @ git+https://github.com/Jossifresben/aramaic-root-atlas.git",
+    "aramaic-root-atlas @ git+https://github.com/Jossifresben/aramaic-root-atlas.git@6e5f715534b0e386c75fdc2b321e9003ea276d3e",
 ]
 
 [project.optional-dependencies]

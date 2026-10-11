@@ -2,10 +2,16 @@
 {% block title %}{{ t('not_found_title') }} · Zohar{% endblock %}
 {% block content %}
 <section class="not-found">
+  <h1 class="display">{{ t('not_found_title') }}</h1>
   <p class="intro">{{ t(message|default('not_found')) }}</p>
   {%- if suggestions %}
   <p>{{ t('suggestions') }}
   {%- for x in suggestions %} <a href="{{ lang_url('symbol', sid=x.id) }}">{{ x.label }}</a>{% if not loop.last %} ·{% endif %}{% endfor %}</p>
   {%- endif %}
+  {%- if passage_suggestions %}
+  <p>{{ t('suggest_passages') }}
+  {%- for x in passage_suggestions %} <a href="{{ lang_url('passage', pid=x.id) }}">{{ x.citation }}</a>{% if not loop.last %} ·{% endif %}{% endfor %}</p>
+  {%- endif %}
+  <p><a href="{{ lang_url('home') }}">{{ t('back_home') }}</a></p>
 </section>
 {% endblock %}

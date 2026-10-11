@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}{{ s.label }} · {{ s.label_ar }} · Zohar{% endblock %}
 {% block content %}
-{% macro npass(n) %}{{ t('passages_one') if n == 1 else t('passages_n', n=n) }}{% endmacro %}
+{% macro npass(n) %}{{ t('passages_one') if n == 1 else t('passages_n', n=n|num) }}{% endmacro %}
 <nav class="breadcrumb muted" aria-label="{{ t('breadcrumb') }}">
   <a href="{{ lang_url('home') }}">{{ t('breadcrumb_symbols') }}</a> ›
   <a href="{{ lang_url('node', nid=s.node) }}">{{ s.node_label }}</a> ›
@@ -28,7 +28,7 @@
     {%- if partners %}
     <ul class="bars">
     {%- for p in partners %}
-      <li><a class="bar-row" href="{{ lang_url('symbol', sid=p.id) }}"><span class="bar-label">{{ p.label }}</span><span class="bar-track"><span class="bar bar-{{ p.tone }}" style="width:{{ p.width }}%"></span></span><span class="bar-n">{{ p.passages_together }}</span></a></li>
+      <li><a class="bar-row" href="{{ lang_url('symbol', sid=p.id) }}"><span class="bar-label">{{ p.label }}</span><span class="bar-track"><span class="bar bar-{{ p.tone }}" style="width:{{ p.width }}%"></span></span><span class="bar-n">{{ p.passages_together|num }}</span></a></li>
     {%- endfor %}
     </ul>
     {%- else %}
@@ -47,9 +47,9 @@
       {%- if partners %}
       {%- set top = partners[0] %}
       <a class="top-partner display" href="{{ lang_url('symbol', sid=top.id) }}">{{ top.label }}</a>
-      <p class="muted">{{ t('passages_together_one') if top.passages_together == 1 else t('passages_together_n', n=top.passages_together) }}</p>
+      <p class="muted">{{ t('passages_together_one') if top.passages_together == 1 else t('passages_together_n', n=top.passages_together|num) }}</p>
       {%- if also_with %}
-      <p>{{ t('also_with') }}: {% for p in also_with %}<a href="{{ lang_url('symbol', sid=p.id) }}">{{ p.label }}</a> <span class="muted">({{ p.passages_together }})</span>{% if not loop.last %} · {% endif %}{% endfor %}</p>
+      <p>{{ t('also_with') }}: {% for p in also_with %}<a href="{{ lang_url('symbol', sid=p.id) }}">{{ p.label }}</a> <span class="muted">({{ p.passages_together|num }})</span>{% if not loop.last %} · {% endif %}{% endfor %}</p>
       {%- endif %}
       {%- else %}
       <p class="muted">{{ t('no_partners') }}</p>
@@ -60,10 +60,10 @@
       {%- if states.states %}
       <ul class="states">
       {%- for x in states.states %}
-        <li><span class="state display">{{ x.display }}</span> <span class="heb muted" lang="he" dir="rtl">{{ x.marker_roots }}</span> <span class="muted">· {{ npass(x.count) }}</span></li>
+        <li><span class="state display">{{ x.display }}</span> <span class="heb muted" lang="he" dir="rtl">{{ x.marker_roots.split(',')|join(' · ') }}</span> <span class="muted">· {{ npass(x.count) }}</span></li>
       {%- endfor %}
       </ul>
-      <p class="muted">{{ t('unmarked_one') if states.unmarked == 1 else t('unmarked_n', n=states.unmarked) }}</p>
+      <p class="muted">{{ t('unmarked_one') if states.unmarked == 1 else t('unmarked_n', n=states.unmarked|num) }}</p>
       {%- else %}
       <p class="muted">{{ t('no_states') }}</p>
       {%- endif %}
@@ -86,7 +86,7 @@
   {%- if strata %}
   <ul class="bars card">
   {%- for x in strata %}
-    <li class="bar-row"><span class="bar-label">{{ t('stratum_' ~ x.stratum) }}</span><span class="bar-track"><span class="bar bar-gold" style="width:{{ x.width }}%"></span></span><span class="bar-n">{{ x.count }}</span></li>
+    <li class="bar-row"><span class="bar-label">{{ t('stratum_' ~ x.stratum) }}</span><span class="bar-track"><span class="bar bar-gold" style="width:{{ x.width }}%"></span></span><span class="bar-n">{{ x.count|num }}</span></li>
   {%- endfor %}
   </ul>
   {%- else %}

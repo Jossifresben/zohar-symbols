@@ -23,7 +23,7 @@ EN_UI = ["Passages", "passages", "Partners", "States", "Read it", "Read", "Schol
          "Left pillar", "Middle pillar", "The Other Side", "home page", "Report a problem", "Who", "What this is",
          "No such", "Main body", "Across", "Only in"]
 # And the reverse: Spanish UI words that must never reach an English page.
-ES_UI = ["Pasajes", "pasajes", "Compañeros", "Léelo", "Anterior", "Siguiente", "especialistas", "Símbolos",
+ES_UI = ["Pasajes", "pasajes", "Acompañantes", "Léelo", "Anterior", "Siguiente", "especialistas", "Símbolos",
          "Buscar", "Preguntar", "Leer", "Método", "Citar", "Licencias", "Acerca de", "Estados", "Próximamente",
          "Quizá", "Sucesos", "Columna", "Cómo se mueve", "sin traducir"]
 
@@ -81,7 +81,7 @@ def _dynamic_families():
     return {
         "node_": queries.NODE_ORDER, "node_intro_": queries.NODE_ORDER, "pillar_": sorted({v for v in queries.PILLAR.values() if v}),
         "kind_": queries.KINDS, "kind_one_": queries.KINDS, "state_": queries.STATE_ORDER,
-        "stream_": [s for s in STREAMS if s != "main"], "stratum_": list(STREAMS) + ["idra_rabba", "idra_zuta"],
+        "stream_": list(STREAMS), "stratum_": list(STREAMS) + ["idra_rabba", "idra_zuta"],
         "sch_m_": ["corpus", "lemma", "tag", "cooc", "states", "surf", "resolve"],
         "sch_cite_": ["bibtex", "chicago", "sbl"],
     }
@@ -298,7 +298,7 @@ def test_gloss_fallback_spanish_word_order(app):
     with app.app_context():
         ids = [r["id"] for r in queries.rows("select id from symbol where count_passages>1 and coalesce(gloss_es,'')=''")]
         glosses = [queries.symbol(i, "es")["gloss"] for i in ids]
-    with_partner = [g for g in glosses if "compañero" in g]
+    with_partner = [g for g in glosses if "acompañante" in g]
     if not with_partner:
         pytest.skip("no fallback gloss with a partner in the fixture")
     for g in with_partner:

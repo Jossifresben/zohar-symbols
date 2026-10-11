@@ -1,14 +1,17 @@
 # Build needs network access to he.wikisource.org (the pipeline fetches the pinned
 # revisions in seeds/wikisource_revisions.json). The Atlas repo on GitHub
 # (Jossifresben/aramaic-root-atlas) must contain the commit that declares
-# `aramaic_core` as a package (user action: push it); otherwise `pip install .` fails.
+# `aramaic_core` as a package (user action: push it); pyproject.toml pins that exact commit, so
+# `pip install .` fails until it is pushed. The build ends with pipeline.check_tables, which fails the
+# deploy if the rebuilt tables differ from data/tables.v0.1.0.sha256.
 # Custom domain zohar.digital is set in the Render dashboard, not here.
 services:
   - type: web
     name: zohar-digital
     runtime: python
     plan: starter
-    buildCommand: pip install . && python -m pipeline.run_all
+    buildCommand: pip install . && python -m pipeline.run_all && python -m pipeline.check_tables
+    healthCheckPath: /healthz
     startCommand: gunicorn web.wsgi:app --bind 0.0.0.0:$PORT --workers 2 --timeout 60
     envVars:
       - key: PYTHON_VERSION

@@ -13,10 +13,10 @@ a:hover{text-decoration:underline}
 .wm-heb{font-size:24px;color:var(--gold)}
 .wm-sub{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .site-nav{display:flex;gap:20px;flex:1}
-.site-nav a{color:var(--muted)}
+.site-nav a{color:var(--muted);display:inline-flex;align-items:center;min-height:44px}
 .site-nav a:hover{color:var(--text);text-decoration:none}
 .lang-switch{display:flex;border:1px solid var(--border);border-radius:6px;overflow:hidden}
-.lang-btn{padding:4px 12px;font-size:13px;color:var(--muted)}
+.lang-btn{display:inline-flex;align-items:center;min-height:44px;padding:4px 12px;font-size:13px;color:var(--muted)}
 .lang-btn.active{background:var(--surface);color:var(--gold)}
 .lang-btn:hover{text-decoration:none}
 main{max-width:1200px;margin:0 auto;padding:32px}

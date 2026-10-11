@@ -1,4 +1,6 @@
 """Route registration. One blueprint, mounted twice: at / (English) and /es (Spanish)."""
+import re
+
 from flask import Blueprint, g, has_request_context, jsonify, render_template, request, url_for
 from markupsafe import Markup, escape
 
@@ -57,6 +59,31 @@ def _symbol_href(sid: str) -> str:
     return f"/symbol/{escape(sid)}"
 
 
+_PID = re.compile(r"^(\d)\.(\d{3})([a-z])\.(\d{3})$")
+
+
+def _passage_suggestions(pid: str, lang: str) -> list[dict]:
+    """Where to go from a passage id that does not exist: the first passage of its folio-side if that exists, the
+    neighbouring folio-sides' first passages, and always the very first passage. Each is {id, citation}."""
+    ids: list[str] = []
+    m = _PID.match(pid)
+    if m:
+        v, f, s = int(m.group(1)), int(m.group(2)), m.group(3)
+        own = db.one("select id from passage where volume=? and folio=? and side=? order by para, id limit 1", (v, f, s))
+        if own:
+            ids.append(own["id"])
+        ids += [x for x in queries.folio_neighbours(v, f, s) if x]
+    first = db.one("select id from passage order by volume, folio, side, para limit 1")
+    if first and first["id"] not in ids:
+        ids.append(first["id"])
+    out = []
+    for i in ids:
+        p = queries.passage(i, lang)
+        if p:
+            out.append(dict(id=i, citation=p["citation"]))
+    return out
+
+
 def register(app) -> None:
     from . import api, ask, home, nodes, passages, scholars, symbols, tree  # noqa: F401  (decorate bp)
 
@@ -64,8 +91,7 @@ def register(app) -> None:
 
     @app.context_processor
     def _meta():
-        row = db.one("select value from meta where key='tables_version'")
-        return {"tables_version": row["value"] if row else ""}
+        return {"tables_version": queries.cached("meta").get("tables_version", "")}
 
     with app.app_context():
         row = db.one("select id from passage order by volume, folio, side, para limit 1")
@@ -84,7 +110,8 @@ def register(app) -> None:
     @app.errorhandler(404)
     def _not_found(_e):
         if "/passage/" in request.path:
-            return render_template("404.html", message="passage_not_found", suggestions=[]), 404
+            return render_template("404.html", message="passage_not_found", suggestions=[],
+                                   passage_suggestions=_passage_suggestions(request.path.rstrip("/").rsplit("/", 1)[-1], g.lang)), 404
         if "/sefirah/" in request.path:
             return render_template("404_node.html", node_ids=queries.NODE_ORDER), 404
         q = request.path.rstrip("/").rsplit("/", 1)[-1]

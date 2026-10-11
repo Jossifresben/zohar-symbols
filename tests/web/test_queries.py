@@ -24,7 +24,7 @@ def test_symbol_and_partners(app):
         s = q.symbol("moon", "es")
         assert s["label"] == "Luna" and s["label_other"] == "Moon" and s["node"] == "malkhut"
         assert s["aliases_surface"] == ["סיהרא", "לבנה"] and s["aliases_root"] == ["סהר"]
-        assert s["gloss"] == "Luna: aparece en 4 pasajes del Zohar; su compañero más frecuente es Sol (juntos en 3 pasajes)."
+        assert s["gloss"] == "Luna: aparece en 4 pasajes del Zohar; su acompañante más frecuente es Sol (juntos en 3 pasajes)."
         p = q.partners("moon", "en")
         # moon-sun are together in 1.020a.001, 1.020b.001, 1.020b.003
         assert p[0]["id"] == "sun" and p[0]["passages_together"] == 3 and p[0]["label"] == "Sun" and "pmi" not in p[0]
@@ -102,4 +102,7 @@ def test_cite():
         cite.roman(4)
     assert cite.citation(1, 20, "a") == "Zohar I:20a" and cite.roman(3) == "III"
     f = cite.formats({"tables_version": "0.1.0"})
-    assert "zohar.digital" in f["bibtex"] and "[DOI pending]" in f["chicago"]
+    assert "zohar.digital" in f["bibtex"] and "DOI pending" in f["chicago"]
+    assert "doi =" not in f["bibtex"] and "note = {DOI pending}" in f["bibtex"]
+    es = cite.formats({"tables_version": "0.1.0"}, "es")
+    assert "Versión 0.1.0" in es["chicago"] and "Versión 0.1.0" in es["sbl"] and "Version" not in es["chicago"]

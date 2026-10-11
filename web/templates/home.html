@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% from "_chips.html" import chips with context %}
-{% block title %}{% if q %}{{ heading or t('search_results', q=q) }} · Zohar{% else %}{{ t('site_title') }}{% endif %}{% endblock %}
+{% block title %}{% if q or heading %}{{ heading or t('search_results', q=q) }} · Zohar{% else %}{{ t('site_title') }}{% endif %}{% endblock %}
 {% block content %}
 <section class="hero">
   <h1 class="display">{{ t('home_title') }}</h1>
@@ -16,7 +16,7 @@
     {%- endfor %}
   </div>
 </section>
-{% if q %}
+{% if q or heading %}
 <section class="results card">
   <h2 class="display">{{ heading or t('search_results', q=q) }}</h2>
   {% if results %}

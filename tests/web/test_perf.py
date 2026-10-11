@@ -23,7 +23,7 @@ def test_cached_returns_warm_values_and_rejects_unknown(client):
         assert queries.cached("meta") == app.config["CACHE"]["meta"]
         assert queries.cached("nodes_with_symbols", "es")[0]["node"] == "keter"
         assert queries.cached("scholars_pairs", "en") is not None
-        for k in ("token_shares", "passage_totals", "alias_count"):
+        for k in ("token_shares", "passage_totals", "alias_split", "meta"):
             queries.cached(k)
         with pytest.raises(KeyError):
             queries.cached("nope")
@@ -35,10 +35,19 @@ def test_requests_do_not_recompute_cached_queries(client, monkeypatch):
     from web import queries
     def boom(*a, **k):
         raise AssertionError("recomputed per request")
-    for name in ("token_shares", "passage_totals", "alias_count", "scholars_pairs", "nodes_with_symbols", "meta"):
+    for name in ("token_shares", "passage_totals", "alias_split", "alias_count", "scholars_pairs", "nodes_with_symbols", "meta"):
         monkeypatch.setattr(queries, name, boom)
+    import web.db as dbm
+    def guard(real):
+        def wrapped(sql, *a, **k):
+            assert "from meta" not in sql, "live meta query per request"
+            return real(sql, *a, **k)
+        return wrapped
+    for mod, name in ((dbm, "one"), (dbm, "all"), (queries, "one"), (queries, "rows")):
+        monkeypatch.setattr(mod, name, guard(getattr(mod, name)))
     assert client.get("/").status_code == 200
     assert client.get("/es/scholars").status_code == 200
+    assert client.get("/symbol/moon").status_code == 200 and client.get("/passage/1.020b.002").status_code == 200
 
 
 def test_healthz_reports_cache_warm_ms(client):

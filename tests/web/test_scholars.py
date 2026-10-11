@@ -6,7 +6,7 @@ def test_scholars_page(client):
     assert "PMI" in html and "tables_version" in html.lower()
     assert "We are not scholars" in html
     assert "/api/pairs.csv" in html and "/api/meta.json" in html
-    assert "[DOI pending]" in html
+    assert "DOI pending" in html and "doi =" not in html
     assert html.count('data-copy=') == 3 and "app.js" in html
     assert "data/SOURCES.md" in html and "CC BY-SA 4.0" in html
 
@@ -20,7 +20,9 @@ def test_scholars_page_es_has_no_english_ui(client):
 def test_scholars_counts_from_data(client):
     import re
     html = client.get("/scholars").get_data(as_text=True)
-    assert re.search(r'data-n="passages">\d+<', html) and re.search(r'data-n="symbols">\d+<', html) and re.search(r'data-n="with_root">\d+<', html)
+    assert re.search(r'data-n="passages">[\d,]+<', html) and re.search(r'data-n="symbols">[\d,]+<', html) and re.search(r'data-n="with_root">[\d,]+<', html)
+    assert re.search(r"\d+ forms \+ \d+ roots", html)
+    assert re.search(r"\d+ formas \+ \d+ raíces", client.get("/es/scholars").get_data(as_text=True))
 
 
 def test_about_pages(client):

@@ -53,7 +53,7 @@ def home():
 def search():
     kind = request.args.get("kind", "")
     if kind in queries.KINDS:
-        return _page(kind, queries.by_kind(kind, g.lang), heading=get_string(f"kind_{kind}", g.lang))
+        return _page("", queries.by_kind(kind, g.lang), heading=get_string(f"kind_{kind}", g.lang))
     q = request.args.get("q", "").strip()
     if not q:
         return _page()
