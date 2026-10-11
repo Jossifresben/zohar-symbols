@@ -60,9 +60,14 @@ def glossary(conn: sqlite3.Connection) -> str:
     return "Glossary (Aramaic/Hebrew forms → labels):\n" + "\n".join(lines)
 
 
-def system_blocks(conn: sqlite3.Connection, ttl: str | None = None) -> list[dict]:
-    cc = {"type": "ephemeral", **({"ttl": ttl} if ttl else {})}
-    return [{"type": "text", "text": INSTRUCTIONS + "\n\n" + glossary(conn), "cache_control": cc}]
+def system_blocks(conn: sqlite3.Connection, ttl: str | None = None, cache: bool = True) -> list[dict]:
+    """The shared instructions + glossary. In the Batch API the cache was written by nearly every
+    request (measured: 5,030 of 5,352 tokens per request in the first 100), so batch runs send it
+    uncached: plain input at 1x is cheaper than a cache write at 1.25x/2x."""
+    block = {"type": "text", "text": INSTRUCTIONS + "\n\n" + glossary(conn)}
+    if cache:
+        block["cache_control"] = {"type": "ephemeral", **({"ttl": ttl} if ttl else {})}
+    return [block]
 
 
 def surfaced_ids(conn: sqlite3.Connection) -> list[str]:
@@ -201,6 +206,7 @@ def main(argv=None) -> None:
     f.add_argument("--name", required=True)
     f.add_argument("--range", default="0:")
     f.add_argument("--submit", action="store_true")
+    f.add_argument("--no-cache", action="store_true")
     c = sub.add_parser("collect")
     c.add_argument("batch_id")
     c.add_argument("--name", default="pilot")
@@ -220,7 +226,7 @@ def main(argv=None) -> None:
     elif a.cmd == "prewarm":
         print(json.dumps(prewarm(conn)))
     elif a.cmd == "full":
-        system = system_blocks(conn, "1h")
+        system = system_blocks(conn, "1h", cache=not a.no_cache)
         all_reqs = [build_request(conn, pid, lang, EFFORT, system)
                     for pid in surfaced_ids(conn) for lang in LANGS]
         lo, _, hi = a.range.partition(":")
