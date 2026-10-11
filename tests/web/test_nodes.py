@@ -49,6 +49,7 @@ def test_every_node_has_intro_both_languages():
             assert len(get_string(f"node_intro_{nid}", lang)) > 40
 
 
+# 22 paths of the Kircher/Golden Dawn layout, as in cosmicoach-astro-integrada/qabalah.py; the controller's Task 5 dispatch lists them.
 BRIEF_PATHS = {frozenset(p) for p in [(1, 2), (1, 3), (1, 6), (2, 3), (2, 4), (2, 6), (3, 5), (3, 6), (4, 5), (4, 6), (4, 7), (5, 6),
                                       (5, 8), (6, 7), (6, 8), (6, 9), (7, 8), (7, 9), (7, 10), (8, 9), (8, 10), (9, 10)]}
 
@@ -69,3 +70,9 @@ def test_no_pillar_chip_outside_the_pillars(client):
         html = client.get(f"/sefirah/{nid}").get_data(as_text=True)
         assert "pillar" not in html.lower()
     assert "Middle pillar" in client.get("/sefirah/tiferet").get_data(as_text=True)
+
+
+def test_tree_anchor_has_visible_focus_ring():
+    from pathlib import Path
+    css = (Path(__file__).resolve().parents[2] / "web" / "static" / "app.css").read_text(encoding="utf-8")
+    assert ".tree-node:focus-visible{outline:" in css.replace(" {", "{")
