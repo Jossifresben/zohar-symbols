@@ -8,3 +8,8 @@ licensed CC BY-SA 4.0. Revision ids and fetch dates are in `data/SOURCES.md`.
 
 Seed lists cite Moshe Cordovero, *Pardes Rimonim* (Gate 23) and Joseph
 Gikatilla, *Sha'arei Orah*, both public domain.
+
+The translations in `data/translations.v*.jsonl` were written by the model
+Claude Fable 5.1 (Anthropic) from that text and are shared under the same
+licence, CC BY-SA 4.0. They are machine translations, not reviewed by
+specialists.

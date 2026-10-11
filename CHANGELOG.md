@@ -1,5 +1,13 @@
 # Changelog
 
+## release 0.1.0 — 2026-10-11 (zohar.digital)
+- First public release: the site at https://zohar.digital, bilingual EN/ES, on tables 0.1.0 (below).
+- Symbols, sefirot, the Tree (Kircher's three-pillar layout, double-line paths), Read (folio by folio, navigation above and below), Scholars (method, strata, strongest pairs with Aramaic labels, exports, citation).
+- Translations: 678 surfaced passages in English and Spanish (1,356 texts) by Claude Fable 5.1, Batch API, prompt t3; $73.30 in all including the pilot. Each row carries model, prompt version, date and a source hash; stale rows are dropped at build; hand corrections in `data/translation_overrides.tsv`; a "report a problem" link per translation.
+- Keys panel on every passage page: each image in reading order, its usual sefirah and the source of that assignment.
+- Home opens with Zohar III 152a (the garment of the Torah); Radiance logo.
+- Deferred work: docs/BACKLOG.md (interpretations pilot done, full run parked).
+
 ## tables 0.1.0 — 2026-10-11
 - First full build of the Zohar main body (3 volumes, Mantua pagination) from Hebrew Wikisource: 29 parasha pages pinned in `seeds/wikisource_revisions.json`, 1,630 folio-sides, 15,909 passages, 832,463 tokens. The separate Wikisource page `זוהר השמטות` (the appendix printed at the end of the Vilna/Izmir editions) is not fetched; appendix text the Wikisource editors copied into the parasha pages is kept as stream `addendum` (220 passages on 12 folio-sides, III 92b–287b; the one at III 92b is Sefer ha-Bahir text by the editors' own note).
 - Text streams: Wikisource labels the parallel streams of each folio (`רע"מ דף …`, `מדרש הנעלם דף …`, `סתרי תורה דף …`, …). Every label is classified (main / stream / overlay) or the build fails; a plain `דף` label takes its stream from the level-2 heading that governs it (Bo and Mishpatim Ra'aya Meheimna, 19 sections). Passages per stream: main 13,505; Ra'aya Meheimna 1,667; addendum 220; Midrash ha-Ne'lam 214; Sitrei Torah 171; Tosefta 64; Raza de-Razin 48; other (the `ד"א` baraita in Sifra di-Tseniuta) 11; Matnitin 9. A stream's paragraphs continue the folio-side's numbering after the main stream (`3.088b.002` may be Ra'aya Meheimna); ids have a three-digit paragraph field.
