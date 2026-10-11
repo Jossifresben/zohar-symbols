@@ -2,7 +2,7 @@
 
 **Date:** 2026-10-11 · **Status:** approved conversationally, awaiting written review
 **Author:** Jossi Fresco Benaim with Claude (Fable 5.1)
-**Repo:** `Jossifresben/zohar-symbols` (working name; product name and domain undecided)
+**Repo:** `Jossifresben/zohar-symbols` · **Domain:** zohar.digital (procured 2026-10-11)
 **Design reference:** mockup canvas https://claude.ai/artifact/LNcGFhBgXUKqs3SuxRB8RS (Home + Moon page)
 
 ---
@@ -203,4 +203,4 @@ Flask + Jinja, vanilla JS for filter, search and hovers. Server-rendered. Same s
 4. Ask layer 2; About and Scholars complete; tag v1.0; Zenodo DOI; user decides when public.
 v1.1: Zohar Chadash, Tikkunei Zohar.
 
-**Parked, decided later:** product name and domain; `aramaic_core` packaging (step 1); exact stratum boundaries (transcribe Tishby into `strata.tsv`).
+**Parked, decided later:** product name (domain is zohar.digital); `aramaic_core` packaging (step 1); exact stratum boundaries (transcribe Tishby into `strata.tsv`).
