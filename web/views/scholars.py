@@ -8,7 +8,7 @@ from . import bp
 def scholars():
     meta = queries.meta()
     shares = queries.token_shares()
-    counts = dict(shares, symbols=len(queries.symbols_table(g.lang)), aliases=queries.alias_count())
+    counts = dict(shares, **queries.passage_totals(), symbols=len(queries.symbols_table(g.lang)), aliases=queries.alias_count())
     return render_template("scholars.html", meta=meta, counts=counts, formats=cite.formats(meta),
                            revids=", ".join(str(r) for r in _revids(meta)), pairs=queries.scholars_pairs(lang=g.lang))
 
@@ -20,7 +20,7 @@ def about():
 
 def _revids(meta: dict) -> list:
     import json
-    raw = meta.get("source_revids", "")
+    raw = meta.get("source_revids") or ""
     try:
         v = json.loads(raw)
     except ValueError:

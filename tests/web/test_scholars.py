@@ -20,7 +20,7 @@ def test_scholars_page_es_has_no_english_ui(client):
 def test_scholars_counts_from_data(client):
     import re
     html = client.get("/scholars").get_data(as_text=True)
-    assert re.search(r'data-n="symbols">\d+<', html) and re.search(r'data-n="with_root">\d+<', html)
+    assert re.search(r'data-n="passages">\d+<', html) and re.search(r'data-n="symbols">\d+<', html) and re.search(r'data-n="with_root">\d+<', html)
 
 
 def test_about_pages(client):
@@ -69,7 +69,7 @@ def test_queries_new(app):
     from web import queries
     with app.app_context():
         sh = queries.token_shares()
-        assert sh["tokens"] == sh["with_root"] + sh["non_lexical"] + sh["unknown"] and 0 <= sh["conf_high"] <= sh["tokens"]
+        assert sh["with_root"] > 0 and sh["tokens"] == sh["with_root"] + sh["non_lexical"] + sh["unknown"] and 0 <= sh["conf_high"] <= sh["tokens"]
         assert len(queries.symbol_mentions("moon", "en")) == 5
         assert any(r["id"] == "moon" for r in queries.symbols_table("en"))
         assert queries.all_pairs() is not None and queries.alias_count() > 0

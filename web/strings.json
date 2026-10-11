@@ -600,44 +600,44 @@
     "es": "Método"
   },
   "sch_m_corpus": {
-    "en": "Corpus and strata. The text is the Hebrew Wikisource Zohar, in Mantua pagination, from its 29 parasha pages. Passages are the folio paragraphs. Nine text streams are read from the editors' section labels and headings, plus the ranges of Idra Rabba and Idra Zuta and a fallback range for the Midrash ha-Ne'lam in Shemot. These streams are the strata shown on the site.",
-    "es": "Corpus y estratos. El texto es el Zohar de Wikisource hebreo, con la paginación de Mantua, tomado de sus 29 páginas por parashá. Los pasajes son los párrafos de cada folio. Nueve corrientes de texto se leen de las etiquetas de sección y los títulos de los editores, más los rangos de Idra Rabá e Idra Zutá y un rango de reserva para el Midrash ha-Ne'lam en Shemot. Esas corrientes son los estratos que muestra el sitio."
+    "en": "Corpus and strata. The text is the Hebrew Wikisource Zohar, in Mantua pagination, taken from its 29 parasha pages. Passages are the folio paragraphs. The editors' section labels and headings give nine text streams (main, Ra'aya Meheimna, Midrash ha-Ne'lam, Sitrei Torah, Raza de-Razin, Tosefta, Matnitin, other, addendum). Every non-main stream is its own stratum. A main-stream passage is additionally classified as Idra Rabba, Idra Zuta or Shemot Midrash ha-Ne'lam when it falls inside the conventional folio ranges in seeds/strata.tsv (the last range covers text Wikisource leaves unlabelled); otherwise it stays \"main\". That makes eleven strata in all.",
+    "es": "Corpus y estratos. El texto es el Zohar de Wikisource hebreo, con la paginación de Mantua, tomado de sus 29 páginas por parashá. Los pasajes son los párrafos de cada folio. Las etiquetas de sección y los títulos de los editores dan nueve corrientes de texto (principal, Ra'aya Meheimna, Midrash ha-Ne'lam, Sitrei Torá, Raza de-Razin, Tosefta, Matnitin, otros, apéndice). Cada corriente que no es la principal es un estrato propio. Además, un pasaje de la corriente principal se clasifica como Idra Rabá, Idra Zutá o Midrash ha-Ne'lam de Shemot cuando cae dentro de los rangos de folios convencionales de seeds/strata.tsv (el último rango cubre texto que Wikisource deja sin etiqueta); si no, sigue siendo \"principal\". En total hay once estratos."
   },
   "sch_m_lemma": {
-    "en": "Lemmatisation. Each word is reduced to a root with the Aramaic Root Atlas (aramaic_core) plus a Zohar override table. Overrides are looked up through the proclitics ו ד ב ל כ מ ש. An override with an empty root marks a known non-lexical token, such as an abbreviation of a divine name.",
-    "es": "Lematización. Cada palabra se reduce a una raíz con el Atlas de Raíces Arameas (aramaic_core) más una tabla de excepciones propia del Zohar. Las excepciones se buscan a través de los proclíticos ו ד ב ל כ מ ש. Una excepción con raíz vacía marca un token no léxico conocido, como la abreviatura de un nombre divino."
+    "en": "Lemmatisation. Each word is reduced to a root where possible, with the Aramaic Root Atlas (aramaic_core) and a Zohar override table; the override table takes precedence over aramaic_core. Overrides are looked up through the proclitics ו ד ב ל כ מ ש. An override with an empty root marks a known non-lexical token, such as the abbreviation הקב״ה. Words the extractor cannot place are kept and counted as unknown.",
+    "es": "Lematización. Cada palabra se reduce a una raíz cuando es posible, con el Atlas de Raíces Arameas (aramaic_core) y una tabla de excepciones propia del Zohar; la tabla de excepciones tiene precedencia sobre aramaic_core. Las excepciones se buscan a través de los proclíticos ו ד ב ל כ מ ש. Una excepción con raíz vacía marca un token no léxico conocido, como la abreviatura הקב״ה. Las palabras que el extractor no sabe ubicar se conservan y se cuentan como desconocidas."
   },
   "sch_m_tag": {
-    "en": "Mention tagging. A symbol is tagged by its surface aliases (with safe proclitic pairs) and by its distinctive roots. The longest multi-word match wins. Words that follow רבי, ר׳, א״ר or רב are not tagged, because they are the name of a sage.",
-    "es": "Etiquetado de menciones. Un símbolo se etiqueta por sus alias de superficie (con pares seguros de proclíticos) y por sus raíces distintivas. Gana la coincidencia más larga de varias palabras. No se etiquetan las palabras que siguen a רבי, ר׳, א״ר o רב, porque son el nombre de un sabio."
+    "en": "Mention tagging. A symbol is tagged by its surface aliases (matched through safe proclitic pairs) and by its distinctive roots; a surface alias takes precedence over a root match on the same token. For multi-word aliases the longest match wins. The word immediately after רבי, ר׳, א״ר or רב is not tagged as a single-word alias, because it is the name of a sage; multi-word aliases are exempt from this rule.",
+    "es": "Etiquetado de menciones. Un símbolo se etiqueta por sus alias de superficie (con pares seguros de proclíticos) y por sus raíces distintivas; un alias de superficie tiene precedencia sobre una coincidencia por raíz en el mismo token. En los alias de varias palabras gana la coincidencia más larga. La palabra inmediatamente posterior a רבי, ר׳, א״ר o רב no se etiqueta como alias de una sola palabra, porque es el nombre de un sabio; los alias de varias palabras quedan exentos de esta regla."
   },
   "sch_m_cooc": {
     "en": "Co-occurrence and PMI. Two symbols co-occur when both are mentioned in the same passage (a folio paragraph) on different tokens. PMI = log2(c·N / (fa·fb)), where c is the number of passages with both, fa and fb the passages of each, and N all passages. It is shown only for pairs with at least 5 passages together.",
     "es": "Coocurrencia y PMI. Dos símbolos coocurren cuando ambos se mencionan en el mismo pasaje (un párrafo de folio) sobre palabras distintas. PMI = log2(c·N / (fa·fb)), donde c es el número de pasajes con ambos, fa y fb los pasajes de cada uno y N todos los pasajes. Solo se muestra para pares con al menos 5 pasajes juntos."
   },
   "sch_m_states": {
-    "en": "States. A symbol's state (for example full or diminished) is detected when the marker roots declared for that state co-occur with it in the passage. The markers are declared in the seed, not inferred.",
-    "es": "Estados. El estado de un símbolo (por ejemplo pleno o disminuido) se detecta cuando las raíces marcadoras declaradas para ese estado coinciden con él en el pasaje. Los marcadores se declaran en la semilla; no se infieren."
+    "en": "States. A symbol's state (for example full or diminished) is detected in a passage that mentions the symbol when any one of the marker roots declared for that state occurs in the passage. The markers are declared in the seed, not inferred.",
+    "es": "Estados. El estado de un símbolo (por ejemplo pleno o disminuido) se detecta en un pasaje que menciona el símbolo cuando aparece en él cualquiera de las raíces marcadoras declaradas para ese estado. Los marcadores se declaran en la semilla; no se infieren."
   },
   "sch_m_surf": {
-    "en": "Surfaced passages. Passages shown for a symbol are ranked by (2·own + partner mentions) / (tokens + 20). Passages of at least 12 tokens come first, one per stratum first, and ties are broken by folio order.",
-    "es": "Pasajes destacados. Los pasajes que se muestran para un símbolo se ordenan por (2·propias + menciones de compañeros) / (tokens + 20). Primero los de al menos 12 tokens, primero uno por estrato, y los empates se resuelven por orden de folio."
+    "en": "Surfaced passages. Candidates are the passages that mention the symbol. Each is scored (2·own mentions + mentions of the symbol's top three partners) / (tokens + 20). Passages of at least 12 tokens have priority and, among them, one per stratum comes first, then the rest by score; shorter passages are used only to fill six. Ties are broken by passage id (folio order).",
+    "es": "Pasajes destacados. Los candidatos son los pasajes que mencionan el símbolo. Cada uno recibe la puntuación (2·menciones propias + menciones de los tres compañeros principales del símbolo) / (tokens + 20). Tienen prioridad los de al menos 12 tokens y, entre ellos, uno por estrato; después el resto por puntuación; los más cortos solo se usan para completar seis. Los empates se resuelven por id de pasaje (orden de folio)."
   },
   "sch_m_resolve": {
-    "en": "Raw and resolved counts. The raw count is every tagged mention. Where several symbols share an alias, the resolved count assigns the mention by the context of the same node, without normalisation. The raw count is always shown.",
-    "es": "Recuento bruto y resuelto. El recuento bruto es cada mención etiquetada. Cuando varios símbolos comparten un alias, el recuento resuelto asigna la mención según el contexto del mismo nodo, sin normalizar. El recuento bruto se muestra siempre."
+    "en": "Raw and resolved counts. The raw count is every tagged mention. When two or more symbols are tagged on the same token, the mention counts toward the resolved total of each symbol unless a rival symbol has strictly more support in that passage, where support is the number of other symbols of the rival's own node present in the passage; ties keep both. Support is not normalised by node size, so nodes with many seeded symbols (Malkhut) win more often. The raw count is always shown beside the resolved one.",
+    "es": "Recuento bruto y resuelto. El recuento bruto es cada mención etiquetada. Cuando dos o más símbolos se etiquetan sobre el mismo token, la mención cuenta en el total resuelto de cada símbolo salvo que un símbolo rival tenga estrictamente más apoyo en ese pasaje, entendiendo por apoyo el número de otros símbolos del propio nodo del rival presentes en el pasaje; los empates conservan ambos. El apoyo no se normaliza por el tamaño del nodo, de modo que los nodos con muchos símbolos sembrados (Maljut) ganan más a menudo. El recuento bruto se muestra siempre junto al resuelto."
   },
   "sch_prov_h": {
     "en": "Provenance",
     "es": "Procedencia"
   },
   "sch_p_seed": {
-    "en": "Seed sources. The symbols and their aliases are seeded from Cordovero, Pardes Rimonim (gate 23), Gikatilla, Sha'arei Orah, and the Zohar's own usage. Each symbol records its seed source.",
-    "es": "Fuentes de la semilla. Los símbolos y sus alias provienen de Cordovero, Pardes Rimonim (puerta 23), de Gikatilla, Sha'arei Orah, y del uso del propio Zohar. Cada símbolo registra su fuente."
+    "en": "Seed sources. The symbols and their aliases are seeded from Cordovero's Pardes Rimonim (gate 23), Gikatilla's Sha'arei Orah, the Zohar's own usage, and additions. Each symbol records its seed source.",
+    "es": "Fuentes de la semilla. Los símbolos y sus alias provienen del Pardes Rimonim de Cordovero (puerta 23), Sha'arei Orah de Gikatilla, el uso del propio Zohar y añadidos. Cada símbolo registra su fuente."
   },
   "sch_p_counts": {
-    "en": "The dictionary has {symbols} symbols and {aliases} aliases. Of {tokens} tokens, {with_root} have a root, {non_lexical} are known non-lexical tokens and {unknown} are unknown; {conf_high} have lemma confidence of 0.8 or more.",
-    "es": "El diccionario tiene {symbols} símbolos y {aliases} alias. De {tokens} tokens, {with_root} tienen raíz, {non_lexical} son no léxicos conocidos y {unknown} son desconocidos; {conf_high} tienen una confianza de lema de 0,8 o más."
+    "en": "The dictionary has {symbols} symbols and {aliases} aliases over {passages} passages ({sides} folio-sides). Of {tokens} tokens, {with_root} have a root, {non_lexical} are known non-lexical tokens and {unknown} are unknown; {conf_high} have lemma confidence of 0.8 or more.",
+    "es": "El diccionario tiene {symbols} símbolos y {aliases} alias sobre {passages} pasajes ({sides} caras de folio). De {tokens} tokens, {with_root} tienen raíz, {non_lexical} son no léxicos conocidos y {unknown} son desconocidos; {conf_high} tienen una confianza de lema de 0,8 o más."
   },
   "sch_p_cav": {
     "en": "Caveats. The strata ranges are conventional. Parasha is a page-level label, not a property of each passage. A scholarly spot-check of the boundaries of the Midrash ha-Ne'lam and the addenda is pending. Zohar III 116a–b is absent from Hebrew Wikisource.",
@@ -740,8 +740,8 @@
     "es": "Licencias"
   },
   "sch_lic_text": {
-    "en": "Code: MIT. Text and tables: CC BY-SA 4.0, attributing Hebrew Wikisource. Tradition glosses (Cordovero, Gikatilla) are in the public domain.",
-    "es": "Código: MIT. Texto y tablas: CC BY-SA 4.0, con atribución a Wikisource hebreo. Las glosas de la tradición (Cordovero, Gikatilla) son de dominio público."
+    "en": "Code: MIT. Text and tables: CC BY-SA 4.0, attributing Hebrew Wikisource. The cited works of Cordovero and Gikatilla are in the public domain; this project's summaries of them are CC BY-SA 4.0 like the rest of the tables.",
+    "es": "Código: MIT. Texto y tablas: CC BY-SA 4.0, con atribución a Wikisource hebreo. Las obras citadas de Cordovero y Gikatilla son de dominio público; los resúmenes que este proyecto hace de ellas son CC BY-SA 4.0 como el resto de las tablas."
   },
   "about_title": {
     "en": "About",

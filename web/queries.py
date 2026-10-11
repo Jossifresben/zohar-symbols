@@ -219,12 +219,18 @@ def scholars_pairs(min_together: int = 5, limit: int = 200, lang: str = "en") ->
 def token_shares() -> dict:
     """Token totals by lemma outcome: with a root, known non-lexical (empty-root override), unknown; plus confidence >= 0.8."""
     r = one("""select count(*) tokens,
+                      coalesce(sum(case when root is not null then 1 else 0 end),0) with_root,
                       coalesce(sum(case when source='override' and root is null then 1 else 0 end),0) non_lexical,
                       coalesce(sum(case when root is null and source='none' then 1 else 0 end),0) unknown,
                       coalesce(sum(case when confidence >= 0.8 then 1 else 0 end),0) conf_high
                from token""")
-    tokens, nl, unk = r["tokens"], r["non_lexical"], r["unknown"]
-    return dict(tokens=tokens, with_root=tokens - nl - unk, non_lexical=nl, unknown=unk, conf_high=r["conf_high"])
+    return dict(tokens=r["tokens"], with_root=r["with_root"], non_lexical=r["non_lexical"], unknown=r["unknown"],
+                conf_high=r["conf_high"])
+
+
+def passage_totals() -> dict:
+    r = one("select count(*) passages, count(distinct volume||'.'||folio||side) sides from passage")
+    return dict(passages=r["passages"], sides=r["sides"])
 
 
 def alias_count() -> int:

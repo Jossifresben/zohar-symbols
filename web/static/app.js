@@ -24,10 +24,11 @@
     b.hidden = false;
     b.addEventListener('click', function () {
       var src = document.getElementById(b.dataset.copy);
+      if (!src) return;
       navigator.clipboard.writeText(src.textContent).then(function () {
         var old = b.textContent; b.textContent = b.dataset.done;
         setTimeout(function () { b.textContent = old; }, 1500);
-      });
+      }).catch(function () {});
     });
   });
 })();

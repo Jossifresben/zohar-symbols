@@ -10,6 +10,7 @@
 <section class="card" id="provenance"><h2 class="label">{{ t('sch_prov_h') }}</h2>
   <p>{{ t('sch_p_seed') }}</p>
   <p>{{ t('sch_p_counts',
+      passages='<span data-n="passages">%d</span>'|safe % counts.passages, sides='<span data-n="sides">%d</span>'|safe % counts.sides,
       symbols='<span data-n="symbols">%d</span>'|safe % counts.symbols, aliases='<span data-n="aliases">%d</span>'|safe % counts.aliases,
       tokens='<span data-n="tokens">%d</span>'|safe % counts.tokens, with_root='<span data-n="with_root">%d</span>'|safe % counts.with_root,
       non_lexical='<span data-n="non_lexical">%d</span>'|safe % counts.non_lexical, unknown='<span data-n="unknown">%d</span>'|safe % counts.unknown,
