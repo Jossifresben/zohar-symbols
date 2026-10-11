@@ -11,7 +11,8 @@ CREATE TABLE token (
 );
 CREATE TABLE symbol (
   id TEXT PRIMARY KEY, label_en TEXT NOT NULL, label_es TEXT NOT NULL, label_ar TEXT NOT NULL,
-  kind TEXT NOT NULL, node TEXT NOT NULL, aliases TEXT NOT NULL,
+  kind TEXT NOT NULL, node TEXT NOT NULL,
+  aliases TEXT NOT NULL,  -- "surface1;surface2|root1;root2" (roots in Hebrew script, as in the seed)
   gloss_en TEXT, gloss_es TEXT, moves_en TEXT, moves_es TEXT, seed_source TEXT NOT NULL,
   count_raw INTEGER NOT NULL, count_resolved INTEGER NOT NULL, count_passages INTEGER NOT NULL
 );
@@ -23,15 +24,21 @@ CREATE INDEX mention_symbol ON mention(symbol_id);
 CREATE INDEX mention_passage ON mention(passage_id);
 CREATE INDEX passage_folio ON passage(volume, folio, side);
 CREATE TABLE cooccurrence (
-  symbol_a TEXT NOT NULL, symbol_b TEXT NOT NULL, passages_together INTEGER NOT NULL,
+  symbol_a TEXT NOT NULL REFERENCES symbol(id), symbol_b TEXT NOT NULL REFERENCES symbol(id), passages_together INTEGER NOT NULL,
   pmi REAL NOT NULL, tables_version TEXT NOT NULL, PRIMARY KEY (symbol_a, symbol_b)
 );
 CREATE INDEX cooccurrence_b ON cooccurrence(symbol_b);
-CREATE TABLE state (
-  symbol_id TEXT NOT NULL, state_label TEXT NOT NULL, marker_roots TEXT NOT NULL,
-  passage_id TEXT NOT NULL, PRIMARY KEY (symbol_id, state_label, passage_id)
+-- every state declared in the seed, so a declared state with zero detections is visible
+CREATE TABLE state_decl (
+  symbol_id TEXT NOT NULL REFERENCES symbol(id), state_label TEXT NOT NULL, marker_roots TEXT NOT NULL,
+  PRIMARY KEY (symbol_id, state_label)
 );
-CREATE TABLE surfaced (symbol_id TEXT NOT NULL, rank INTEGER NOT NULL, passage_id TEXT NOT NULL,
+CREATE TABLE state (
+  symbol_id TEXT NOT NULL REFERENCES symbol(id), state_label TEXT NOT NULL, marker_roots TEXT NOT NULL,
+  passage_id TEXT NOT NULL REFERENCES passage(id), PRIMARY KEY (symbol_id, state_label, passage_id)
+);
+CREATE TABLE surfaced (symbol_id TEXT NOT NULL REFERENCES symbol(id), rank INTEGER NOT NULL,
+  passage_id TEXT NOT NULL REFERENCES passage(id),
   PRIMARY KEY (symbol_id, rank));
 CREATE TABLE translation (
   passage_id TEXT NOT NULL, lang TEXT NOT NULL, text TEXT NOT NULL, model_id TEXT NOT NULL,

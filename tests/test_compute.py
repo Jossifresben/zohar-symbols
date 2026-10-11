@@ -69,7 +69,11 @@ def test_surfaced_is_deterministic_and_bounded():
     strata = {p["id"]: "main" for p in passages}
     a = surfaced_passages("moon", mentions, cooc, tbp, strata, k=6)
     b = surfaced_passages("moon", mentions, cooc, tbp, strata, k=6)
-    assert a == b and 0 < len(a) <= 3 and a[0] == "1.020b.001"  # densest: 2 moons + sun in 18 tokens
+    # score = (2·own + 1·partner) / (tokens + 20); moon's only partner is sun; all >= 12 tokens
+    # 1.020b.001: (2·2 + 1) / (18 + 20) = 5/38 = 0.132
+    # 1.020a.001: (2·1 + 1) / (13 + 20) = 3/33 = 0.091
+    # 1.020a.002: (2·1 + 0) / (17 + 20) = 2/37 = 0.054
+    assert a == b == ["1.020b.001", "1.020a.001", "1.020a.002"]
 
 
 def test_ambiguous_alias_raw_and_resolved():
@@ -127,3 +131,30 @@ def test_labelled_stream_is_its_stratum_and_overrides_ranges():
     assert s == {"3.130a.001": "raaya_meheimna", "3.130a.002": "idra_rabba",
                  "1.100a.001": "midrash_haneelam", "1.100a.002": "main"}
     assert {r["stratum"] for r in rows} == {"idra_rabba", "idra_zuta"}
+
+
+def _m(sym, pid, pos):
+    return dict(symbol_id=sym, passage_id=pid, position=pos, matched_form="x", via="surface")
+
+
+def test_symbols_on_the_same_tokens_are_not_partners():
+    shared = [_m("a", "P", 0), _m("b", "P", 0), _m("a", "P", 3), _m("b", "P", 3)]
+    assert cooccurrence(shared, 1) == []
+    subset = [_m("a", "P", 0), _m("b", "P", 0), _m("b", "P", 4)]   # a has no token of its own
+    assert cooccurrence(subset, 1) == []
+    own = shared + [_m("a", "P", 5), _m("b", "P", 7)]                # each has its own token too
+    assert [(c["a"], c["b"], c["passages_together"]) for c in cooccurrence(own, 1)] == [("a", "b", 1)]
+
+
+def test_surfaced_prefers_passages_of_at_least_12_tokens():
+    mentions = [_m("x", "short", 0), _m("x", "short", 1), _m("x", "long", 0)]
+    tbp = {"short": [{}] * 3, "long": [{}] * 12}  # short is denser: 4/23 > 2/32
+    strata = {"short": "main", "long": "idra_rabba"}
+    assert surfaced_passages("x", mentions, [], tbp, strata, k=1) == ["long"]
+    assert surfaced_passages("x", mentions, [], tbp, strata, k=2) == ["long", "short"]  # fallback
+
+
+def test_surfaced_length_prior_damps_tiny_passages():
+    mentions = [_m("x", "p13", 0)] + [_m("x", "p40", i) for i in range(4)]
+    tbp = {"p13": [{}] * 13, "p40": [{}] * 40}   # 2/33 = 0.061 < 8/60 = 0.133
+    assert surfaced_passages("x", mentions, [], tbp, {}, k=2) == ["p40", "p13"]

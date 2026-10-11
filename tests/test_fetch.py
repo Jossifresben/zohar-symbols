@@ -87,3 +87,14 @@ def test_streams_numbered_after_main_across_pages():
     assert got == [("1.020a.001", "main", "אחד"), ("1.020a.003", "raaya_meheimna", "רעיא"),
                    ("1.020a.002", "main", "שנים")]
     assert out["split_detail"] == {"1.020a": "א → ב"}  # the RM stream did not straddle pages
+
+
+def test_size_outliers_listed():
+    from pipeline.fetch import size_outliers
+    def ps(folio, n, words):
+        return [dict(volume=1, folio=folio, side="a", text_ar=" ".join(["מלה"] * words)) for _ in range(n)]
+    passages = ps(1, 2, 10) + ps(2, 2, 10) + ps(3, 2, 10) + ps(4, 7, 10) + ps(5, 1, 50)
+    # median paras 2, median tokens 20: 4a has 7 > 6 paras (and 70 > 60 tokens); 5a has 50 tokens, not > 60
+    assert size_outliers(passages) == [("size outlier: 1.004a", "7 paras, 70 tokens")]
+    passages += ps(6, 1, 200)
+    assert ("size outlier: 1.006a", "1 paras, 200 tokens") in size_outliers(passages)

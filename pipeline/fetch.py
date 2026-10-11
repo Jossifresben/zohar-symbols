@@ -4,9 +4,11 @@ import argparse
 import csv
 import json
 from collections import Counter
+from statistics import median
 from dataclasses import asdict
 from pathlib import Path
 
+from .lemmatise import tokenize
 from .report import write_report
 from .segment import STREAMS, _stream_key, renumber, segment_page
 from .version import TABLES_VERSION
@@ -67,6 +69,21 @@ def write_sources_md(out: dict, path: Path) -> None:
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+def size_outliers(passages: list[dict], factor: int = 3) -> list[tuple[str, str]]:
+    """Folio-sides (all streams) whose paragraph or token count exceeds factor × the corpus median:
+    the signature of two folios merged under one label, or of a missed section boundary."""
+    paras, toks = Counter(), Counter()
+    for p in passages:
+        k = f"{p['volume']}.{p['folio']:03d}{p['side']}"
+        paras[k] += 1
+        toks[k] += len(tokenize(p["text_ar"]))
+    if not paras:
+        return []
+    mp, mt = median(paras.values()), median(toks.values())
+    return [(f"size outlier: {k}", f"{paras[k]} paras, {toks[k]} tokens") for k in sorted(paras)
+            if paras[k] > factor * mp or toks[k] > factor * mt]
+
+
 def report_rows(out: dict) -> list[tuple[str, object]]:
     folios = {(p["volume"], p["folio"], p["side"]) for p in out["passages"]}
     rows: list[tuple[str, object]] = [
@@ -78,6 +95,7 @@ def report_rows(out: dict) -> list[tuple[str, object]]:
     ]
     streams = Counter(p.get("stream", "main") for p in out["passages"])
     rows += [(f"passages: {s}", streams[s]) for s in STREAMS if streams[s]]
+    rows += size_outliers(out["passages"])
     rows += [(f"continued: {k}", n) for k, n in out["continued_detail"].items()]
     rows += [(f"split across pages: {k}", v) for k, v in out["split_detail"].items()]
     return rows

@@ -60,3 +60,31 @@ def test_build_fails_on_dangling_foreign_key(tmp_path):
     syms = load_kinnuyim(SEEDS / "kinnuyim.tsv")
     with pytest.raises(ValueError, match="foreign key"):
         build(raw, tokens, mentions, computed, syms, tmp_path / "z.sqlite", tmp_path / "t.json")
+
+
+def test_declared_states_and_alias_roots_stored(tmp_path):
+    raw, tokens, mentions, computed = _tiny()   # no state detected
+    syms = load_kinnuyim(SEEDS / "kinnuyim.tsv")
+    build(raw, tokens, mentions, computed, syms, tmp_path / "z.sqlite", tmp_path / "t.json")
+    con = sqlite3.connect(tmp_path / "z.sqlite")
+    assert con.execute("select count(*) from state").fetchone() == (0,)
+    assert con.execute("select marker_roots from state_decl where symbol_id='moon' and state_label='diminished'"
+                       ).fetchone() == ("זער,מעט,גלו",)
+    coupling = next(s for s in syms if s.id == "coupling")
+    aliases = con.execute("select aliases from symbol where id='coupling'").fetchone()[0]
+    surf, roots = aliases.split("|")
+    assert surf.split(";") == coupling.aliases_surface and "זוג" in roots.split(";")
+
+
+@pytest.mark.parametrize("table", ["surfaced", "cooccurrence", "state"])
+def test_foreign_keys_cover_derived_tables(tmp_path, table):
+    raw, tokens, mentions, computed = _tiny()
+    if table == "surfaced":
+        computed["surfaced"] = {"moon": ["9.999z.999"]}
+    elif table == "cooccurrence":
+        computed["cooccurrence"] = [dict(a="moon", b="no_such_symbol", passages_together=1, pmi=0.0)]
+    else:
+        computed["states"] = [dict(symbol_id="moon", state_label="diminished", passage_id="9.999z.999")]
+    syms = load_kinnuyim(SEEDS / "kinnuyim.tsv")
+    with pytest.raises(ValueError, match="foreign key"):
+        build(raw, tokens, mentions, computed, syms, tmp_path / "z.sqlite", tmp_path / "t.json")

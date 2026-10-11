@@ -116,3 +116,21 @@ def test_root_hit_stores_cleaned_surface():
     toks = [dict(passage_id="p", position=0, surface="בזווגייהו?", root=hebrew_to_syriac("זוג"),
                  stem=None, confidence=0.9, source="aramaic_core")]
     assert tag(toks, syms)[0]["matched_form"] == "בזווגייהו"
+
+
+def test_seed_roots_must_occur_among_token_roots():
+    from aramaic_core.characters import hebrew_to_syriac
+    from pipeline.tag import check_seed_roots, Symbol
+    zwg, zer = hebrew_to_syriac("זוג"), hebrew_to_syriac("זער")
+    sym = Symbol(id="s", label_en="s", label_es="s", label_ar="s", kind="object", node="malkhut",
+                 aliases_surface=["א"], aliases_root=[zwg], states={"dim": ["זער", "קקק"]},
+                 seed_source="t", states_syriac={"dim": [zer, hebrew_to_syriac("קקק")]})
+    toks = _toks("p", "בזווגייהו ואזעירי", root_for={"בזווגייהו": zwg, "ואזעירי": zer})
+    with pytest.raises(SeedError) as e:
+        check_seed_roots(toks, [sym])
+    assert "state dim marker root" in str(e.value) and "alias root" not in str(e.value)
+    sym.states_syriac["dim"] = [zer]
+    check_seed_roots(toks, [sym])  # passes
+    sym.aliases_root = [hebrew_to_syriac("ששש")]
+    with pytest.raises(SeedError, match="s: alias root"):
+        check_seed_roots(toks, [sym])

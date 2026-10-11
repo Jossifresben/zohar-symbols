@@ -55,16 +55,21 @@ def _symbols_by_passage(mentions: list[dict]) -> dict[str, set[str]]:
 
 
 def cooccurrence(mentions: list[dict], n_passages: int) -> list[dict]:
-    """Pairs of symbols mentioned in the same passage; PMI over ALL passages (n_passages)."""
-    sbp = _symbols_by_passage(mentions)
+    """Pairs of symbols mentioned in the same passage; PMI over ALL passages (n_passages).
+    Two symbols are partners in a passage only if each has a mention on a token the other does not
+    tag: symbols tagging the same tokens (an ambiguous alias) are rivals, not partners."""
+    pos = defaultdict(lambda: defaultdict(set))  # passage -> symbol -> positions
+    for m in mentions:
+        pos[m["passage_id"]][m["symbol_id"]].add(m["position"])
     n = n_passages
     single = Counter()
     pair = Counter()
-    for syms in sbp.values():
-        for s in syms:
+    for by_sym in pos.values():
+        for s in by_sym:
             single[s] += 1
-        for a, b in combinations(sorted(syms), 2):
-            pair[(a, b)] += 1
+        for a, b in combinations(sorted(by_sym), 2):
+            if by_sym[a] - by_sym[b] and by_sym[b] - by_sym[a]:
+                pair[(a, b)] += 1
     out = []
     for (a, b), c in sorted(pair.items()):
         pmi = math.log2(c * n / (single[a] * single[b])) if n else 0.0  # integers until the one float op
@@ -101,8 +106,29 @@ def _top_partners(symbol_id: str, cooc: list[dict], k: int = 3) -> list[str]:
     return [r[0] for r in rows[:k]]
 
 
+MIN_TOKENS = 12      # shorter passages are surfaced only when too few longer ones exist
+LENGTH_PRIOR = 20    # added to the token count so a 3-word passage cannot win on density alone
+
+
+def _pick(ranked: list[str], strata: dict[str, str], k: int) -> list[str]:
+    chosen, used_strata = [], set()
+    for pid in ranked:                      # one per stratum first
+        st = strata.get(pid, "main")
+        if st not in used_strata and len(chosen) < k:
+            chosen.append(pid)
+            used_strata.add(st)
+    for pid in ranked:                      # then fill by score
+        if len(chosen) >= k:
+            break
+        if pid not in chosen:
+            chosen.append(pid)
+    return chosen
+
+
 def surfaced_passages(symbol_id: str, mentions: list[dict], cooc: list[dict],
                       tokens_by_passage: dict[str, list[dict]], strata: dict[str, str], k: int = 6) -> list[str]:
+    """Score = (2·own + 1·top-partner mentions) / (token_count + LENGTH_PRIOR) over passages that
+    mention the symbol; passages of >= MIN_TOKENS tokens first, shorter ones only to fill up to k."""
     partners = set(_top_partners(symbol_id, cooc))
     score = Counter()
     cands = set()                           # passages where the symbol itself is mentioned
@@ -112,21 +138,13 @@ def surfaced_passages(symbol_id: str, mentions: list[dict], cooc: list[dict],
             cands.add(m["passage_id"])
         elif m["symbol_id"] in partners:
             score[m["passage_id"]] += 1
-    dens = {pid: score[pid] / max(1, len(tokens_by_passage.get(pid, []))) for pid in cands}
+    ntok = {pid: len(tokens_by_passage.get(pid, [])) for pid in cands}
+    dens = {pid: score[pid] / (ntok[pid] + LENGTH_PRIOR) for pid in cands}
     ranked = sorted(cands, key=lambda pid: (-dens[pid], pid))
-    chosen, used_strata = [], set()
-    for pid in ranked:                      # one per stratum first
-        st = strata.get(pid, "main")
-        if st not in used_strata:
-            chosen.append(pid)
-            used_strata.add(st)
-        if len(chosen) == k:
-            return chosen
-    for pid in ranked:                      # then fill by density
-        if pid not in chosen:
-            chosen.append(pid)
-        if len(chosen) == k:
-            break
+    long_ = [pid for pid in ranked if ntok[pid] >= MIN_TOKENS]
+    chosen = _pick(long_, strata, k)
+    if len(chosen) < k:
+        chosen += _pick([pid for pid in ranked if ntok[pid] < MIN_TOKENS], strata, k - len(chosen))
     return chosen
 
 

@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from .lemmatise import tokenize
-from .report import write_report
+from .report import headline, read_report, write_sections
 from .tag import Symbol, load_kinnuyim
 from .version import TABLES_VERSION
 
@@ -18,6 +18,11 @@ def _marker_roots(sym: dict, s: dict) -> str | None:
     symbol = sym.get(s["symbol_id"])
     roots = symbol.states.get(s["state_label"]) if symbol else None
     return None if roots is None else ",".join(roots)
+
+
+def aliases_field(s: Symbol) -> str:
+    """symbol.aliases: "surface1;surface2|root1;root2"."""
+    return ";".join(s.aliases_surface) + "|" + ";".join(s.aliases_root_seed)
 
 
 def count_stale_states(computed: dict, symbols: list[Symbol]) -> int:
@@ -41,7 +46,7 @@ def build(raw: dict, tokens: list[dict], mentions: list[dict], computed: dict,
         (t["passage_id"], t["position"], t["surface"], t["root"], t["stem"], t["confidence"], t["source"]) for t in tokens])
     counts = computed["symbol_counts"]
     con.executemany("insert into symbol values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [
-        (s.id, s.label_en, s.label_es, s.label_ar, s.kind, s.node, ";".join(s.aliases_surface),
+        (s.id, s.label_en, s.label_es, s.label_ar, s.kind, s.node, aliases_field(s),
          None, None, None, None, s.seed_source,
          counts.get(s.id, {}).get("raw", 0), counts.get(s.id, {}).get("resolved", 0), counts.get(s.id, {}).get("passages", 0))
         for s in symbols])
@@ -50,6 +55,8 @@ def build(raw: dict, tokens: list[dict], mentions: list[dict], computed: dict,
     con.executemany("insert into cooccurrence values (?,?,?,?,?)", [
         (c["a"], c["b"], c["passages_together"], c["pmi"], TABLES_VERSION) for c in computed["cooccurrence"]])
     sym = {s.id: s for s in symbols}
+    con.executemany("insert into state_decl values (?,?,?)", [
+        (s.id, label, ",".join(roots)) for s in symbols for label, roots in s.states.items()])
     con.executemany("insert into state values (?,?,?,?)", [
         (s["symbol_id"], s["state_label"], _marker_roots(sym, s) or "", s["passage_id"])
         for s in computed["states"]])
@@ -68,7 +75,8 @@ def build(raw: dict, tokens: list[dict], mentions: list[dict], computed: dict,
     j = dict(computed)
     j["tables_version"] = TABLES_VERSION
     j["symbols"] = [dict(id=s.id, label_en=s.label_en, label_es=s.label_es, label_ar=s.label_ar, kind=s.kind,
-                         node=s.node, aliases=s.aliases_surface, seed_source=s.seed_source) for s in symbols]
+                         node=s.node, aliases=s.aliases_surface, aliases_root=s.aliases_root_seed,
+                         states=s.states, seed_source=s.seed_source) for s in symbols]
     out_json.write_text(json.dumps(j, ensure_ascii=False, indent=1, sort_keys=True), encoding="utf-8")
 
 
@@ -81,7 +89,7 @@ def main(argv=None) -> None:
     syms = load_kinnuyim(ROOT / "seeds" / "kinnuyim.tsv")
     out_sqlite = ROOT / "data" / "zohar.sqlite"
     build(raw, tokens, mentions, computed, syms, out_sqlite, ROOT / "data" / f"tables.v{TABLES_VERSION}.json")
-    write_report(ROOT / "data" / "report.md", f"build {TABLES_VERSION}", [
+    build_rows = [
         ("passages", len(raw["passages"])), ("tokens", len(tokens)), ("mentions", len(mentions)),
         ("symbols", len(syms)), ("pairs", len(computed["cooccurrence"])),
         ("tokens with root", sum(1 for t in tokens if t["root"])),
@@ -90,7 +98,16 @@ def main(argv=None) -> None:
         ("confidence ≥ 0.8", sum(1 for t in tokens if t["confidence"] >= 0.8)),
         ("state rows", len(computed["states"])),
         ("state rows stale vs seed (marker_roots empty)", count_stale_states(computed, syms)),
-    ])
+        ("declared states", sum(len(s.states) for s in syms)),
+    ]
+    # raw/ and work/ are not committed: their headline rows travel with the tables in data/report.md
+    stages = [ROOT / "raw" / "report.md", work / "lemmatise.report.md", work / "tag.report.md",
+              work / "compute.report.md"]
+    sections = [(f"build {TABLES_VERSION}", build_rows)]
+    for path in stages:
+        title, rows = read_report(path)
+        sections.append((title, headline(rows)))
+    write_sections(ROOT / "data" / "report.md", sections)
 
 
 if __name__ == "__main__":

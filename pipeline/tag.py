@@ -24,7 +24,7 @@ _DOUBLE_PROCLITICS = {"וד", "וב", "ול", "וכ", "ומ", "דב", "דל", "�
 _SHORT_OK = set("ובדל")
 _NON_WORD_EDGES = re.compile(r"^[^א-ת]+|[^א-ת׳״]+$")
 
-__all__ = ["Symbol", "SeedError", "load_kinnuyim", "strip_proclitics", "tag", "main"]
+__all__ = ["Symbol", "SeedError", "load_kinnuyim", "strip_proclitics", "tag", "check_seed_roots", "main"]
 
 
 class SeedError(Exception):
@@ -44,6 +44,7 @@ class Symbol:
     states: dict[str, list[str]]     # label -> Hebrew-script roots (as written in seed)
     seed_source: str
     states_syriac: dict[str, list[str]] = field(default_factory=dict)
+    aliases_root_seed: list[str] = field(default_factory=list)  # Hebrew-script, as written in seed
 
 
 def _split(s: str) -> list[str]:
@@ -84,6 +85,7 @@ def load_kinnuyim(path: Path) -> list[Symbol]:
                 id=r["id"], label_en=r["label_en"], label_es=r["label_es"], label_ar=r["label_ar"],
                 kind=r["kind"], node=r["node"], aliases_surface=surf,
                 aliases_root=[_root_key(x) for x in _split(r["aliases_root"])],
+                aliases_root_seed=_split(r["aliases_root"]),
                 states=states, seed_source=r["seed_source"],
                 states_syriac={k: [_root_key(x) for x in v] for k, v in states.items()}))
             seen.add(r["id"])
@@ -166,12 +168,26 @@ def tag(tokens: list[dict], symbols: list[Symbol]) -> list[dict]:
     return mentions
 
 
+def check_seed_roots(tokens: list[dict], symbols: list[Symbol]) -> None:
+    """Every seeded alias root and state-marker root must occur among the token roots; a root that
+    never occurs is a typo or a wrong transliteration, and would silently match nothing."""
+    roots = {t["root"] for t in tokens if t.get("root")}
+    bad = []
+    for s in symbols:
+        bad += [f"{s.id}: alias root {r}" for r in s.aliases_root if r not in roots]
+        bad += [f"{s.id}: state {label} marker root {r}"
+                for label, rs in s.states_syriac.items() for r in rs if r not in roots]
+    if bad:
+        raise SeedError("seeded roots never found among token roots: " + "; ".join(bad))
+
+
 def main(argv=None) -> None:
     work = ROOT / "work"
     with (work / "tokens.jsonl").open(encoding="utf-8") as f:
         tokens = [json.loads(line) for line in f]
     syms = load_kinnuyim(ROOT / "seeds" / "kinnuyim.tsv")
     m = tag(tokens, syms)
+    check_seed_roots(tokens, syms)
     with (work / "mentions.jsonl").open("w", encoding="utf-8") as f:
         for x in m:
             f.write(json.dumps(x, ensure_ascii=False) + "\n")
