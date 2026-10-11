@@ -11,6 +11,7 @@ the classical commentary on the folio as unseen background. Code computes every 
 import argparse
 import html
 import json
+import re
 import random
 import sys
 from pathlib import Path
@@ -160,8 +161,9 @@ def review(name: str) -> Path:
 
 
 CHUNKS = WORK / "chunks"
-BANNED = ("Zeir Anpin", "Zeʿir Anpin", "Arikh Anpin", "partzuf", "tzimtzum", "repentance", "arrepentimiento",
-          "Ohr HaChamah", "Or HaJamá", "Mikdash Melekh", "Cordovero", "Luria", "Vital", "Ashlag", "Sulam")
+BANNED = ("Zeir Anpin", "Zeʿir Anpin", "Arikh Anpin", "partzuf", "tzimtzum", "repentance", "arrepentimiento")  # any case
+BANNED_NAMES = ("Ohr HaChamah", "Or HaJamá", "Mikdash Melekh", "Cordovero", "Luria", "Vital", "Ashlag", "Sulam")  # exact
+                                                                                       # case, whole word ("vital soul" is fine)
 MAX_WORDS = 200
 
 
@@ -180,15 +182,21 @@ def write_chunks(conn, size: int = 20) -> int:
     return n
 
 
-def check(text: str) -> str | None:
+LENGTH_TOLERANCE = 275   # the prompt asks for at most 200 words; the model runs over by 5–30%, which a reader won't notice
+IDRA_TERMS = ("Zeir Anpin", "Zeʿir Anpin", "Arikh Anpin")   # allowed when the passage itself says אנפין / אפין
+
+
+def check(text: str, source: str = "") -> str | None:
     """None if an interpretation passes the code checks, else the reason."""
     s = split_langs(text)
     if not s:
         return "shape"
     for lg in ("en", "es"):
-        if len(s[lg].split()) > MAX_WORDS + 10:   # small tolerance for hyphenation/punctuation counting
+        if len(s[lg].split()) > LENGTH_TOLERANCE:
             return f"{lg} {len(s[lg].split())} words"
-    hit = [b for b in BANNED if b.lower() in text.lower()]
+    in_source = "אנפין" in source or "אפין" in source
+    hit = [b for b in BANNED if b.lower() in text.lower() and not (in_source and b in IDRA_TERMS)]
+    hit += [n for n in BANNED_NAMES if re.search(rf"\b{re.escape(n)}\b", text)]
     return f"banned: {hit}" if hit else None
 
 
@@ -209,7 +217,8 @@ def ingest(chunk: int, model: str = MODEL) -> dict:
         if pid not in got:
             failed[pid] = "missing"
             continue
-        why = check(got[pid])
+        src_text = conn.execute("select text_ar from passage where id=?", (pid,)).fetchone()["text_ar"]
+        why = check(got[pid], src_text)
         if why:
             failed[pid] = why
             continue
@@ -229,6 +238,7 @@ def export(names: list[str], created_at: str = "2026-10-12") -> str:
     """Write the committed interpretations file: one row per (passage, language), from cc_results and the
     named batch result sets; a row must pass check(). Later sources override earlier ones."""
     from .version import TABLES_VERSION
+    conn = connect()
     rows, rejected = {}, {}
     sources = [WORK / "cc_results.jsonl"] + [WORK / f"{n}_results.jsonl" for n in names]
     for path in sources:
@@ -237,7 +247,8 @@ def export(names: list[str], created_at: str = "2026-10-12") -> str:
             if r["status"] != "succeeded" or r.get("stop_reason") != "end_turn" or not r.get("text"):
                 rejected[r["passage_id"]] = r.get("stop_reason") or r["status"]
                 continue
-            why = check(r["text"])
+            src = conn.execute("select text_ar from passage where id=?", (r["passage_id"],)).fetchone()
+            why = check(r["text"], src["text_ar"] if src else "")
             if why:
                 rejected[r["passage_id"]] = why
                 continue

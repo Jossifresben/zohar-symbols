@@ -1,5 +1,8 @@
 # Changelog
 
+## unreleased
+- Interpretations: "What this passage means" / "Qué significa este pasaje" under the translation of 677 passages, EN and ES, by Claude Fable 5.1 (prompt i2), labelled as inferred, not a traditional commentary and not reviewed; same provenance, staleness check, overrides (`data/interpretation_overrides.tsv`) and report link as the translations. $33.84 including the pilot. One Idra Rabba passage (III 128a) was refused and has none.
+
 ## release 0.1.0 — 2026-10-11 (zohar.digital)
 - First public release: the site at https://zohar.digital, bilingual EN/ES, on tables 0.1.0 (below).
 - Symbols, sefirot, the Tree (Kircher's three-pillar layout, double-line paths), Read (folio by folio, navigation above and below), Scholars (method, strata, strongest pairs with Aramaic labels, exports, citation).

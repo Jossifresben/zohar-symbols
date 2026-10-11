@@ -18,7 +18,7 @@
 | translations stale (source changed) | 0 |
 | translations for unknown passages | 0 |
 | translations corrected by hand | 0 |
-| interpretations | 40 |
+| interpretations | 1354 |
 | interpretations stale (source changed) | 0 |
 | interpretations for unknown passages | 0 |
 | interpretations corrected by hand | 0 |

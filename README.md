@@ -12,13 +12,14 @@
 - **Sefirot and the Tree / Sefirot y el Árbol** — the symbols grouped by the sefirah they point to; the Tree diagram is orientation only (a post-Zoharic drawing, Kircher's layout).
 - **Read / Leer** — the whole main body, 15,909 passages in Mantua pagination, folio by folio. Every passage page has a **Keys** panel: every image in reading order, the sefirah it usually stands for, and the source of that assignment (Cordovero, *Pardes Rimonim* gate 23; Gikatilla, *Sha'arei Orah*; or this project's reading of Zohar usage, labelled as such).
 - **Translations / Traducciones** — 678 surfaced passages translated into English and Spanish (1,356 texts) by Claude Fable 5.1, attributed on the page and not reviewed by specialists; every translation has a "report a problem" link.
+- **What this passage means / Qué significa este pasaje** — a short plain-language interpretation under 677 of those translations, by the same model, labelled as inferred: not a traditional commentary, not reviewed by specialists.
 - **Scholars / Investigadores** — method, strata, strongest pairs, exports (CSV/JSON API under `/api/`), citation formats.
 
 ## Model use and provenance / Uso del modelo y procedencia
 
-**EN.** Every count, correlation and ranking is computed by deterministic code; no model produces a number. The model writes only the translations. Each one is stored with its model id, prompt version, date and a hash of the source passage; a translation whose source text changed is dropped at build time. Hand corrections go in `data/translation_overrides.tsv` and replace the model text. We are not scholars: the aim is a pleasant, honest experience of the Zohar.
+**EN.** Every count, correlation and ranking is computed by deterministic code; no model produces a number. The model writes only the translations and the interpretations. Each one is stored with its model id, prompt version, date and a hash of the source passage; a translation whose source text changed is dropped at build time. Hand corrections go in `data/translation_overrides.tsv` and replace the model text. We are not scholars: the aim is a pleasant, honest experience of the Zohar.
 
-**ES.** Todos los recuentos, correlaciones y rankings los calcula un código determinista; ningún modelo produce cifras. El modelo solo escribe las traducciones. Cada una se guarda con el id del modelo, la versión del prompt, la fecha y un hash del pasaje fuente; una traducción cuyo texto fuente cambió se descarta al construir. Las correcciones manuales van en `data/translation_overrides.tsv` y sustituyen al texto del modelo. No somos especialistas: buscamos una experiencia del Zohar agradable y honesta.
+**ES.** Todos los recuentos, correlaciones y rankings los calcula un código determinista; ningún modelo produce cifras. El modelo solo escribe las traducciones y las interpretaciones. Cada una se guarda con el id del modelo, la versión del prompt, la fecha y un hash del pasaje fuente; una traducción cuyo texto fuente cambió se descarta al construir. Las correcciones manuales van en `data/translation_overrides.tsv` y sustituyen al texto del modelo. No somos especialistas: buscamos una experiencia del Zohar agradable y honesta.
 
 ## Data / Datos
 
@@ -28,6 +29,8 @@
 | `data/tables.v0.1.0.sha256` | Its fingerprint; the deploy fails if a rebuild differs |
 | `data/translations.v0.1.0.jsonl` | The model translations, with provenance per row |
 | `data/translation_overrides.tsv` | Hand corrections (empty so far) |
+| `data/interpretations.v0.1.0.jsonl` | The model interpretations, with provenance per row |
+| `data/interpretation_overrides.tsv` | Hand corrections to interpretations |
 | `data/report.md` | Build report: corpus, lemmatisation and tagging statistics |
 | `data/SOURCES.md` | Pinned Wikisource revisions |
 | `seeds/` | Symbol seed (`kinnuyim.tsv`), strata, parashot, lemma overrides |
@@ -42,7 +45,7 @@ uv run --no-sync python -m pipeline.check_tables   # verify the rebuilt tables a
 uv run --no-sync python -m pipeline.translate --help   # translation stage (Batch API; needs ANTHROPIC_API_KEY)
 ```
 
-Lemmatisation uses `aramaic_core` from the [Aramaic Root Atlas](https://github.com/Jossifresben/aramaic-root-atlas) (DOI [10.5281/zenodo.19358625](https://doi.org/10.5281/zenodo.19358625)), pinned to a commit. `pipeline/commentary.py` and `pipeline/interpret.py` are an experimental interpretation stage (see the backlog); they are not part of the build.
+Lemmatisation uses `aramaic_core` from the [Aramaic Root Atlas](https://github.com/Jossifresben/aramaic-root-atlas) (DOI [10.5281/zenodo.19358625](https://doi.org/10.5281/zenodo.19358625)), pinned to a commit. `pipeline/interpret.py` writes the interpretations (Batch API, or chunk files for Claude Code sub-agents); `pipeline/commentary.py` caches public-domain Sefaria commentary that was tested as background and not used.
 
 ## Development setup
 

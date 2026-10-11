@@ -2,15 +2,13 @@
 
 Deferred work, most likely first. Dates are when the item was parked.
 
-## Interpretations: "What this passage means" (parked 2026-10-11, budget)
+## Interpretations: follow-ups
 
-A plain-language EN/ES interpretation under each translated passage, 120–200 words, labelled "Interpretation inferred by Claude Fable 5.1, not a traditional commentary, not reviewed by specialists", with the "report a problem" link. No citations shown to the reader.
+Done 2026-10-12: 677 of 678 translated passages have "What this passage means" in EN and ES (prompt `i2`, plain, Claude Fable 5.1; 20 via Claude Code sub-agents, 658 via the Batch API for $32.53; pilot $1.31).
 
-- **Built:** `pipeline/commentary.py` caches the Sefaria text (public domain, Hebrew) of Ohr HaChamah and Mikdash Melekh for the folio-sides of the translated passages under `work/commentary/` (not committed, not displayed). 471 of the 678 translated passages have commentary on their folio-side (Ohr HaChamah 344 of 422 folio-sides, Mikdash Melekh 294). `pipeline/interpret.py` (prompt `i1`) builds one request per passage returning both languages.
-- **Pilot done:** 10 passages, each in two variants (commentary as unseen background vs. without), $1.31. Blind A/B page: `work/interpret/pilot_review.html` (rebuild with `python -m pipeline.interpret review pilot`); the key is `work/interpret/pilot_key.json`. All 20 well-formed; no later-Kabbalah terms, no commentator names. Length ran 201–238 words: tighten in `i2`.
-- **Review (2026-10-11):** blind first pass then a re-read: 5 grounded, 5 plain. Side-by-side reading of three pairs found equal accuracy, plain often more concrete. **Decision: plain for all passages** (no commentary in the request); grounding is not worth the ~50% extra. The commentary cache stays available if the hardest strata (Idrot, Sitrei Torah) ever need it.
-- **Next:** prompt `i2` (hard cap of 200 words per language) → full run, plain, 678 passages, about $32 → export to `data/interpretations.v*.jsonl` with the translations' provenance and staleness check → `interpretation` table → section under the translation on the passage page.
-- **Budget:** needs about $40 of API headroom (org monthly spend limit, Console → Billing).
+- `3.128a.014` (Idra Rabba): the model refused; no interpretation. Retry with a reworded request or write one by hand in `data/interpretation_overrides.tsv`.
+- Length runs over the 200-word target (up to ~270); accepted. Tighten in a later prompt version if it matters.
+- The grounded variant (Sefaria commentary as background) is kept in `pipeline/commentary.py` / `work/commentary/` if the hardest strata need it.
 
 ## Text and segmentation
 
