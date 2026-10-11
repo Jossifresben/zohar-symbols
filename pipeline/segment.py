@@ -7,14 +7,22 @@ from .hebnum import heb_to_int
 BOOKS = {"בראשית": "Genesis", "שמות": "Exodus", "ויקרא": "Leviticus",
          "במדבר": "Numbers", "דברים": "Deuteronomy"}
 
-_START = re.compile(r"<קטע התחלה=דף ([א-ת]+) ([אב])/>")
-_END = re.compile(r"<קטע סוף=דף ([א-ת]+) ([אב])/>")
+_NUM = r"([א-ת\"׳״]+)"
+_START = re.compile(r"<\s*קטע\s+התחלה\s*=\s*דף\s+" + _NUM + r"\s+([אב])\s*/\s*>")
+_END = re.compile(r"<\s*קטע\s+סוף\s*=\s*דף\s+" + _NUM + r"\s+([אב])\s*/\s*>")
+_RAW_START = re.compile(r"<\s*קטע\s+התחלה\s*=")
 _MM = re.compile(r"\{\{ממ\|([^|}]+)\|([א-ת]+)(?:\|([א-ת]+))?\}\}")
-_TZ = re.compile(r"\{\{צ\|([^}]*)\}\}")
+_TZ = re.compile(r"\{\{צ\|([^|{}]*)(?:\|[^{}]*)?\}\}")
 _SHIN = re.compile(r"\{\{ש\}\}")
 _ANY_TEMPLATE = re.compile(r"\{\{[^{}]*\}\}")
-_VARIANT = re.compile(r"\((?:נ\"א|ס\"א|נ״א|ס״א)[^)]*\)")
-_LINK = re.compile(r"\[\[[^\]]*\]\]")
+_VARIANT_OPEN = r"\((?:נ\"א|ס\"א|נ״א|ס״א)"
+# Known limit: a variant reading containing nested parentheses is not handled.
+_VARIANT = re.compile(_VARIANT_OPEN + r"[^)\n]*\)")
+_VARIANT_LEFT = re.compile(_VARIANT_OPEN)
+_COMMENT = re.compile(r"<!--.*?-->", re.S)
+_REF = re.compile(r"<ref[^>]*/>|<ref[^>]*>.*?</ref>", re.S)
+_DROP_LINK = re.compile(r"\[\[(?:קטגוריה|קובץ):[^\]]*\]\]")
+_LINK = re.compile(r"\[\[(?:[^\]|]*\|)?([^\]]*)\]\]")
 _TAG = re.compile(r"</?(?:small|big|br|ref|span|div)[^>]*>")
 _BOLD = re.compile(r"'''?")
 _WS = re.compile(r"[ \t]+")
@@ -52,27 +60,48 @@ def _verse_ref(block: str) -> str | None:
 
 
 def clean_wikitext(s: str) -> str:
+    s = _COMMENT.sub("", s)
+    s = _REF.sub("", s)
     s = _VARIANT.sub("", s)
     s = _TZ.sub(lambda m: m.group(1), s)
     s = _SHIN.sub("\n\n", s)
-    s = _ANY_TEMPLATE.sub("", s)
-    s = _ANY_TEMPLATE.sub("", s)  # nested once more
-    s = _LINK.sub("", s)
+    while True:
+        t = _ANY_TEMPLATE.sub("", s)
+        if t == s:
+            break
+        s = t
+    s = _DROP_LINK.sub("", s)
+    s = _LINK.sub(lambda m: m.group(1), s)
     s = _TAG.sub("", s)
     s = _BOLD.sub("", s)
     s = _WS.sub(" ", s)
     return "\n".join(line.strip() for line in s.split("\n")).strip()
 
 
-def _paragraphs(block: str) -> list[str]:
-    cleaned = clean_wikitext(block)
-    paras = [p.strip() for p in re.split(r"\n\s*\n", cleaned)]
-    return [p.replace("\n", " ") for p in paras if p]
+def _paragraphs(block: str, page_title: str, label: str) -> list[str]:
+    out = []
+    for raw in re.split(r"\n\s*\n", block):
+        for piece in _SHIN.split(raw):
+            cleaned = clean_wikitext(piece)
+            if "{{" in cleaned or "}}" in cleaned:
+                raise SegmentError(page_title, label, "unbalanced template braces")
+            if _VARIANT_LEFT.search(cleaned):
+                raise SegmentError(page_title, label, "unclosed variant reading")
+            text = " ".join(ln for ln in cleaned.split("\n") if ln.strip())
+            if text:
+                out.append(text)
+    return out
+
+
+def _num(s: str) -> int:
+    return heb_to_int(re.sub(r"[\"׳״]", "", s))
 
 
 def segment_page(wikitext: str, volume: int, parasha: str, page_title: str) -> list[Passage]:
     passages: list[Passage] = []
+    seen: set[tuple[int, str]] = set()
     pos = 0
+    n_matched = 0
     while True:
         m = _START.search(wikitext, pos)
         if not m:
@@ -84,13 +113,20 @@ def segment_page(wikitext: str, volume: int, parasha: str, page_title: str) -> l
             raise SegmentError(page_title, label, "unclosed section")
         if (e.group(1), e.group(2)) != (m.group(1), m.group(2)):
             raise SegmentError(page_title, label, f"closed by {e.group(1)} {e.group(2)}")
+        n_matched += 1
         block = wikitext[m.end():e.start()]
-        folio = heb_to_int(m.group(1))
+        folio = _num(m.group(1))
         side = "a" if m.group(2) == "א" else "b"
+        if (folio, side) in seen:
+            raise SegmentError(page_title, label, "duplicate section")
+        seen.add((folio, side))
         vref = _verse_ref(block)
-        for i, text in enumerate(_paragraphs(block), start=1):
+        for i, text in enumerate(_paragraphs(block, page_title, label), start=1):
             passages.append(Passage(
                 id=f"{volume}.{folio:03d}{side}.{i:02d}", volume=volume, folio=folio,
                 side=side, para=i, parasha=parasha, text_ar=text, verse_ref=vref))
         pos = e.end()
+    n_raw = len(_RAW_START.findall(wikitext))
+    if n_raw != n_matched:
+        raise SegmentError(page_title, "<unparsed>", f"{n_raw} start tags, {n_matched} parsed")
     return passages

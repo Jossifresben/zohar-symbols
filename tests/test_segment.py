@@ -42,3 +42,62 @@ def test_unclosed_section_raises():
 
 def test_clean_keeps_quoted_words():
     assert clean_wikitext("{{צ|בראשית}} ברא") == "בראשית ברא"
+
+
+def _seg(wt):
+    return segment_page(wt, volume=1, parasha="x", page_title="p")
+
+
+def _sec(body, f="כ א"):
+    return f"<קטע התחלה=דף {f}/>\n{body}\n<קטע סוף=דף {f}/>"
+
+
+def test_bad_side_tag_raises():
+    with pytest.raises(SegmentError) as e:
+        _seg("<קטע התחלה=דף כ ג/>x\n<קטע סוף=דף כ ג/>")
+    assert "<unparsed>" in str(e.value)
+
+
+def test_tolerant_tags_and_geresh_numeral():
+    ps = _seg("<קטע התחלה = דף כ\"א א />x\n<קטע סוף = דף כ\"א א />")
+    assert ps[0].folio == 21
+
+
+def test_template_line_does_not_split_paragraph():
+    ps = _seg(_sec("text\n{{הערה|x}}\ntext"))
+    assert [p.text_ar for p in ps] == ["text text"]
+
+
+def test_links_keep_label_and_category_removed_inside_section():
+    ps = _seg(_sec("[[קטגוריה:ספר הזהר]]\nא [[יעקב|יעקב אבינו]] ב [[משה]]"))
+    assert len(ps) == 1
+    assert ps[0].text_ar == "א יעקב אבינו ב משה"
+    assert "קטגוריה" not in ps[0].text_ar
+
+
+def test_ref_and_comment_removed():
+    ps = _seg(_sec("א<ref name=a>הערה</ref> ב<ref x/> <!-- c --> ג"))
+    assert ps[0].text_ar == "א ב ג"
+
+
+def test_deep_nesting_removed_and_tz_extra_arg():
+    assert clean_wikitext("א {{a|{{b|{{c|{{d}}}}}}}} ב") == "א ב"
+    assert clean_wikitext("{{צ|a|b}} x") == "a x"
+
+
+def test_unbalanced_braces_raise():
+    with pytest.raises(SegmentError) as e:
+        _seg(_sec("א {{הערה|x ב"))
+    assert "unbalanced" in str(e.value)
+
+
+def test_duplicate_folio_raises():
+    with pytest.raises(SegmentError) as e:
+        _seg(_sec("x") + "\n" + _sec("y"))
+    assert "duplicate" in str(e.value)
+
+
+def test_unclosed_variant_raises():
+    with pytest.raises(SegmentError) as e:
+        _seg(_sec('א (נ"א ב\n\nג) ד'))
+    assert "variant" in str(e.value)
