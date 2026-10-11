@@ -5,7 +5,8 @@
 <section class="sym-head"><h1 class="display">{{ t('sch_title') }}</h1><p class="intro">{{ t('sch_intro') }}</p></section>
 <section class="card" id="method"><h2 class="label">{{ t('sch_method_h') }}</h2>
   {%- for k in ['corpus','lemma','tag','cooc','states','surf','resolve'] %}
-  <p>{{ t('sch_m_' ~ k) }}</p>
+  {%- set m = t('sch_m_' ~ k) %}{% set i = m.find('. ') + 1 %}
+  <p><strong>{{ m[:i] }}</strong>{{ m[i:] }}</p>
   {%- endfor %}
 </section>
 <section class="card" id="provenance"><h2 class="label">{{ t('sch_prov_h') }}</h2>
