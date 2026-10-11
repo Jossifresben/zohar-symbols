@@ -17,11 +17,11 @@
   },
   "nav_scholars": {
     "en": "Scholars",
-    "es": "Estudiosos"
+    "es": "Especialistas"
   },
   "footer_source": {
     "en": "Text: Hebrew Wikisource, Zohar (public domain). Every figure on this site is computed by deterministic code.",
-    "es": "Texto: Wikisource hebreo, Zohar (dominio público). Cada cifra de este sitio la calcula código determinista."
+    "es": "Texto: Wikisource hebreo, Zohar (dominio público). Todas las cifras de este sitio las calcula un código determinista."
   },
   "footer_counts": {
     "en": "Counts are mentions in the corpus, not interpretations.",
@@ -29,7 +29,7 @@
   },
   "footer_scholars": {
     "en": "For scholars: method and data",
-    "es": "Para estudiosos: método y datos"
+    "es": "Para especialistas: método y datos"
   },
   "lang_en": {
     "en": "EN",
@@ -65,7 +65,7 @@
   },
   "node_netzah": {
     "en": "Netzaḥ",
-    "es": "Nétsaj"
+    "es": "Netzaj"
   },
   "node_hod": {
     "en": "Hod",
@@ -88,24 +88,24 @@
     "es": "Ein Sof"
   },
   "gloss_fallback": {
-    "en": "{label}: appears in {n} passages of the Zohar; its commonest companion is {partner} ({m} passages together).",
-    "es": "{label}: aparece en {n} pasajes del Zohar; su compañero más frecuente es {partner} ({m} pasajes juntos)."
+    "en": "{label}: appears in {passages} of the Zohar; its commonest companion is {partner} ({together}).",
+    "es": "{label}: aparece en {passages} del Zohar; su compañero más frecuente es {partner} ({together})."
   },
   "gloss_fallback_alone": {
-    "en": "{label}: appears in {n} passages of the Zohar.",
-    "es": "{label}: aparece en {n} pasajes del Zohar."
+    "en": "{label}: appears in {passages} of the Zohar.",
+    "es": "{label}: aparece en {passages} del Zohar."
   },
   "gloss_fallback_none": {
     "en": "{label}: not yet found in the text.",
-    "es": "{label}: aún no aparece en el texto."
+    "es": "{label}: todavía no se ha encontrado en el texto."
   },
   "home_title": {
     "en": "The Zohar speaks in images. Here is what they mean.",
-    "es": "El Zohar habla en imágenes. Esto es lo que significan."
+    "es": "El Zohar habla en imágenes. Descubre qué significan."
   },
   "home_intro": {
     "en": "Every symbol below is a figure the Zohar returns to again and again. Larger means more passages. Choose one to see where it appears and what it is paired with.",
-    "es": "Cada símbolo de abajo es una figura a la que el Zohar vuelve una y otra vez. Cuanto mayor es el nombre, en más pasajes aparece. Elige uno para ver dónde aparece y con qué se asocia."
+    "es": "Cada símbolo que ves aquí es una figura a la que el Zohar vuelve una y otra vez. Cuanto más grande el nombre, en más pasajes aparece. Elige uno para ver dónde está y con qué se asocia."
   },
   "search_placeholder": {
     "en": "Search a symbol: moon, king, sea…",
@@ -217,7 +217,7 @@
   },
   "orientation_read_body": {
     "en": "Read a passage with every symbol marked, in Hebrew and in translation.",
-    "es": "Lee un pasaje con cada símbolo marcado, en hebreo y en traducción."
+    "es": "Lee un pasaje con cada símbolo marcado, en hebreo y traducido."
   },
   "orientation_ask_title": {
     "en": "Why does the Zohar talk about the sea so much?",
@@ -225,7 +225,7 @@
   },
   "orientation_ask_body": {
     "en": "Answers grounded in the passages, with the count behind every claim.",
-    "es": "Respuestas basadas en los pasajes, con el recuento detrás de cada afirmación."
+    "es": "Respuestas basadas en los pasajes, con el recuento que respalda cada afirmación."
   },
   "ask_coming": {
     "en": "Ask is coming soon.",
@@ -241,7 +241,7 @@
   },
   "not_found": {
     "en": "Nothing here. Try the home page.",
-    "es": "Aquí no hay nada. Prueba la página de inicio."
+    "es": "Aquí no hay nada. Vuelve a la página de inicio."
   },
   "breadcrumb_symbols": {
     "en": "Symbols",
@@ -265,7 +265,7 @@
   },
   "kind_one_event": {
     "en": "Event",
-    "es": "Acontecimiento"
+    "es": "Suceso"
   },
   "passages_n": {
     "en": "{n} passages",
@@ -277,7 +277,7 @@
   },
   "cooccurrence_note": {
     "en": "Co-occurrence within the same passage; Mantua folio paragraph as unit.",
-    "es": "Coaparición en el mismo pasaje; unidad: párrafo del folio de Mantua."
+    "es": "Coocurrencia en un mismo pasaje; la unidad es el párrafo de folio de la edición de Mantua."
   },
   "how_it_moves": {
     "en": "How it moves",
@@ -297,7 +297,7 @@
   },
   "no_partners": {
     "en": "No partners yet.",
-    "es": "Aún sin compañeros."
+    "es": "Todavía no tiene compañeros."
   },
   "states": {
     "en": "States",
@@ -305,11 +305,11 @@
   },
   "state_full": {
     "en": "full",
-    "es": "llena"
+    "es": "en plenitud"
   },
   "state_diminished": {
     "en": "diminished",
-    "es": "menguada"
+    "es": "en mengua"
   },
   "state_exile": {
     "en": "in exile",
@@ -321,11 +321,11 @@
   },
   "unmarked_n": {
     "en": "{n} passages without a state marker",
-    "es": "{n} pasajes sin marca de estado"
+    "es": "{n} pasajes sin marcador de estado"
   },
   "no_states": {
     "en": "No states declared for this symbol.",
-    "es": "No hay estados declarados para este símbolo."
+    "es": "Este símbolo no tiene estados declarados."
   },
   "read_it": {
     "en": "Read it",
@@ -333,11 +333,11 @@
   },
   "read_it_sub": {
     "en": "Passages chosen across the strata, with the symbol marked.",
-    "es": "Pasajes elegidos a lo largo de los estratos, con el símbolo marcado."
+    "es": "Pasajes escogidos de los distintos estratos, con el símbolo marcado."
   },
   "not_yet_found": {
     "en": "Not yet found in the text.",
-    "es": "Aún no aparece en el texto."
+    "es": "Todavía no se ha encontrado en el texto."
   },
   "not_translated": {
     "en": "not yet translated",
@@ -369,7 +369,7 @@
   },
   "suggestions": {
     "en": "Did you mean:",
-    "es": "¿Quisiste decir?"
+    "es": "Quizá buscabas:"
   },
   "stratum_main": {
     "en": "Main body",
@@ -441,11 +441,11 @@
   },
   "stratum_idra_rabba": {
     "en": "Idra Rabba",
-    "es": "Idra Rabba"
+    "es": "Idra Rabá"
   },
   "stratum_idra_zuta": {
     "en": "Idra Zuta",
-    "es": "Idra Zuta"
+    "es": "Idra Zutá"
   },
   "strata_n": {
     "en": "Across {n} strata",
@@ -457,7 +457,7 @@
   },
   "breadcrumb": {
     "en": "Breadcrumb",
-    "es": "Ruta"
+    "es": "Ruta de navegación"
   },
   "passages_one": {
     "en": "1 passage",
@@ -469,11 +469,11 @@
   },
   "unmarked_one": {
     "en": "1 passage without a state marker",
-    "es": "1 pasaje sin marca de estado"
+    "es": "1 pasaje sin marcador de estado"
   },
   "node_intro_keter": {
     "en": "The hidden head of the divine structure, called Atika Kadisha, the Holy Ancient One, and also Arikh Anpin, the Long Face. These titles occur mostly in the Idrot.",
-    "es": "La cabeza oculta de la estructura divina, llamada Atika Kadisha, la Antigua Santa, y también Arij Anpin, el Rostro Largo. Estos títulos aparecen sobre todo en las Idrot."
+    "es": "La cabeza oculta de la estructura divina, llamada Atika Kadisha, el Santo Anciano, y también Arij Anpin, el Rostro Largo. Estos títulos aparecen sobre todo en las Idrot."
   },
   "node_intro_hokhmah": {
     "en": "Abba, the Father: the point from which everything unfolds, and Reshit, the beginning. It stands at the head of the right pillar.",
@@ -481,7 +481,7 @@
   },
   "node_intro_binah": {
     "en": "Imma, the Mother: the river that flows out of Eden and the palace. She is the womb of the seven sefirot below her. She stands at the head of the left pillar.",
-    "es": "Imma, la Madre: el río que sale del Edén y el palacio. Es el vientre de las siete sefirot que están debajo. Encabeza la columna izquierda."
+    "es": "Imma, la Madre: el río que sale del Edén y el palacio. Es la matriz de las siete sefirot que hay debajo de ella. Encabeza la columna izquierda."
   },
   "node_intro_hesed": {
     "en": "The Right, associated with Abraham, with water and with white. It is the sefirah of lovingkindness.",
@@ -493,7 +493,7 @@
   },
   "node_intro_tiferet": {
     "en": "The King, the Sun, Jacob who is called Israel, and the written Torah. It stands on the middle pillar, between Right and Left, and is the Shekhinah's partner.",
-    "es": "El Rey, el Sol, Jacob que se llama Israel, y la Torá escrita. Está en la columna central, entre la Derecha y la Izquierda, y es la pareja de la Shejiná."
+    "es": "El Rey, el Sol, Jacob, llamado Israel, y la Torá escrita. Está en la columna central, entre la Derecha y la Izquierda, y es la pareja de la Shejiná."
   },
   "node_intro_netzah": {
     "en": "One of the two thighs of the divine body, the supports from which the prophets draw. In Cordovero's scheme it corresponds to Moses.",
@@ -509,7 +509,7 @@
   },
   "node_intro_malkhut": {
     "en": "The tenth sefirah: the divine presence in the world, called the Shekhinah, the Matronita, the Moon, the Sea, the Earth and Knesset Yisra'el. Her story is exile and union, and much of the Zohar turns on her.",
-    "es": "La décima sefirá: la presencia divina en el mundo, llamada la Shejiná, la Matronita, la Luna, el Mar, la Tierra y Knesset Yisra'el. Su historia es la del exilio y la unión, y buena parte del Zohar gira en torno a ella."
+    "es": "La décima sefirá: la presencia divina en el mundo, llamada la Shejiná, la Matronita, la Luna, el Mar, la Tierra y Kneset Israel. Su historia es la del exilio y la unión, y buena parte del Zohar gira en torno a ella."
   },
   "node_intro_sitra_ahra": {
     "en": "The Other Side: the serpent, Samael and Lilith, and the husk that surrounds the holy. It is fed by excess of judgement.",
@@ -517,7 +517,7 @@
   },
   "node_intro_ein_sof": {
     "en": "The Infinite, beyond the sefirot. It is named only by negation: what it is not.",
-    "es": "El Infinito, más allá de las sefirot. Solo se lo nombra por negación: lo que no es."
+    "es": "El Infinito, más allá de las sefirot. Solo puede nombrarse por negación: por lo que no es."
   },
   "pillar_right": {
     "en": "Right pillar",
@@ -541,7 +541,7 @@
   },
   "tree_provenance": {
     "en": "Drawn later than the Zohar (14th-century ilanot; this layout Kircher, 1652). Useful for orientation; not the Zohar's own map, which speaks in pillars, body and family.",
-    "es": "Dibujado después del Zohar (ilanot del siglo XIV; esta disposición es de Kircher, 1652). Sirve para orientarse, pero no es el mapa del propio Zohar, que habla de columnas, cuerpo y familia."
+    "es": "Dibujado después del Zohar (ilanot del siglo XIV; esta disposición es de Kircher, 1652). Sirve para orientarse, pero no es el mapa propio del Zohar, que habla de columnas, de cuerpo y de familia."
   },
   "tree_other_side": {
     "en": "The Other Side, mirrored below",
@@ -589,11 +589,11 @@
   },
   "sch_title": {
     "en": "For scholars",
-    "es": "Para estudiosos"
+    "es": "Para especialistas"
   },
   "sch_intro": {
     "en": "Method, provenance, data and citation. No number on this site is produced by a model: deterministic code counts, a model only translates and glosses, and every step is listed here.",
-    "es": "Método, procedencia, datos y cita. Ningún número de este sitio lo produce un modelo: código determinista cuenta; el modelo solo traduce y glosa; cada paso se detalla aquí."
+    "es": "Método, procedencia, datos y cita. Ningún número de este sitio lo produce un modelo: cuenta un código determinista, el modelo solo traduce y glosa, y cada paso se detalla aquí."
   },
   "sch_method_h": {
     "en": "Method",
@@ -601,31 +601,31 @@
   },
   "sch_m_corpus": {
     "en": "Corpus and strata. The text is the Hebrew Wikisource Zohar, in Mantua pagination, taken from its 29 parasha pages. Passages are the folio paragraphs. The editors' section labels and headings give nine text streams (main, Ra'aya Meheimna, Midrash ha-Ne'lam, Sitrei Torah, Raza de-Razin, Tosefta, Matnitin, other, addendum). Every non-main stream is its own stratum. Main-stream passages inside the conventional Idra Rabba and Idra Zuta ranges of seeds/strata.tsv take those strata, and those inside the Shemot Midrash ha-Ne'lam ranges (II 4a–5b, 14a–21b; text Wikisource leaves unlabelled) join the Midrash ha-Ne'lam stratum; all other main-stream passages stay \"main\". Eleven strata in all: main, Idra Rabba, Idra Zuta, and the eight labelled streams.",
-    "es": "Corpus y estratos. El texto es el Zohar de Wikisource hebreo, con la paginación de Mantua, tomado de sus 29 páginas por parashá. Los pasajes son los párrafos de cada folio. Las etiquetas de sección y los títulos de los editores dan nueve corrientes de texto (principal, Ra'aya Meheimna, Midrash ha-Ne'lam, Sitrei Torá, Raza de-Razin, Tosefta, Matnitin, otros, apéndice). Cada corriente que no es la principal es un estrato propio. Los pasajes de la corriente principal que caen dentro de los rangos convencionales de Idra Rabá e Idra Zutá de seeds/strata.tsv toman esos estratos, y los que caen dentro de los rangos del Midrash ha-Ne'lam de Shemot (II 4a–5b, 14a–21b; texto que Wikisource deja sin etiqueta) se unen al estrato Midrash ha-Ne'lam; el resto de la corriente principal sigue siendo \"principal\". En total hay once estratos: principal, Idra Rabá, Idra Zutá y las ocho corrientes etiquetadas."
+    "es": "Corpus y estratos. El texto es el Zohar de Wikisource hebreo, con la paginación de Mantua, tomado de sus 29 páginas de parashá. Los pasajes son los párrafos de cada folio. Las etiquetas de sección y los títulos de los editores distinguen nueve corrientes de texto (principal, Ra'aya Meheimna, Midrash ha-Ne'lam, Sitrei Torá, Raza de-Razín, Tosefta, Matnitín, otros, apéndice). Cada corriente distinta de la principal es un estrato propio. Los pasajes de la corriente principal que caen dentro de los rangos convencionales de Idra Rabá e Idra Zutá de seeds/strata.tsv pasan a esos estratos, y los que caen dentro de los rangos del Midrash ha-Ne'lam de Shemot (II 4a–5b, 14a–21b; texto que Wikisource deja sin etiqueta) se suman al estrato Midrash ha-Ne'lam; el resto de la corriente principal sigue siendo «principal». En total hay once estratos: principal, Idra Rabá, Idra Zutá y las ocho corrientes etiquetadas."
   },
   "sch_m_lemma": {
     "en": "Lemmatisation. Each word is reduced to a root where possible, with the Aramaic Root Atlas (aramaic_core) and a Zohar override table; the override table takes precedence over aramaic_core. Overrides are looked up through the proclitics ו ד ב ל כ מ ש. An override with an empty root marks a known non-lexical token, such as the abbreviation הקב״ה. Words the extractor cannot place are kept and counted as unknown.",
-    "es": "Lematización. Cada palabra se reduce a una raíz cuando es posible, con el Atlas de Raíces Arameas (aramaic_core) y una tabla de excepciones propia del Zohar; la tabla de excepciones tiene precedencia sobre aramaic_core. Las excepciones se buscan a través de los proclíticos ו ד ב ל כ מ ש. Una excepción con raíz vacía marca un token no léxico conocido, como la abreviatura הקב״ה. Las palabras que el extractor no sabe ubicar se conservan y se cuentan como desconocidas."
+    "es": "Lematización. Cada palabra se reduce a una raíz cuando es posible, con el Atlas de Raíces Arameas (aramaic_core) y una tabla de excepciones propia del Zohar, que prevalece sobre aramaic_core. Las excepciones se buscan también tras los proclíticos ו ד ב ל כ מ ש. Una excepción con la raíz vacía marca un token no léxico conocido, como la abreviatura הקב״ה. Las palabras que el extractor no logra ubicar se conservan y se cuentan como desconocidas."
   },
   "sch_m_tag": {
     "en": "Mention tagging. A symbol is tagged by its surface aliases (matched through safe proclitic pairs) and by its distinctive roots; a surface alias takes precedence over a root match on the same token. For multi-word aliases the longest match wins. The word immediately after רבי, ר׳, א״ר or רב is not tagged at all, neither by a single-word alias nor by root, because it is the name of a sage; multi-word aliases are exempt from this rule.",
-    "es": "Etiquetado de menciones. Un símbolo se etiqueta por sus alias de superficie (con pares seguros de proclíticos) y por sus raíces distintivas; un alias de superficie tiene precedencia sobre una coincidencia por raíz en el mismo token. En los alias de varias palabras gana la coincidencia más larga. La palabra inmediatamente posterior a רבי, ר׳, א״ר o רב no se etiqueta en absoluto, ni por alias de una sola palabra ni por raíz, porque es el nombre de un sabio; los alias de varias palabras quedan exentos de esta regla."
+    "es": "Etiquetado de menciones. Un símbolo se etiqueta por sus alias de superficie (admitiendo pares seguros de proclíticos) y por sus raíces distintivas; en un mismo token, un alias de superficie prevalece sobre una coincidencia por raíz. En los alias de varias palabras gana la coincidencia más larga. La palabra que sigue inmediatamente a רבי, ר׳, א״ר o רב no se etiqueta en absoluto, ni por alias de una sola palabra ni por raíz, porque es el nombre de un sabio; los alias de varias palabras quedan exentos de esta regla."
   },
   "sch_m_cooc": {
     "en": "Co-occurrence and PMI. Two symbols co-occur in a passage (a folio paragraph) only when each has at least one mention on a token the other does not tag; a symbol whose tokens are a subset of the other's is a rival, not a partner. PMI = log2(c·N / (fa·fb)), where c is the number of passages where the pair co-occurs, fa and fb the passages mentioning each symbol, and N all passages. It is shown only for pairs with at least 5 passages together.",
-    "es": "Coocurrencia y PMI. Dos símbolos coocurren en un pasaje (un párrafo de folio) solo cuando cada uno tiene al menos una mención sobre un token que el otro no etiqueta; un símbolo cuyos tokens son un subconjunto de los del otro es un rival, no un compañero. PMI = log2(c·N / (fa·fb)), donde c es el número de pasajes en que el par coocurre, fa y fb los pasajes que mencionan a cada símbolo y N todos los pasajes. Solo se muestra para pares con al menos 5 pasajes juntos."
+    "es": "Coocurrencia y PMI. Dos símbolos coocurren en un pasaje (un párrafo de folio) solo cuando cada uno tiene al menos una mención en un token que el otro no etiqueta; un símbolo cuyos tokens son un subconjunto de los del otro es un rival, no un compañero. PMI = log2(c·N / (fa·fb)), donde c es el número de pasajes en que coocurre el par, fa y fb son los pasajes que mencionan cada símbolo y N es el total de pasajes. Solo se muestra para los pares con al menos 5 pasajes en común."
   },
   "sch_m_states": {
     "en": "States. A symbol's state (for example full or diminished) is detected in a passage that mentions the symbol when any one of the marker roots declared for that state occurs in the passage. The markers are declared in the seed, not inferred.",
-    "es": "Estados. El estado de un símbolo (por ejemplo pleno o disminuido) se detecta en un pasaje que menciona el símbolo cuando aparece en él cualquiera de las raíces marcadoras declaradas para ese estado. Los marcadores se declaran en la semilla; no se infieren."
+    "es": "Estados. El estado de un símbolo (por ejemplo, en plenitud o en mengua) se detecta en un pasaje que menciona el símbolo cuando en él aparece cualquiera de las raíces marcadoras declaradas para ese estado. Los marcadores se declaran en la semilla; no se infieren."
   },
   "sch_m_surf": {
     "en": "Surfaced passages. Candidates are the passages that mention the symbol. Each is scored (2·own mentions + mentions of the symbol's top three partners) / (tokens + 20). Passages of at least 12 tokens have priority and, among them, one per stratum comes first, then the rest by score; shorter passages are used only to fill six. Ties are broken by passage id (folio order).",
-    "es": "Pasajes destacados. Los candidatos son los pasajes que mencionan el símbolo. Cada uno recibe la puntuación (2·menciones propias + menciones de los tres compañeros principales del símbolo) / (tokens + 20). Tienen prioridad los de al menos 12 tokens y, entre ellos, uno por estrato; después el resto por puntuación; los más cortos solo se usan para completar seis. Los empates se resuelven por id de pasaje (orden de folio)."
+    "es": "Pasajes destacados. Los candidatos son los pasajes que mencionan el símbolo. Cada uno recibe la puntuación (2·menciones propias + menciones de los tres compañeros principales del símbolo) / (tokens + 20). Tienen prioridad los pasajes de al menos 12 tokens y, entre ellos, va primero uno por estrato y después el resto por puntuación; los más cortos solo se usan para completar seis. Los empates se resuelven por el id del pasaje (orden de folio)."
   },
   "sch_m_resolve": {
     "en": "Raw and resolved counts. The raw count is every tagged mention. When two or more symbols are tagged on the same token, a symbol's mention is dropped from its resolved count only when a rival on that token has strictly more support than the symbol itself; ties keep both. Support of a symbol is the number of symbols of its node present in the passage, not counting any of the symbols tagged on the shared token. Support is not normalised by node size, so nodes with many seeded symbols (Malkhut) win more often. The raw count is always shown beside the resolved one.",
-    "es": "Recuento bruto y resuelto. El recuento bruto es cada mención etiquetada. Cuando dos o más símbolos se etiquetan sobre el mismo token, la mención se descarta del recuento resuelto de un símbolo solo cuando un rival en ese token tiene estrictamente más apoyo que el propio símbolo; los empates conservan ambos. El apoyo de un símbolo es el número de símbolos de su nodo presentes en el pasaje, sin contar ninguno de los símbolos etiquetados en el token compartido. El apoyo no se normaliza por el tamaño del nodo, de modo que los nodos con muchos símbolos sembrados (Maljut) ganan más a menudo. El recuento bruto se muestra siempre junto al resuelto."
+    "es": "Recuento bruto y recuento resuelto. El recuento bruto incluye todas las menciones etiquetadas. Cuando dos o más símbolos se etiquetan en el mismo token, la mención se descarta del recuento resuelto de un símbolo solo si un rival en ese token tiene estrictamente más apoyo que el propio símbolo; en caso de empate se conservan ambos. El apoyo de un símbolo es el número de símbolos de su nodo presentes en el pasaje, sin contar ninguno de los símbolos etiquetados en el token compartido. El apoyo no se normaliza por el tamaño del nodo, de modo que los nodos con muchos símbolos en la semilla (Maljut) ganan más a menudo. El recuento bruto se muestra siempre junto al resuelto."
   },
   "sch_prov_h": {
     "en": "Provenance",
@@ -633,11 +633,11 @@
   },
   "sch_p_seed": {
     "en": "Seed sources. The symbols and their aliases are seeded from Cordovero's Pardes Rimonim (gate 23), Gikatilla's Sha'arei Orah, the Zohar's own usage, and additions. Each symbol records its seed source.",
-    "es": "Fuentes de la semilla. Los símbolos y sus alias provienen del Pardes Rimonim de Cordovero (puerta 23), el Sha'arei Orah de Gikatilla, el uso del propio Zohar y añadidos. Cada símbolo registra su fuente."
+    "es": "Fuentes de la semilla. Los símbolos y sus alias provienen del Pardes Rimonim de Cordovero (puerta 23), del Sha'arei Orah de Gikatilla, del uso del propio Zohar y de añadidos. Cada símbolo registra su fuente."
   },
   "sch_p_counts": {
     "en": "The dictionary has {symbols} symbols and {aliases} aliases over {passages} passages ({sides} folio-sides). Of {tokens} tokens, {with_root} have a root, {non_lexical} are known non-lexical tokens and {unknown} are unknown; {conf_high} have lemma confidence of 0.8 or more.",
-    "es": "El diccionario tiene {symbols} símbolos y {aliases} alias sobre {passages} pasajes ({sides} caras de folio). De {tokens} tokens, {with_root} tienen raíz, {non_lexical} son no léxicos conocidos y {unknown} son desconocidos; {conf_high} tienen una confianza de lema de 0,8 o más."
+    "es": "El diccionario tiene {symbols} símbolos y {aliases} alias en {passages} pasajes ({sides} caras de folio). De {tokens} tokens, {with_root} tienen raíz, {non_lexical} son tokens no léxicos conocidos y {unknown} son desconocidos; {conf_high} tienen una confianza de lema de 0,8 o más."
   },
   "sch_p_cav": {
     "en": "Caveats. The strata ranges are conventional. Parasha is a page-level label, not a property of each passage. A scholarly spot-check of the boundaries of the Midrash ha-Ne'lam and the addenda is pending. Zohar III 116a–b is absent from Hebrew Wikisource.",
@@ -653,7 +653,7 @@
   },
   "sch_t_built": {
     "en": "Built at",
-    "es": "Construida el"
+    "es": "Generada el"
   },
   "sch_t_revids": {
     "en": "Source revisions (Wikisource revids)",
@@ -669,7 +669,7 @@
   },
   "sch_pairs_note": {
     "en": "Only pairs with at least 5 passages together are shown, sorted by PMI. A high PMI with few passages is weak evidence; read it with the count.",
-    "es": "Solo se muestran pares con al menos 5 pasajes juntos, ordenados por PMI. Un PMI alto con pocos pasajes es una evidencia débil; léelo junto con el recuento."
+    "es": "Solo se muestran los pares con al menos 5 pasajes en común, ordenados por PMI. Un PMI alto con pocos pasajes es un indicio débil; léelo junto con el recuento."
   },
   "sch_col_a": {
     "en": "Symbol A",
@@ -681,7 +681,7 @@
   },
   "sch_col_together": {
     "en": "Passages together",
-    "es": "Pasajes juntos"
+    "es": "Pasajes en común"
   },
   "sch_no_pairs": {
     "en": "No pair reaches the floor in this build.",
@@ -701,11 +701,11 @@
   },
   "sch_e_meta": {
     "en": "build metadata (JSON)",
-    "es": "metadatos de la construcción (JSON)"
+    "es": "metadatos de la compilación (JSON)"
   },
   "sch_e_symbol": {
     "en": "Per symbol: every mention as CSV (UTF-8 with BOM, opens in Excel) or JSON, e.g. /api/symbol/moon.csv. Every export carries the tables_version.",
-    "es": "Por símbolo: cada mención en CSV (UTF-8 con BOM, abre en Excel) o JSON, p. ej. /api/symbol/moon.csv. Cada exportación lleva la tables_version."
+    "es": "Por símbolo: todas las menciones en CSV (UTF-8 con BOM, se abre en Excel) o en JSON, p. ej. /api/symbol/moon.csv. Cada exportación incluye su tables_version."
   },
   "sch_cite_h": {
     "en": "Cite",
@@ -749,7 +749,7 @@
   },
   "about_what_h": {
     "en": "What this is",
-    "es": "Qué es"
+    "es": "Qué es esto"
   },
   "about_what_1": {
     "en": "The Zohar speaks in images: the moon, the king, the garden, the mouth of the river. Each one stands for something in a long tradition of reading.",
@@ -777,7 +777,7 @@
   },
   "about_attr": {
     "en": "The text is from Hebrew Wikisource, shared under CC BY-SA 4.0, and so are the tables derived from it. Code is MIT.",
-    "es": "El texto proviene de Wikisource hebreo, compartido bajo CC BY-SA 4.0, y lo mismo vale para las tablas derivadas. El código es MIT."
+    "es": "El texto procede de Wikisource hebreo y se comparte bajo CC BY-SA 4.0, al igual que las tablas derivadas de él. El código es MIT."
   },
   "about_report": {
     "en": "Report a problem",
@@ -785,6 +785,14 @@
   },
   "about_method_link": {
     "en": "Method and data for scholars",
-    "es": "Método y datos para estudiosos"
+    "es": "Método y datos para especialistas"
+  },
+  "site_title": {
+    "en": "Zohar Symbols",
+    "es": "Símbolos del Zohar"
+  },
+  "not_found_title": {
+    "en": "Not found",
+    "es": "No encontrado"
   }
 }

@@ -5,4 +5,4 @@ from . import bp
 
 @bp.route("/ask")
 def ask():  # placeholder
-    return render_template("stub.html", msg="ask_coming")
+    return render_template("stub.html", msg="ask_coming", title="nav_ask")

@@ -55,6 +55,10 @@ def partners(sid: str, lang: str, k: int = 7) -> list[dict]:
             for r in ps]
 
 
+def _n_passages(n: int, lang: str) -> str:
+    return get_string("passages_one" if n == 1 else "passages_n", lang, n=n)
+
+
 def symbol(sid: str, lang: str) -> dict | None:
     s = one("select * from symbol where id=?", (sid,))
     if not s:
@@ -69,9 +73,11 @@ def symbol(sid: str, lang: str) -> dict | None:
         if n == 0:
             gloss = get_string("gloss_fallback_none", lang, label=label)
         elif top:
-            gloss = get_string("gloss_fallback", lang, label=label, n=n, partner=top[0]["label"], m=top[0]["passages_together"])
+            m = top[0]["passages_together"]
+            gloss = get_string("gloss_fallback", lang, label=label, passages=_n_passages(n, lang), partner=top[0]["label"],
+                               together=get_string("passages_together_one" if m == 1 else "passages_together_n", lang, n=m))
         else:
-            gloss = get_string("gloss_fallback_alone", lang, label=label, n=n)
+            gloss = get_string("gloss_fallback_alone", lang, label=label, passages=_n_passages(n, lang))
     return dict(id=s["id"], label=label, label_ar=s["label_ar"], label_other=_lab(s, other), kind=s["kind"], node=s["node"],
                 node_label=t_node(s["node"], lang),
                 aliases_surface=[a for a in surface.split(";") if a], aliases_root=[a for a in roots.split(";") if a],

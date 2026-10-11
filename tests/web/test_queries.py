@@ -24,7 +24,7 @@ def test_symbol_and_partners(app):
         s = q.symbol("moon", "es")
         assert s["label"] == "Luna" and s["label_other"] == "Moon" and s["node"] == "malkhut"
         assert s["aliases_surface"] == ["סיהרא", "לבנה"] and s["aliases_root"] == ["סהר"]
-        assert s["gloss"] == "Luna: aparece en 4 pasajes del Zohar; su compañero más frecuente es Sol (3 pasajes juntos)."
+        assert s["gloss"] == "Luna: aparece en 4 pasajes del Zohar; su compañero más frecuente es Sol (juntos en 3 pasajes)."
         p = q.partners("moon", "en")
         # moon-sun are together in 1.020a.001, 1.020b.001, 1.020b.003
         assert p[0]["id"] == "sun" and p[0]["passages_together"] == 3 and p[0]["label"] == "Sun" and "pmi" not in p[0]
