@@ -48,16 +48,16 @@ def test_states_detected_by_marker_root():
 
 def test_strata_assignment():
     rows = load_strata(SEEDS / "strata.tsv")
-    passages = [dict(id="3.130a.01", volume=3, folio=130, side="a"),
-                dict(id="1.020a.01", volume=1, folio=20, side="a"),
-                dict(id="3.145a.02", volume=3, folio=145, side="a"),
-                dict(id="3.145b.01", volume=3, folio=145, side="b"),
-                dict(id="3.127a.01", volume=3, folio=127, side="a"),
-                dict(id="3.127b.01", volume=3, folio=127, side="b")]
+    passages = [dict(id="3.130a.001", volume=3, folio=130, side="a"),
+                dict(id="1.020a.001", volume=1, folio=20, side="a"),
+                dict(id="3.145a.002", volume=3, folio=145, side="a"),
+                dict(id="3.145b.001", volume=3, folio=145, side="b"),
+                dict(id="3.127a.001", volume=3, folio=127, side="a"),
+                dict(id="3.127b.001", volume=3, folio=127, side="b")]
     s = assign_strata(passages, rows)
-    assert s["3.130a.01"] == "idra_rabba" and s["1.020a.01"] == "main"
-    assert s["3.145a.02"] == "idra_rabba" and s["3.145b.01"] == "main"
-    assert s["3.127a.01"] == "main" and s["3.127b.01"] == "idra_rabba"
+    assert s["3.130a.001"] == "idra_rabba" and s["1.020a.001"] == "main"
+    assert s["3.145a.002"] == "idra_rabba" and s["3.145b.001"] == "main"
+    assert s["3.127a.001"] == "main" and s["3.127b.001"] == "idra_rabba"
 
 
 def test_surfaced_is_deterministic_and_bounded():
@@ -69,7 +69,7 @@ def test_surfaced_is_deterministic_and_bounded():
     strata = {p["id"]: "main" for p in passages}
     a = surfaced_passages("moon", mentions, cooc, tbp, strata, k=6)
     b = surfaced_passages("moon", mentions, cooc, tbp, strata, k=6)
-    assert a == b and 0 < len(a) <= 3 and a[0] == "1.020b.01"  # densest: 2 moons + sun in 18 tokens
+    assert a == b and 0 < len(a) <= 3 and a[0] == "1.020b.001"  # densest: 2 moons + sun in 18 tokens
 
 
 def test_ambiguous_alias_raw_and_resolved():
@@ -113,5 +113,17 @@ def test_resolution_by_same_node_support():
 
 def test_detect_states_skips_unknown_symbol():
     _, tokens, syms, mentions = _pipeline()
-    ghost = dict(symbol_id="not_in_seed", passage_id="1.020a.02", position=0, matched_form="x", via="surface")
+    ghost = dict(symbol_id="not_in_seed", passage_id="1.020a.002", position=0, matched_form="x", via="surface")
     assert detect_states(mentions + [ghost], tokens, syms) == detect_states(mentions, tokens, syms)
+
+
+def test_labelled_stream_is_its_stratum_and_overrides_ranges():
+    rows = load_strata(SEEDS / "strata.tsv")
+    passages = [dict(id="3.130a.001", volume=3, folio=130, side="a", stream="raaya_meheimna"),
+                dict(id="3.130a.002", volume=3, folio=130, side="a", stream="main"),
+                dict(id="1.100a.001", volume=1, folio=100, side="a", stream="midrash_haneelam"),
+                dict(id="1.100a.002", volume=1, folio=100, side="a", stream="main")]
+    s = assign_strata(passages, rows)
+    assert s == {"3.130a.001": "raaya_meheimna", "3.130a.002": "idra_rabba",
+                 "1.100a.001": "midrash_haneelam", "1.100a.002": "main"}
+    assert {r["stratum"] for r in rows} == {"idra_rabba", "idra_zuta"}

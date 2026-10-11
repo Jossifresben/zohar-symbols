@@ -33,8 +33,9 @@ def build(raw: dict, tokens: list[dict], mentions: list[dict], computed: dict,
     con = sqlite3.connect(out_sqlite)
     con.executescript(SCHEMA)
     strata = computed["strata"]
-    con.executemany("insert into passage values (?,?,?,?,?,?,?,?,?,?)", [
-        (p["id"], p["volume"], p["folio"], p["side"], p["para"], p["parasha"], strata.get(p["id"], "main"),
+    con.executemany("insert into passage values (?,?,?,?,?,?,?,?,?,?,?)", [
+        (p["id"], p["volume"], p["folio"], p["side"], p["para"], p["parasha"], p.get("stream", "main"),
+         strata.get(p["id"], "main"),
          p["text_ar"], p.get("verse_ref"), len(tokenize(p["text_ar"]))) for p in raw["passages"]])
     con.executemany("insert into token values (?,?,?,?,?,?,?)", [
         (t["passage_id"], t["position"], t["surface"], t["root"], t["stem"], t["confidence"], t["source"]) for t in tokens])

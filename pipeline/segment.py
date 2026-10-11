@@ -8,14 +8,34 @@ BOOKS = {"בראשית": "Genesis", "שמות": "Exodus", "ויקרא": "Levitic
          "במדבר": "Numbers", "דברים": "Deuteronomy"}
 
 _NUM = r"([א-ת\"׳״]+)"
-# an optional " - <parasha>" suffix labels a folio shared by two parashot (e.g. "דף לה ב - צו")
-_SUFFIX = r"(?:\s+-\s+[^/<>]+?)?"
-_START = re.compile(r"<\s*קטע\s+התחלה\s*=\s*דף\s+" + _NUM + r"\s+([אב])" + _SUFFIX + r"\s*/\s*>")
-_END = re.compile(r"<\s*קטע\s+סוף\s*=\s*דף\s+" + _NUM + r"\s+([אב])" + _SUFFIX + r"\s*/\s*>")
-# Folio sections only: the page also carries overlay sections (e.g. "שבועות 1",
-# "בראשית א א") that mark verses/readings, not Mantua folios.
-_RAW_START = re.compile(r"<\s*קטע\s+התחלה\s*=\s*דף")
+_TAG_ANY = re.compile(r"<\s*קטע\s+(התחלה|סוף)\s*=\s*([^/<>]*?)\s*/\s*>")
+# A folio-stream label: optional stream/parasha prefix, "דף N S", optional " - <parasha>" suffix
+# (a folio shared by two parashot, e.g. "דף לה ב - צו").
+_FOLIO_LABEL = re.compile(r"^(?:(?P<prefix>.+?)\s+)?דף\s+(?P<num>[א-ת\"׳״]+)\s+(?P<side>[אב])"
+                          r"(?:\s*-\s*(?P<suffix>.+))?$")
+# Overlay sections mark verses, readings or a named unit inside folio sections; stripped, not counted.
+_OVERLAY_LABEL = re.compile(r"^(?:(?:בראשית|שמות|ויקרא|במדבר|דברים)\s+[א-ת\"׳״]+\s+[א-ת\"׳״]+"
+                            r"|שבועות\s+\d+|ספרא דצניעותא(?:\s+\S+)?)$")
+# Fixed order: paragraph numbering of a folio-side runs main first, then streams in this order.
+STREAMS = ("main", "raaya_meheimna", "midrash_haneelam", "sitrei_torah", "raza_derazin",
+           "tosefta", "matnitin", "other")
+_STREAM_WORDS = {'רע"מ': "raaya_meheimna", "רע״מ": "raaya_meheimna", "רעיא מהימנא": "raaya_meheimna",
+                 "מדרש הנעלם": "midrash_haneelam", "סתרי תורה": "sitrei_torah",
+                 "רזא דרזין": "raza_derazin", "תוספתא": "tosefta", "מתניתין": "matnitin",
+                 'ד"א': "other", "ד״א": "other"}
+# A parasha name as label prefix or suffix means the main stream.
+PARASHA_NAMES = frozenset("""בראשית נח לך לך וירא חיי שרה תולדות ויצא וישלח וישב מקץ ויגש ויחי
+שמות וארא בא בשלח יתרו משפטים תרומה תצוה כי תשא ויקהל פקודי
+ויקרא צו שמיני תזריע מצורע אחרי מות קדושים אמור בהר בחקותי בחקתי
+במדבר נשא בהעלותך שלח קרח חוקת חקת בלק פינחס פנחס מטות מסעי
+דברים ואתחנן עקב ראה שופטים תצא כי תצא תבוא כי תבוא נצבים וילך האזינו""".split()) | {
+    "לך לך", "חיי שרה", "כי תשא", "אחרי מות", "כי תצא", "כי תבוא", "וזאת הברכה"}
+# A section whose whole content is an editor's note that the folio has no text in this stream.
+_PLACEHOLDER = re.compile(r"^\((?=[^()]*(?:רעיא מהימנא|זהר|זוהר))(?=[^()]*(?:דף|פרשת|אין))[^()]*\)$")
+_RAW_TAG = re.compile(r"<\s*קטע\s+(?:התחלה|סוף)")
 _SECTION_TAG = re.compile(r"<\s*קטע\s+(?:התחלה|סוף)\s*=[^>]*/>")
+_HEBREW = re.compile(r"[א-ת]")
+_HEADING = re.compile(r"^[ \t]*=+[^=\n].*?=+[ \t]*$", re.M)
 _MM = re.compile(r"\{\{ממ\|([^|}]+)\|([א-ת]+)(?:\|([א-ת]+))?\}\}")
 _SHIN = re.compile(r"\{\{ש\}\}")
 _ANY_TEMPLATE = re.compile(r"\{\{[^{}]*\}\}")
@@ -26,7 +46,7 @@ _VARIANT = re.compile(_VARIANT_OPEN + r"[^)\n]*\)")
 _VARIANT_LEFT = re.compile(_VARIANT_OPEN)
 _COMMENT = re.compile(r"<!--.*?-->", re.S)
 _REF = re.compile(r"<ref[^>]*/>|<ref[^>]*>.*?</ref>", re.S)
-_DROP_LINK = re.compile(r"\[\[(?:קטגוריה|קובץ):[^\]]*\]\]")
+_DROP_LINK = re.compile(r"\[\[\s*:?\s*(?:קטגוריה|קובץ|תמונה|file|image)\s*:[^\]]*\]\]", re.I)
 _LINK = re.compile(r"\[\[(?:[^\]|]*\|)?([^\]]*)\]\]")
 _TAG = re.compile(r"</?(?:small|big|br|ref|span|div)[^>]*>")
 _BOLD = re.compile(r"'''?")
@@ -53,6 +73,36 @@ _TEXT_FIXES = {
     ("זוהר חלק יז", 'עיי"ש]))'): 'עיי"ש]}}',
     # template closed with "PP" instead of "}}"
     ("זוהר חלק יז", "ויחר אפי בהם ואכלםPP,"): "ויחר אפי בהם ואכלם}},",
+    # --- section-tag typos (found when the stream sections were first parsed) ---
+    # Midrash ha-Ne'lam I 99b is restarted after a heading without being closed
+    ("זוהר חלק ה", "ההר הטוב.\n\n===מדרש הנעלם - אמר רבי חייא אמר רב==="):
+        "ההר הטוב.<קטע סוף=מדרש הנעלם דף צט ב/>\n\n===מדרש הנעלם - אמר רבי חייא אמר רב===",
+    # Midrash ha-Ne'lam I 117a is closed as 117b (no 117b section exists)
+    ("זוהר חלק ה", "<קטע סוף=מדרש הנעלם דף קיז ב/>"): "<קטע סוף=מדרש הנעלם דף קיז א/>",
+    # the second part of I 134a (start of Toldot) has an end tag but no start tag
+    ("זוהר חלק ו", "{{ממ זהר משולב|א|קלד|א}}{{צ|ואלה תולדות יצחק"):
+        "{{ממ זהר משולב|א|קלד|א}}<קטע התחלה=דף קלד א/>{{צ|ואלה תולדות יצחק",
+    # four Tosefta sections (I 232a-234a) are closed with the main-stream label
+    ("זוהר חלק י", "מאן דמפשפש <קטע סוף=דף רלב א/>"): "מאן דמפשפש <קטע סוף=תוספתא דף רלב א/>",
+    ("זוהר חלק י", "(עד כאן תוספתא): <קטע סוף=דף רלב ב/>"): "(עד כאן תוספתא): <קטע סוף=תוספתא דף רלב ב/>",
+    ("זוהר חלק י", "סומקא נחתא, <קטע סוף=דף רלג ב/>"): "סומקא נחתא, <קטע סוף=תוספתא דף רלג ב/>",
+    ("זוהר חלק י", "(עד כאן תוספתא): <קטע סוף=דף רלד א/>"): "(עד כאן תוספתא): <קטע סוף=תוספתא דף רלד א/>",
+    # main II 194b encloses the Ki Tisa Ra'aya Meheimna (II 187b-188a); Vayakhel resumes 194b
+    ("זוהר חלק יז", "אמן ואמן:\n\n==רעיא מהימנא - כי תשא=="):
+        "אמן ואמן:<קטע סוף=דף קצד ב/>\n\n==רעיא מהימנא - כי תשא==",
+    ("זוהר חלק יז", "==פרשת ויקהל==\n\n{{צ|ויקהל משה את כל עדת בני ישראל"):
+        "==פרשת ויקהל==\n\n<קטע התחלה=דף קצד ב/>{{צ|ויקהל משה את כל עדת בני ישראל",
+    # a quotation template is opened twice and closed once (III 244b, Ra'aya Meheimna)
+    ("זוהר חלק כח", "מן {{צ|'''ה'''מוציא}}"): "מן '''ה'''מוציא}}",
+    # quotation templates never closed (III 246a, III 255b) and a single-brace opening (III 281a)
+    ("זוהר חלק כח", "{{צ|ארבעה משמרות הוי הלילה. ו"): "{{צ|ארבעה משמרות הוי הלילה}}. ו",
+    ("זוהר חלק כח", "{{צ|והחיות רצוא ושוב? כאור"): "{{צ|והחיות רצוא ושוב}}? כאור",
+    ("זוהר חלק כט", "{ממ|ויקרא|כה|מט}}"): "{{ממ|ויקרא|כה|מט}}",
+    # Ra'aya Meheimna placeholders III 66a, 66b are closed as 62a, 62b
+    ("זוהר חלק כב", '<קטע התחלה=רע"מ דף סו א/>(הדף מכיל רק זוהר ללא רעיא מהימנא)<קטע סוף=רע"מ דף סב א/>'):
+        '<קטע התחלה=רע"מ דף סו א/>(הדף מכיל רק זוהר ללא רעיא מהימנא)<קטע סוף=רע"מ דף סו א/>',
+    ("זוהר חלק כב", '<קטע התחלה=רע"מ דף סו ב/>(הדף מכיל רק זוהר ללא רעיא מהימנא)<קטע סוף=רע"מ דף סב ב/>'):
+        '<קטע התחלה=רע"מ דף סו ב/>(הדף מכיל רק זוהר ללא רעיא מהימנא)<קטע סוף=רע"מ דף סו ב/>',
 }
 
 
@@ -72,6 +122,7 @@ class Passage:
     parasha: str
     text_ar: str
     verse_ref: str | None
+    stream: str = "main"
 
 
 def _verse_ref(block: str) -> str | None:
@@ -125,6 +176,7 @@ def _template_text(m: re.Match) -> str:
 def clean_wikitext(s: str) -> str:
     s = _COMMENT.sub("", s)
     s = _REF.sub("", s)
+    s = _HEADING.sub("", s)  # section headings are not stored in v0.1
     s = _SECTION_TAG.sub("", s)
     s = _BOLD.sub("", s)  # before variants: some are wrapped in bold markup
     s = _VARIANT.sub("", s)
@@ -152,7 +204,7 @@ def _paragraphs(block: str, page_title: str, label: str) -> list[str]:
             if _VARIANT_LEFT.search(cleaned):
                 raise SegmentError(page_title, label, "unclosed variant reading")
             text = " ".join(ln for ln in cleaned.split("\n") if ln.strip())
-            if text:
+            if _HEBREW.search(text):  # punctuation- or markup-only leftovers are not passages
                 out.append(text)
     return out
 
@@ -162,62 +214,126 @@ def _num(s: str) -> int:
 
 
 def passage_id(volume: int, folio: int, side: str, para: int) -> str:
-    return f"{volume}.{folio:03d}{side}.{para:02d}"
+    return f"{volume}.{folio:03d}{side}.{para:03d}"
+
+
+@dataclass(frozen=True)
+class Label:
+    stream: str
+    folio: int
+    side: str
+    key: str  # "<num> <side>" as written, for _LABEL_FIXES
+
+
+def _strip_word(prefix: str, word: str) -> tuple[str, bool]:
+    pat = re.compile(r"(?:^|\s)" + re.escape(word) + r"(?=\s|$)")
+    new = pat.sub(" ", prefix)
+    return " ".join(new.split()), new != prefix
+
+
+def classify_label(label: str, page_title: str = "") -> Label | None:
+    """A <קטע> label -> its folio stream (Label), None for an overlay; anything else fails loudly."""
+    label = " ".join(label.split())
+    m = _FOLIO_LABEL.match(label)
+    if m:
+        prefix, stream = m.group("prefix") or "", "main"
+        for word, s in _STREAM_WORDS.items():
+            prefix, hit = _strip_word(prefix, word)
+            if hit:
+                if stream != "main":
+                    raise SegmentError(page_title, label, "two stream names in one label")
+                stream = s
+        if prefix and prefix not in PARASHA_NAMES:
+            raise SegmentError(page_title, label, f"unknown label prefix {prefix!r}")
+        suffix = (m.group("suffix") or "").strip()
+        if suffix and suffix not in PARASHA_NAMES:
+            raise SegmentError(page_title, label, f"unknown label suffix {suffix!r}")
+        return Label(stream, _num(m.group("num")), "a" if m.group("side") == "א" else "b",
+                     f"{m.group('num')} {m.group('side')}")
+    if _OVERLAY_LABEL.match(label):
+        return None
+    raise SegmentError(page_title, label, "unclassified section label")
+
+
+def _stream_key(volume: int, folio: int, side: str, stream: str) -> str:
+    k = f"{volume}.{folio:03d}{side}"
+    return k if stream == "main" else f"{k}/{stream}"
+
+
+def renumber(passages: list[dict]) -> list[dict]:
+    """Number paragraphs per (volume, folio, side): main stream first, then the other streams in
+    STREAMS order; document order within a stream. The list keeps its order; dicts are updated."""
+    order = sorted(range(len(passages)), key=lambda i: (
+        passages[i]["volume"], passages[i]["folio"], passages[i]["side"],
+        STREAMS.index(passages[i]["stream"]), i))
+    n: dict[tuple[int, int, str], int] = {}
+    for i in order:
+        p = passages[i]
+        key = (p["volume"], p["folio"], p["side"])
+        n[key] = n.get(key, 0) + 1
+        p["para"] = n[key]
+        p["id"] = passage_id(p["volume"], p["folio"], p["side"], n[key])
+    return passages
 
 
 def segment_page(wikitext: str, volume: int, parasha: str, page_title: str,
                  stats: dict | None = None) -> list[Passage]:
-    """A repeated (folio, side) on one page continues paragraph numbering;
-    stats['continued'] counts such repeats."""
+    """A repeated (folio, side, stream) on one page continues that stream; stats['continued']
+    counts such repeats, stats['placeholders'] the sections that only say a stream is absent."""
     for (title, old), new in _TEXT_FIXES.items():
         if title == page_title:
             if wikitext.count(old) != 1:
                 raise SegmentError(page_title, "<fix>", f"known typo not found exactly once: {old!r}")
             wikitext = wikitext.replace(old, new)
-    passages: list[Passage] = []
-    seen: dict[tuple[int, str], int] = {}
-    texts: dict[tuple[int, str], set[str]] = {}
-    nsec: dict[tuple[int, str], int] = {}
-    pos = 0
-    n_matched = 0
-    while True:
-        m = _START.search(wikitext, pos)
-        if not m:
-            break
-        label = f"{m.group(1)} {m.group(2)}"
-        e = _END.search(wikitext, m.end())
-        nxt = _START.search(wikitext, m.end())
-        if (e and nxt and nxt.start() < e.start() and (page_title, label) in _LABEL_FIXES
-                and (nxt.group(1), nxt.group(2)) == (m.group(1), m.group(2))):
-            n_matched += 1  # stray duplicate start tag: accounted for, then skipped
-            pos = nxt.start()
+    wikitext = _COMMENT.sub("", wikitext)  # a tag inside an HTML comment is not a section
+    all_tags = list(_TAG_ANY.finditer(wikitext))
+    n_raw = len(_RAW_TAG.findall(wikitext))
+    if n_raw != len(all_tags):
+        raise SegmentError(page_title, "<unparsed>", f"{n_raw} section tags, {len(all_tags)} well-formed")
+    tags = []  # folio-stream tags in document order: (match, is_start, Label)
+    for m in all_tags:
+        lab = classify_label(m.group(2), page_title)
+        if lab is not None:
+            tags.append((m, m.group(1) == "התחלה", lab))
+    stats = stats if stats is not None else {}
+    found: list[dict] = []
+    nsec: dict[tuple[int, str, str], int] = {}
+    texts: dict[tuple[int, str, str], set[str]] = {}
+    i = 0
+    while i < len(tags):
+        m, is_start, lab = tags[i]
+        label = " ".join(m.group(2).split())
+        if not is_start:
+            raise SegmentError(page_title, label, "end tag without a start")
+        nxt = tags[i + 1] if i + 1 < len(tags) else None
+        if (nxt and nxt[1] and nxt[2] == lab and lab.stream == "main"
+                and (page_title, lab.key) in _LABEL_FIXES):
+            # stray duplicate start tag: skipped, but only if nothing but markup lies before the real one
+            if _HEBREW.search(clean_wikitext(wikitext[m.end():nxt[0].start()])):
+                raise SegmentError(page_title, label, "stray start tag is followed by text")
+            i += 1
             continue
-        if not e or (nxt and nxt.start() < e.start()):
+        if not nxt or nxt[1]:
             raise SegmentError(page_title, label, "unclosed section")
-        if (e.group(1), e.group(2)) != (m.group(1), m.group(2)):
-            raise SegmentError(page_title, label, f"closed by {e.group(1)} {e.group(2)}")
-        n_matched += 1
+        e, _, elab = nxt
+        if (elab.stream, elab.folio, elab.side) != (lab.stream, lab.folio, lab.side):
+            raise SegmentError(page_title, label, f"closed by {' '.join(e.group(2).split())}")
+        i += 2
         block = wikitext[m.end():e.start()]
-        folio = _num(m.group(1))
-        side = "a" if m.group(2) == "א" else "b"
-        key = (folio, side)
-        base = seen.get(key, 0)
+        if _PLACEHOLDER.match(" ".join(clean_wikitext(block).split())):
+            stats["placeholders"] = stats.get("placeholders", 0) + 1
+            continue
+        key = (lab.folio, lab.side, lab.stream)
         nsec[key] = nsec.get(key, 0) + 1
-        if base and stats is not None:
+        if nsec[key] > 1:
             stats["continued"] = stats.get("continued", 0) + 1
-            stats.setdefault("continued_keys", {})[f"{volume}.{folio:03d}{side}"] = nsec[key]
+            stats.setdefault("continued_keys", {})[_stream_key(volume, *key)] = nsec[key]
         vref = _verse_ref(block)
         prior = set(texts.get(key, ()))
-        for i, text in enumerate(_paragraphs(block, page_title, label), start=base + 1):
-            if base and text in prior:
+        for text in _paragraphs(block, page_title, label):
+            if nsec[key] > 1 and text in prior:
                 raise SegmentError(page_title, label, "duplicate text in repeated section")
-            passages.append(Passage(
-                id=passage_id(volume, folio, side, i), volume=volume, folio=folio,
-                side=side, para=i, parasha=parasha, text_ar=text, verse_ref=vref))
+            found.append(dict(id="", volume=volume, folio=lab.folio, side=lab.side, para=0,
+                              parasha=parasha, text_ar=text, verse_ref=vref, stream=lab.stream))
             texts.setdefault(key, set()).add(text)
-            seen[key] = i
-        pos = e.end()
-    n_raw = len(_RAW_START.findall(wikitext))
-    if n_raw != n_matched:
-        raise SegmentError(page_title, "<unparsed>", f"{n_raw} start tags, {n_matched} parsed")
-    return passages
+    return [Passage(**p) for p in renumber(found)]

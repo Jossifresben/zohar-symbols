@@ -9,15 +9,15 @@ SEEDS = Path(__file__).parent.parent / "seeds"
 
 def _tiny():
     raw = {"pages": [{"title": "t", "revid": 1}], "passages": [
-        dict(id="1.020a.01", volume=1, folio=20, side="a", para=1, parasha="Bereshit",
+        dict(id="1.020a.001", volume=1, folio=20, side="a", para=1, parasha="Bereshit",
              text_ar="שמשא וסיהרא", verse_ref="Genesis 1:16")]}
-    tokens = [dict(passage_id="1.020a.01", position=0, surface="שמשא", root="x", stem=None, confidence=0.9, source="aramaic_core"),
-              dict(passage_id="1.020a.01", position=1, surface="וסיהרא", root="y", stem=None, confidence=1.0, source="override")]
-    mentions = [dict(symbol_id="sun", passage_id="1.020a.01", position=0, matched_form="שמשא", via="surface"),
-                dict(symbol_id="moon", passage_id="1.020a.01", position=1, matched_form="סיהרא", via="surface")]
+    tokens = [dict(passage_id="1.020a.001", position=0, surface="שמשא", root="x", stem=None, confidence=0.9, source="aramaic_core"),
+              dict(passage_id="1.020a.001", position=1, surface="וסיהרא", root="y", stem=None, confidence=1.0, source="override")]
+    mentions = [dict(symbol_id="sun", passage_id="1.020a.001", position=0, matched_form="שמשא", via="surface"),
+                dict(symbol_id="moon", passage_id="1.020a.001", position=1, matched_form="סיהרא", via="surface")]
     computed = dict(cooccurrence=[dict(a="moon", b="sun", passages_together=1, pmi=0.0)],
                     symbol_counts={"moon": dict(raw=1, resolved=1, passages=1), "sun": dict(raw=1, resolved=1, passages=1)},
-                    states=[], strata={"1.020a.01": "main"}, surfaced={"moon": ["1.020a.01"], "sun": ["1.020a.01"]})
+                    states=[], strata={"1.020a.001": "main"}, surfaced={"moon": ["1.020a.001"], "sun": ["1.020a.001"]})
     return raw, tokens, mentions, computed
 
 
@@ -47,7 +47,7 @@ def test_build_is_idempotent(tmp_path):
 
 def test_build_tolerates_stale_state(tmp_path):
     raw, tokens, mentions, computed = _tiny()
-    computed["states"] = [dict(symbol_id="sun", state_label="no-such-state", passage_id="1.020a.01")]
+    computed["states"] = [dict(symbol_id="sun", state_label="no-such-state", passage_id="1.020a.001")]
     syms = load_kinnuyim(SEEDS / "kinnuyim.tsv")
     build(raw, tokens, mentions, computed, syms, tmp_path / "z.sqlite", tmp_path / "t.json")
     con = sqlite3.connect(tmp_path / "z.sqlite")

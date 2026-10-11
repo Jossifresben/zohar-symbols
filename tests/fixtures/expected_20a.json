@@ -1,10 +1,10 @@
 {
-  "passages_with_moon": ["1.020a.01", "1.020a.02", "1.020b.01"],
+  "passages_with_moon": ["1.020a.001", "1.020a.002", "1.020b.001"],
   "cooccurrence": [
     {"a": "moon", "b": "sun", "passages_together": 2},
     {"a": "coupling", "b": "king", "passages_together": 1},
     {"a": "coupling", "b": "matronita", "passages_together": 1},
     {"a": "king", "b": "matronita", "passages_together": 1}
   ],
-  "states": [{"symbol_id": "moon", "state_label": "diminished", "passage_id": "1.020a.02"}]
+  "states": [{"symbol_id": "moon", "state_label": "diminished", "passage_id": "1.020a.002"}]
 }

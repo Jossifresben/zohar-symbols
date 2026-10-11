@@ -84,7 +84,7 @@ All tables produced by the pipeline, read-only in the web app (SQLite).
 
 | Table | Columns | Notes |
 |---|---|---|
-| **passage** | `id` (`1.020a.03` = volume.folio.paragraph), `volume`, `folio`, `parasha`, `stratum`, `text_ar`, `verse_ref`, `token_count` | The unit of everything. Stratum from `strata.tsv` by folio range. |
+| **passage** | `id` (`1.020a.003` = volume.folio.paragraph; paragraphs of a folio-side run main stream first, then the labelled streams), `volume`, `folio`, `parasha`, `stream`, `stratum`, `text_ar`, `verse_ref`, `token_count` | The unit of everything. `stream` from the Wikisource section label (main, Ra'aya Meheimna, Midrash ha-Ne'lam, ...); stratum = the stream, or for main passages the `strata.tsv` range (Idras). |
 | **token** | `passage_id`, `position`, `surface`, `root`, `stem`, `confidence`, `source` (`aramaic_core` / `override`) | Same shape as the Atlas, so exports are compatible. |
 | **symbol** | `id`, `label_en`, `label_es`, `label_ar`, `kind` (person / object / quality / event), `node`, `aliases` (surface forms + roots), `gloss_en`, `gloss_es`, `moves_en`, `moves_es`, `seed_source` | The dictionary. Glosses are model-drafted, attributed. |
 | **mention** | `symbol_id`, `passage_id`, `position`, `matched_form` | Output of `tag.py`; the join everything derives from. |

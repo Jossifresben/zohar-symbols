@@ -3,11 +3,12 @@
 import argparse
 import csv
 import json
+from collections import Counter
 from dataclasses import asdict
 from pathlib import Path
 
 from .report import write_report
-from .segment import passage_id, segment_page
+from .segment import STREAMS, _stream_key, renumber, segment_page
 from .version import TABLES_VERSION
 from .wikisource import PageText, fetch_page
 
@@ -25,41 +26,32 @@ def load_parashot(path: Path) -> list[dict]:
 
 
 def build_raw(pages: list[tuple[str, int, str, PageText]]) -> dict:
-    """Segment pages in order. A Mantua folio may straddle two parasha pages;
-    the later page's paragraphs continue the numbering (recorded in split_detail).
-    Within-page repeats are recorded in continued_detail."""
+    """Segment pages in order, then number paragraphs per folio-side over all pages (main stream
+    first, then the other streams; see segment.renumber). A folio-side stream that straddles two
+    parasha pages continues on the later page (split_detail); within-page repeats: continued_detail."""
     out = {"tables_version": TABLES_VERSION,
-           "pages": [], "passages": [], "split_folios": 0, "continued_folios": 0,
+           "pages": [], "passages": [], "split_folios": 0, "continued_folios": 0, "placeholders": 0,
            "split_detail": {}, "continued_detail": {}}
-    max_para: dict[tuple[int, int, str], int] = {}
-    texts: dict[tuple[int, int, str], set[str]] = {}
-    first_page: dict[tuple[int, int, str], str] = {}
+    texts: dict[tuple, set[str]] = {}
+    first_page: dict[tuple, str] = {}
     for title, volume, parasha, pt in pages:
         out["pages"].append({"title": title, "revid": pt.revid, "timestamp": pt.timestamp,
                              "volume": volume, "parasha": parasha})
         stats: dict = {}
         passages = [asdict(p) for p in segment_page(pt.wikitext, volume, parasha, title, stats)]
         out["continued_folios"] += stats.get("continued", 0)
+        out["placeholders"] += stats.get("placeholders", 0)
         out["continued_detail"].update(stats.get("continued_keys", {}))
-        offsets: dict[tuple[int, int, str], int] = {}
         for p in passages:
-            key = (p["volume"], p["folio"], p["side"])
-            if key not in offsets:
-                offsets[key] = max_para.get(key, 0)
-                if offsets[key]:
-                    out["split_detail"][f"{key[0]}.{key[1]:03d}{key[2]}"] = f"{first_page[key]} → {title}"
-            if offsets[key]:
+            key = (p["volume"], p["folio"], p["side"], p["stream"])
+            if first_page.setdefault(key, title) != title:
+                out["split_detail"][_stream_key(*key)] = f"{first_page[key]} → {title}"
                 if p["text_ar"] in texts[key]:
-                    pid = passage_id(*key, p["para"] + offsets[key])
-                    raise ValueError(f"{title}: {pid}: duplicate text in repeated section")
-                p["para"] += offsets[key]
-                p["id"] = passage_id(p["volume"], p["folio"], p["side"], p["para"])
+                    raise ValueError(f"{title}: {_stream_key(*key)}: duplicate text in repeated section")
         for p in passages:
-            key = (p["volume"], p["folio"], p["side"])
-            max_para[key] = max(max_para.get(key, 0), p["para"])
-            texts.setdefault(key, set()).add(p["text_ar"])
-            first_page.setdefault(key, title)
+            texts.setdefault((p["volume"], p["folio"], p["side"], p["stream"]), set()).add(p["text_ar"])
         out["passages"] += passages
+    renumber(out["passages"])
     out["split_folios"] = len(out["split_detail"])
     out["sources_as_of"] = max((p["timestamp"] for p in out["pages"]), default="")
     return out
@@ -82,7 +74,10 @@ def report_rows(out: dict) -> list[tuple[str, object]]:
         ("empty passages", sum(1 for p in out["passages"] if not p["text_ar"])),
         ("folios split across pages", out["split_folios"]),
         ("folios continued within a page", out["continued_folios"]),
+        ("placeholder sections dropped", out.get("placeholders", 0)),
     ]
+    streams = Counter(p.get("stream", "main") for p in out["passages"])
+    rows += [(f"passages: {s}", streams[s]) for s in STREAMS if streams[s]]
     rows += [(f"continued: {k}", n) for k, n in out["continued_detail"].items()]
     rows += [(f"split across pages: {k}", v) for k, v in out["split_detail"].items()]
     return rows

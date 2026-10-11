@@ -29,8 +29,14 @@ def _key(folio: int, side: str) -> int:
 
 
 def assign_strata(passages: list[dict], rows: list[dict]) -> dict[str, str]:
+    """A labelled stream (Ra'aya Meheimna, Midrash ha-Ne'lam, ...) is its own stratum; a main-stream
+    passage takes the strata.tsv range it falls in (the Idras), else "main"."""
     out = {}
     for p in passages:
+        stream = p.get("stream", "main")
+        if stream != "main":
+            out[p["id"]] = stream
+            continue
         k = _key(p["folio"], p["side"])
         s = "main"
         for r in rows:

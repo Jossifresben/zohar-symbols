@@ -1,7 +1,7 @@
 CREATE TABLE meta (key TEXT PRIMARY KEY, value TEXT NOT NULL);
 CREATE TABLE passage (
   id TEXT PRIMARY KEY, volume INTEGER NOT NULL, folio INTEGER NOT NULL, side TEXT NOT NULL,
-  para INTEGER NOT NULL, parasha TEXT NOT NULL, stratum TEXT NOT NULL,
+  para INTEGER NOT NULL, parasha TEXT NOT NULL, stream TEXT NOT NULL, stratum TEXT NOT NULL,
   text_ar TEXT NOT NULL, verse_ref TEXT, token_count INTEGER NOT NULL
 );
 CREATE TABLE token (

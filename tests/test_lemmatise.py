@@ -12,7 +12,7 @@ def test_tokenize_strips_punctuation():
 
 
 def test_override_wins(tmp_path):
-    passages = [{"id": "1.020a.01", "text_ar": "שמשא וסיהרא הוו"}]
+    passages = [{"id": "1.020a.001", "text_ar": "שמשא וסיהרא הוו"}]
     toks = lemmatise(passages, load_overrides(SEEDS), VENDOR, tmp_path)
     by_surface = {t["surface"]: t for t in toks}
     assert by_surface["וסיהרא"]["source"] == "override"
@@ -21,7 +21,7 @@ def test_override_wins(tmp_path):
 
 
 def test_unknown_word_kept_with_none(tmp_path):
-    passages = [{"id": "1.020a.01", "text_ar": "קקקקק"}]
+    passages = [{"id": "1.020a.001", "text_ar": "קקקקק"}]
     toks = lemmatise(passages, {}, VENDOR, tmp_path)
     assert toks[0]["root"] is None and toks[0]["confidence"] == 0.0 and toks[0]["source"] == "none"
 

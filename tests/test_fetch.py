@@ -25,7 +25,7 @@ def test_build_raw_from_fixture(tmp_path: Path):
     out = build_raw(pages)
     assert out["pages"][0]["revid"] == 5
     assert len(out["passages"]) == 4
-    assert out["passages"][0]["id"] == "1.020a.01"
+    assert out["passages"][0]["id"] == "1.020a.001"
 
 
 def _page(title, revid, *paras):
@@ -41,7 +41,7 @@ def test_folio_split_across_pages_is_renumbered():
     ]
     out = build_raw(pages)
     ids = [p["id"] for p in out["passages"]]
-    assert ids == ["1.020a.01", "1.020a.02", "1.020a.03", "1.020a.04"]
+    assert ids == ["1.020a.001", "1.020a.002", "1.020a.003", "1.020a.004"]
     assert [p["para"] for p in out["passages"]] == [1, 2, 3, 4]
     assert out["passages"][2]["parasha"] == "Noach"
     assert out["split_folios"] == 1
@@ -63,7 +63,7 @@ def test_within_page_continuation_listed_in_report():
     wt = ("<קטע התחלה=דף כ א/>\nאחד\n<קטע סוף=דף כ א/>\n=== כותרת ===\n"
           "<קטע התחלה=דף כ א/>\nשנים\n<קטע סוף=דף כ א/>\n")
     out = build_raw([("זוהר חלק ב", 1, "Bereshit", PageText("זוהר חלק ב", 1, "t", wt))])
-    assert [p["id"] for p in out["passages"]] == ["1.020a.01", "1.020a.02"]
+    assert [p["id"] for p in out["passages"]] == ["1.020a.001", "1.020a.002"]
     assert dict(report_rows(out))["continued: 1.020a"] == 2
 
 
@@ -76,3 +76,14 @@ def test_sources_md_is_stable_across_runs(tmp_path: Path):
     write_sources_md(build_raw(pages), b)
     assert a.read_text() == b.read_text()
     assert "Source revisions as of 2026-10-01T00:00:00Z" in a.read_text()
+
+
+def test_streams_numbered_after_main_across_pages():
+    a = PageText("א", 1, "t", "<קטע התחלה=דף כ א/>\nאחד\n<קטע סוף=דף כ א/>\n"
+                 '<קטע התחלה=רע"מ דף כ א/>\nרעיא\n<קטע סוף=רע"מ דף כ א/>\n')
+    b = PageText("ב", 2, "t", "<קטע התחלה=דף כ א/>\nשנים\n<קטע סוף=דף כ א/>\n")
+    out = build_raw([("א", 1, "Bereshit", a), ("ב", 1, "Noach", b)])
+    got = [(p["id"], p["stream"], p["text_ar"]) for p in out["passages"]]
+    assert got == [("1.020a.001", "main", "אחד"), ("1.020a.003", "raaya_meheimna", "רעיא"),
+                   ("1.020a.002", "main", "שנים")]
+    assert out["split_detail"] == {"1.020a": "א → ב"}  # the RM stream did not straddle pages
