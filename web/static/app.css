@@ -155,7 +155,7 @@ a.bar-row:hover{text-decoration:none}a.bar-row:hover .bar-label{color:var(--gold
 
 /* scholars / about */
 .card pre{white-space:pre-wrap;background:var(--bg,transparent);border:1px solid var(--border);border-radius:6px;padding:12px;overflow-x:auto}
-table.pairs{border-collapse:collapse;width:100%}.pairs th,.pairs td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--border)}
+table.pairs{border-collapse:collapse;width:100%}.pair-ar{color:var(--gold);margin-inline-start:6px;font-size:1.05em}.pairs th,.pairs td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--border)}
 .copy-btn{cursor:pointer}
 main>.card{margin-bottom:20px}
 

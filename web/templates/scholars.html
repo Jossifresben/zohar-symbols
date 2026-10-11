@@ -30,7 +30,7 @@
   {%- if pairs %}
   <table class="pairs"><thead><tr><th>{{ t('sch_col_a') }}</th><th>{{ t('sch_col_b') }}</th><th>{{ t('sch_col_together') }}</th><th>PMI</th></tr></thead><tbody>
   {%- for p in pairs %}
-    <tr><td><a href="{{ lang_url('symbol', sid=p.a) }}">{{ p.a_label }}</a></td><td><a href="{{ lang_url('symbol', sid=p.b) }}">{{ p.b_label }}</a></td><td>{{ p.passages_together|num }}</td><td>{{ '%.4f'|format(p.pmi) }}</td></tr>
+    <tr><td><a href="{{ lang_url('symbol', sid=p.a) }}">{{ p.a_label }}</a> <span class="heb pair-ar" lang="arc" dir="rtl">{{ p.a_ar }}</span></td><td><a href="{{ lang_url('symbol', sid=p.b) }}">{{ p.b_label }}</a> <span class="heb pair-ar" lang="arc" dir="rtl">{{ p.b_ar }}</span></td><td>{{ p.passages_together|num }}</td><td>{{ '%.4f'|format(p.pmi) }}</td></tr>
   {%- endfor %}
   </tbody></table>
   {%- else %}<p class="muted">{{ t('sch_no_pairs') }}</p>{%- endif %}

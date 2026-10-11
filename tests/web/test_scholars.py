@@ -75,3 +75,10 @@ def test_queries_new(app):
         assert len(queries.symbol_mentions("moon", "en")) == 5
         assert any(r["id"] == "moon" for r in queries.symbols_table("en"))
         assert queries.all_pairs() is not None and queries.alias_count() > 0
+
+
+def test_pairs_show_aramaic_labels(app):
+    from web import queries as q
+    with app.app_context():
+        ps = q.scholars_pairs(min_together=1, lang="es")
+        assert ps and all(p["a_ar"] and p["b_ar"] for p in ps)

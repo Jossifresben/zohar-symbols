@@ -231,9 +231,9 @@ def nearest_symbols(q: str, lang: str, k: int = 3) -> list[dict]:
 
 def scholars_pairs(min_together: int = 5, limit: int = 200, lang: str = "en") -> list[dict]:
     return [dict(a=r["symbol_a"], b=r["symbol_b"], a_label=_lab({"label_en": r["ae"], "label_es": r["as_"]}, lang),
-                 b_label=_lab({"label_en": r["be"], "label_es": r["bs"]}, lang),
+                 b_label=_lab({"label_en": r["be"], "label_es": r["bs"]}, lang), a_ar=r["aa"], b_ar=r["ba"],
                  passages_together=r["passages_together"], pmi=r["pmi"])
-            for r in rows("""select c.symbol_a, c.symbol_b, a.label_en ae, a.label_es as_, b.label_en be, b.label_es bs,
+            for r in rows("""select c.symbol_a, c.symbol_b, a.label_en ae, a.label_es as_, a.label_ar aa, b.label_en be, b.label_es bs, b.label_ar ba,
                                     c.passages_together, c.pmi
                              from cooccurrence c join symbol a on a.id=c.symbol_a join symbol b on b.id=c.symbol_b
                              where c.passages_together >= ? order by c.pmi desc, c.symbol_a, c.symbol_b limit ?""",
