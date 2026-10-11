@@ -135,3 +135,20 @@ def test_translation_shows_attribution_and_report_link(app, fixture_db):
     assert "The King and the Matronita" in html and "Claude Fable 5.1" in html
     assert "github.com/Jossifresben/zohar-symbols/issues/new?" in html and "Report a problem" in html
     con = sqlite3.connect(fixture_db); con.execute("delete from translation"); con.commit(); con.close()
+
+
+def test_passage_keys_panel(client):
+    html = client.get("/passage/1.020b.002").get_data(as_text=True)
+    assert "Keys to this passage" in html and 'class="keys-list"' in html
+    assert 'href="/symbol/matronita"' in html and 'href="/sefirah/malkhut"' in html
+    es = client.get("/es/passage/1.020b.002").get_data(as_text=True)
+    assert "Claves de este pasaje" in es and 'href="/es/sefirah/' in es
+
+
+def test_passage_keys_reading_order_and_sources(app):
+    from web import queries as q
+    with app.app_context():
+        keys = q.passage_keys("1.020b.002", "en")
+        assert keys and all(k["source"] in q.SEED_SOURCES and k["count"] >= 1 and k["forms"] for k in keys)
+        assert len({k["id"] for k in keys}) == len(keys)
+        assert q.passage_keys("9.999z.999", "en") == []

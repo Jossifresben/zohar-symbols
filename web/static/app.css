@@ -140,6 +140,15 @@ a.bar-row:hover{text-decoration:none}a.bar-row:hover .bar-label{color:var(--gold
 .para:target{scroll-margin-top:80px}
 .stream-h{margin:24px 0 8px}
 .folio-symbols{margin-top:32px}
+.keys{margin-top:32px;max-width:920px}
+.keys-intro{font-size:15px;line-height:1.5;margin:4px 0 14px;max-width:720px}
+.keys-list{list-style:none;padding:0;margin:0}
+.key{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.key-forms{font-size:20px;color:var(--gold);min-width:7em}
+.key-sym{font-weight:600}
+.key-node .heb{font-size:16px;margin-inline-start:4px}
+.key-src{font-size:13px;flex-basis:100%;padding-inline-start:0}
+@media (min-width:720px){.key-src{flex-basis:auto;margin-inline-start:auto}}
 .folio-nav{display:flex;justify-content:space-between;gap:16px;margin:32px 0}
 .folio-nav-top{margin:0 0 20px;font-size:14px}
 .folio-nav .next{margin-left:auto}

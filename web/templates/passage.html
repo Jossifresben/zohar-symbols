@@ -35,6 +35,24 @@
   {%- endfor %}
 </section>
 
+{%- if keys %}
+<section class="keys" aria-labelledby="keys-h">
+  <h2 id="keys-h" class="label">{{ t('keys_title') }}</h2>
+  <p class="muted keys-intro">{{ t('keys_intro') }}</p>
+  <ol class="keys-list">
+    {%- for k in keys %}
+    <li class="key">
+      <span class="heb key-forms" lang="arc" dir="rtl">{{ k.forms|join(' · ') }}</span>
+      <a class="key-sym" href="{{ lang_url('symbol', sid=k.id) }}">{{ k.label }}</a>{% if k.count > 1 %} <span class="muted">×{{ k.count }}</span>{% endif %}
+      <span class="key-arrow" aria-hidden="true">→</span>
+      <a class="key-node" href="{{ lang_url('node', nid=k.node) }}">{{ k.node_label }} <span class="heb" lang="he" dir="rtl">{{ k.node_ar }}</span></a>
+      <span class="key-src muted">{{ t('src_' ~ k.source) }}</span>
+    </li>
+    {%- endfor %}
+  </ol>
+</section>
+{%- endif %}
+
 <section class="folio-symbols">
   <h2 class="label">{{ t('symbols_in_folio') }}</h2>
   {{ chips(dict(chips=symbols, more=0, node=None)) }}

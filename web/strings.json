@@ -902,5 +902,29 @@
   "report_problem": {
     "en": "Report a problem",
     "es": "Señalar un error"
+  },
+  "keys_title": {
+    "en": "Keys to this passage",
+    "es": "Claves de este pasaje"
+  },
+  "keys_intro": {
+    "en": "The Zohar speaks in images, and each image points to a sefirah. These are the images in this passage, in reading order, with the sefirah each one usually stands for and who says so. A passage can shift an image to another sefirah, so read this as a starting key, not a verdict. Matching is done by code, not by the model.",
+    "es": "El Zohar habla con imágenes, y cada imagen apunta a una sefirá. Estas son las imágenes de este pasaje, en orden de lectura, con la sefirá que cada una suele representar y quién lo dice. Un pasaje puede desplazar una imagen a otra sefirá, así que tómalo como una clave de partida, no como un veredicto. La identificación la hace el código, no el modelo."
+  },
+  "src_cordovero_23": {
+    "en": "Cordovero, Pardes Rimonim, gate 23",
+    "es": "Cordovero, Pardes Rimonim, puerta 23"
+  },
+  "src_gikatilla": {
+    "en": "Gikatilla, Sha'arei Orah",
+    "es": "Gikatilla, Sha'arei Orá"
+  },
+  "src_zohar_usage": {
+    "en": "from the Zohar's own usage (this project's reading)",
+    "es": "según el uso del propio Zohar (lectura de este proyecto)"
+  },
+  "src_added": {
+    "en": "this project's assignment",
+    "es": "asignación de este proyecto"
   }
 }

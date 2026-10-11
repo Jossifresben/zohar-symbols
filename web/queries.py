@@ -123,6 +123,24 @@ def passage(pid: str, lang: str) -> dict | None:
                 mentions=[dict(position=m["position"], symbol_id=m["symbol_id"], matched_form=m["matched_form"], label=_lab(m, lang)) for m in ms])
 
 
+SEED_SOURCES = ["cordovero_23", "gikatilla", "zohar_usage", "added"]  # where a symbol's sefirah assignment comes from
+
+
+def passage_keys(pid: str, lang: str) -> list[dict]:
+    """The symbols of one passage in reading order (first mention), each with the forms matched in the text,
+    its sefirah and the source of that assignment. Read from the seed and the tagger, no model."""
+    out: dict[str, dict] = {}
+    for r in rows("""select m.symbol_id, m.matched_form, s.label_en, s.label_es, s.label_ar, s.kind, s.node, s.seed_source
+                     from mention m join symbol s on s.id=m.symbol_id where m.passage_id=? order by m.position""", (pid,)):
+        k = out.setdefault(r["symbol_id"], dict(id=r["symbol_id"], label=_lab(r, lang), label_ar=r["label_ar"], kind=r["kind"],
+                                                node=r["node"], node_label=t_node(r["node"], lang), node_ar=NODE_AR[r["node"]],
+                                                source=r["seed_source"], forms=[], count=0))
+        k["count"] += 1
+        if r["matched_form"] not in k["forms"]:
+            k["forms"].append(r["matched_form"])
+    return list(out.values())
+
+
 def folio(volume: int, fol: int, side: str, lang: str) -> list[dict]:
     ids = [r["id"] for r in rows("select id from passage where volume=? and folio=? and side=? order by para, id", (volume, fol, side))]
     return [passage(pid, lang) for pid in ids]
