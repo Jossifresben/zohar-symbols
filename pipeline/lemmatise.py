@@ -12,19 +12,56 @@ from .report import write_report
 from .version import TABLES_VERSION
 
 ROOT = Path(__file__).resolve().parent.parent
-_SPLIT = re.compile(r"[\s.,:;()\[\]\"'״׳]+")
+_HEB = "\u05d0-\u05ea"
+_HEB_RE = re.compile(f"[{_HEB}]")
+_SPLIT = re.compile(r"[\s.,:;()\[\]\"'\u05f4\u05f3]+")
+# a quote mark flanked by Hebrew letters is intra-word (gershayim); a single
+# trailing geresh after a Hebrew letter (ר', ר׳) belongs to the word too
+_GERSHAYIM = re.compile(f"(?<=[{_HEB}])[\"\u05f4](?=[{_HEB}])")
+_GERESH = re.compile(f"(?<=[{_HEB}])['\u05f3](?![{_HEB}])")
+_PROCLITICS = "ודבלכמש"
+_FINALS = str.maketrans("ךםןףץ", "כמנפצ")
 
 
 def tokenize(text: str) -> list[str]:
-    return [w for w in _SPLIT.split(text) if w]
+    """Split into words; keep Hebrew abbreviation marks (gershayim/geresh) inside words,
+    normalised to ״ and ׳; drop tokens with no Hebrew letter."""
+    text = _GERSHAYIM.sub("\ue000", text)  # private-use placeholders survive the split
+    text = _GERESH.sub("\ue001", text)
+    out = []
+    for w in _SPLIT.split(text):
+        w = w.replace("\ue000", "\u05f4").replace("\ue001", "\u05f3")
+        if w and _HEB_RE.search(w):
+            out.append(w)
+    return out
 
 
-def load_overrides(path: Path) -> dict[str, tuple[str, str | None]]:
+def proclitic_candidates(surface: str) -> list[str]:
+    """The surface itself, then with one and two leading proclitics stripped (remainder >= 2 chars)."""
+    cands = [surface]
+    if len(surface) >= 3 and surface[0] in _PROCLITICS:
+        cands.append(surface[1:])
+        if len(surface) >= 4 and surface[1] in _PROCLITICS:
+            cands.append(surface[2:])
+    return cands
+
+
+def load_overrides(path: Path) -> dict[str, tuple[str | None, str | None]]:
+    """surface -> (canonical Syriac root or None for a known non-lexical token, stem)."""
     out = {}
     with path.open(encoding="utf-8") as f:
         for r in csv.DictReader(f, delimiter="\t"):
+            surface = r["surface"].strip()
+            if surface in out:
+                raise ValueError(f"duplicate override surface: {surface!r}")
+            raw_root = (r.get("root") or "").strip().translate(_FINALS)
+            root = hebrew_to_syriac(raw_root) if raw_root else None
+            if root is not None and not all("\u0700" <= ch <= "\u074f" for ch in root):
+                raise ValueError(f"override root for {surface!r} is not pure Syriac: {raw_root!r}")
+            if raw_root and (root is None or len(root) != len(raw_root)):
+                raise ValueError(f"override root for {surface!r} has unconvertible letters: {raw_root!r}")
             stem = (r.get("stem") or "").strip() or None
-            out[r["surface"].strip()] = (hebrew_to_syriac(r["root"].strip()), stem)
+            out[surface] = (root, stem)
     return out
 
 
@@ -48,8 +85,9 @@ def lemmatise(passages: list[dict], overrides: dict, data_dir: Path, tmp_dir: Pa
     tokens = []
     for p in passages:
         for pos, surface in enumerate(tokenize(p["text_ar"])):
-            if surface in overrides:
-                root, stem = overrides[surface]
+            hit = next((c for c in proclitic_candidates(surface) if c in overrides), None)
+            if hit is not None:
+                root, stem = overrides[hit]
                 tokens.append(dict(passage_id=p["id"], position=pos, surface=surface, root=root,
                                    stem=stem, confidence=1.0, source="override"))
                 continue
