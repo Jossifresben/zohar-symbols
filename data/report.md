@@ -1,4 +1,4 @@
-# build 0.1.0-dev
+# build 0.1.0
 
 | item | value |
 |---|---|

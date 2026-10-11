@@ -10,7 +10,7 @@ Status: pipeline in development
 
 ## Data
 
-`data/tables.v*.json`, `data/report.md` and `data/SOURCES.md` are committed. `data/zohar.sqlite` is **not** (the full-Zohar database is ~200 MB, over GitHub's file limit); regenerate it with `uv run --no-sync python -m pipeline.run_all`.
+`data/tables.v*.json`, `data/report.md` and `data/SOURCES.md` are committed. `data/zohar.sqlite` is **not** (the full-Zohar database is ~65 MB; kept out of git to avoid churn in a binary file); regenerate it with `uv run --no-sync python -m pipeline.run_all`.
 
 ## Development setup
 
