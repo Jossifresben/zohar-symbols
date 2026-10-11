@@ -4,7 +4,7 @@ from pathlib import Path
 from pipeline.segment import segment_page
 from pipeline.lemmatise import lemmatise, load_overrides
 from pipeline.tag import load_kinnuyim, tag
-from pipeline.compute import cooccurrence, detect_states, assign_strata, surfaced_passages, resolve_counts, load_strata
+from pipeline.compute import compute_all
 from pipeline.build import build
 
 ROOT = Path(__file__).parent.parent
@@ -17,14 +17,7 @@ def _run(tmp: Path) -> bytes:
     tokens = lemmatise(passages, load_overrides(ROOT / "seeds" / "zohar_overrides.tsv"), ROOT / "vendor" / "atlas_roots", tmp / "w")
     syms = load_kinnuyim(ROOT / "seeds" / "kinnuyim.tsv")
     mentions = tag(tokens, syms)
-    cooc = cooccurrence(mentions, len(passages))
-    strata = assign_strata(passages, load_strata(ROOT / "seeds" / "strata.tsv"))
-    tbp = {}
-    for t in tokens:
-        tbp.setdefault(t["passage_id"], []).append(t)
-    computed = dict(cooccurrence=cooc, symbol_counts=resolve_counts(mentions, cooc, syms),
-                    states=detect_states(mentions, tokens, syms), strata=strata,
-                    surfaced={s.id: surfaced_passages(s.id, mentions, cooc, tbp, strata) for s in syms})
+    computed = compute_all(raw, tokens, mentions, syms)
     build(raw, tokens, mentions, computed, syms, tmp / "z.sqlite", tmp / "t.json")
     return (tmp / "t.json").read_bytes()
 

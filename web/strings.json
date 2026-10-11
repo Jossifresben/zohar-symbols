@@ -1,0 +1,12 @@
+{
+  "nav_symbols": {"en": "Symbols", "es": "Símbolos"},
+  "nav_sefirot": {"en": "Sefirot", "es": "Sefirot"},
+  "nav_read": {"en": "Read", "es": "Leer"},
+  "nav_ask": {"en": "Ask", "es": "Preguntar"},
+  "nav_scholars": {"en": "Scholars", "es": "Estudiosos"},
+  "footer_source": {"en": "Text: Hebrew Wikisource, Zohar (public domain). Every figure on this site is computed by deterministic code.", "es": "Texto: Wikisource hebreo, Zohar (dominio público). Cada cifra de este sitio la calcula código determinista."},
+  "footer_counts": {"en": "Counts are mentions in the corpus, not interpretations.", "es": "Los recuentos son menciones en el corpus, no interpretaciones."},
+  "footer_scholars": {"en": "For scholars: method and data", "es": "Para estudiosos: método y datos"},
+  "lang_en": {"en": "EN", "es": "EN"},
+  "lang_es": {"en": "ES", "es": "ES"}
+}

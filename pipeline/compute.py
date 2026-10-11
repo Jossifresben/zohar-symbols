@@ -175,6 +175,23 @@ def resolve_counts(mentions: list[dict], cooc: list[dict], symbols: list[Symbol]
     return {s.id: dict(raw=raw[s.id], resolved=resolved[s.id], passages=len(passages[s.id])) for s in symbols}
 
 
+def compute_all(raw: dict, tokens: list[dict], mentions: list[dict], symbols: list[Symbol]) -> dict:
+    """Everything compute.main writes, as one dict. Shared by main and the tests."""
+    strata = assign_strata(raw["passages"], load_strata(ROOT / "seeds" / "strata.tsv"))
+    cooc = cooccurrence(mentions, len(raw["passages"]))
+    tbp = defaultdict(list)
+    for t in tokens:
+        tbp[t["passage_id"]].append(t)
+    return dict(
+        tables_version=TABLES_VERSION,
+        cooccurrence=cooc,
+        symbol_counts=resolve_counts(mentions, cooc, symbols),
+        states=detect_states(mentions, tokens, symbols),
+        strata=dict(sorted(strata.items())),
+        surfaced={s.id: surfaced_passages(s.id, mentions, cooc, tbp, strata) for s in sorted(symbols, key=lambda s: s.id)},
+    )
+
+
 def main(argv=None) -> None:
     work = ROOT / "work"
     raw = json.loads((ROOT / "raw" / f"zohar.v{TABLES_VERSION}.json").read_text(encoding="utf-8"))
@@ -182,19 +199,9 @@ def main(argv=None) -> None:
     mentions = [json.loads(l) for l in (work / "mentions.jsonl").open(encoding="utf-8")]
     syms = load_kinnuyim(ROOT / "seeds" / "kinnuyim.tsv")
     seed_ids = {s.id for s in syms}
-    strata = assign_strata(raw["passages"], load_strata(ROOT / "seeds" / "strata.tsv"))
-    cooc = cooccurrence(mentions, len(raw["passages"]))
-    tbp = defaultdict(list)
-    for t in tokens:
-        tbp[t["passage_id"]].append(t)
-    out = dict(
-        tables_version=TABLES_VERSION,
-        cooccurrence=cooc,
-        symbol_counts=resolve_counts(mentions, cooc, syms),
-        states=detect_states(mentions, tokens, syms),
-        strata=dict(sorted(strata.items())),
-        surfaced={s.id: surfaced_passages(s.id, mentions, cooc, tbp, strata) for s in sorted(syms, key=lambda s: s.id)},
-    )
+    out = compute_all(raw, tokens, mentions, syms)
+    strata = out["strata"]
+    cooc = out["cooccurrence"]
     (work / "computed.json").write_text(json.dumps(out, ensure_ascii=False, indent=1, sort_keys=True), encoding="utf-8")
     write_report(work / "compute.report.md", "compute", [
         ("pairs", len(cooc)), ("states", len(out["states"])),
