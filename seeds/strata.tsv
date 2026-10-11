@@ -1,0 +1,13 @@
+# ranges are conventional; see spec §5
+volume	from_folio	from_side	to_folio	to_side	stratum	source
+3	127	b	145	a	idra_rabba	Tishby
+3	287	b	296	b	idra_zuta	Tishby
+1	97	a	140	a	midrash_haneelam	Tishby
+2	4	a	5	b	midrash_haneelam	Tishby
+2	14	a	22	a	midrash_haneelam	Tishby
+1	74	a	75	b	sitrei_torah	Tishby
+1	76	b	80	b	sitrei_torah	Tishby
+1	88	a	90	a	sitrei_torah	Tishby
+3	215	b	283	a	raaya_meheimna	Tishby
+2	114	a	121	a	raaya_meheimna	Tishby
+3	97	a	104	a	raaya_meheimna	Tishby
