@@ -966,5 +966,37 @@
   "sch_repo": {
     "en": "Code and data",
     "es": "Código y datos"
+  },
+  "meta_desc": {
+    "en": "A computed dictionary of the Zohar's symbols (kinnuyim): the moon, the river, the bride, gold. Where each image appears, what it appears with, and the passages, in English and Spanish.",
+    "es": "Diccionario computado de los símbolos del Zohar (kinnuyim): la luna, el río, la novia, el oro. Dónde aparece cada imagen, con qué otras, y los pasajes, en español e inglés."
+  },
+  "meta_desc_symbol": {
+    "en": "{label} ({ar}) in the Zohar, a symbol of {node}. {gloss}",
+    "es": "{label} ({ar}) en el Zohar, símbolo de {node}. {gloss}"
+  },
+  "meta_desc_node": {
+    "en": "{label} ({ar}): the Zohar's symbols that point to this sefirah, with their counts and passages.",
+    "es": "{label} ({ar}): los símbolos del Zohar que apuntan a esta sefirá, con sus recuentos y pasajes."
+  },
+  "meta_desc_passage": {
+    "en": "{cite}: the Aramaic text of the Zohar, folio by folio, with the symbols it uses.",
+    "es": "{cite}: el texto arameo del Zohar, folio a folio, con los símbolos que usa."
+  },
+  "meta_desc_tree": {
+    "en": "The Tree of Life as a map to the Zohar's symbols: the ten sefirot and the images that point to each.",
+    "es": "El Árbol de la Vida como mapa de los símbolos del Zohar: las diez sefirot y las imágenes que apuntan a cada una."
+  },
+  "meta_desc_scholars": {
+    "en": "Method, provenance, data and citation for Zohar Symbols: how every count is computed, how translations and interpretations are made, exports and DOI.",
+    "es": "Método, procedencia, datos y cita de Símbolos del Zohar: cómo se calcula cada cifra, cómo se hacen las traducciones e interpretaciones, exportaciones y DOI."
+  },
+  "meta_desc_about": {
+    "en": "What Zohar Symbols is, who made it, and how to read the Zohar through its images.",
+    "es": "Qué es Símbolos del Zohar, quién lo hizo y cómo leer el Zohar a través de sus imágenes."
+  },
+  "og_alt": {
+    "en": "Zohar Symbols: a computed dictionary of the Zohar's symbols",
+    "es": "Símbolos del Zohar: diccionario computado de los símbolos del Zohar"
   }
 }

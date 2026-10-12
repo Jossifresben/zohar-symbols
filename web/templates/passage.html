@@ -2,6 +2,7 @@
 {% from "_chips.html" import chips %}
 {% from "_translation.html" import translation, interpretation_body with context %}
 {% block title %}{{ p.citation }} · Zohar{% endblock %}
+{% block description %}{% if p.translation %}{{ p.citation }}: {{ p.translation|truncate(150, True, '…') }}{% else %}{{ t('meta_desc_passage', cite=p.citation) }}{% endif %}{% endblock %}
 {% block content %}
 {% macro folio_nav(pos) %}
 <nav class="folio-nav folio-nav-{{ pos }}" aria-label="{{ t('nav_folio') }}{% if pos == 'top' %} ({{ t('nav_top') }}){% endif %}">

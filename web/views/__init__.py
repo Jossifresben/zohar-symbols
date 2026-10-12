@@ -138,6 +138,7 @@ def register(app) -> None:
 
     @app.errorhandler(404)
     def _not_found(_e):
+        g.noindex = True   # no canonical/hreflang on error pages (seo.page_url)
         if "/passage/" in request.path:
             return render_template("404.html", message="passage_not_found", suggestions=[],
                                    passage_suggestions=_passage_suggestions(request.path.rstrip("/").rsplit("/", 1)[-1], g.lang)), 404
@@ -152,5 +153,7 @@ def register(app) -> None:
         row = db.one("select value from meta where key='tables_version'")
         return jsonify(ok=True, tables_version=row["value"] if row else None, cache_warm_ms=app.config["CACHE_WARM_MS"])
 
+    from .. import seo
+    seo.register(app)
     app.register_blueprint(bp)
     app.register_blueprint(bp, url_prefix="/es", name="site_es")

@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% from "_chips.html" import chips with context %}
 {% block title %}{{ n.label }} · {{ n.label_ar }} · Zohar{% endblock %}
+{% block description %}{{ t('meta_desc_node', label=n.label, ar=n.label_ar) }}{% endblock %}
 {% block content %}
 <section class="sym-head node-head">
   <h1 class="display">{{ n.label }} <span class="heb gold" lang="he" dir="rtl">{{ n.label_ar }}</span></h1>

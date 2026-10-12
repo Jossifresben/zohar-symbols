@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block title %}{{ s.label }} · {{ s.label_ar }} · Zohar{% endblock %}
+{% block description %}{{ t('meta_desc_symbol', label=s.label, ar=s.label_ar, node=s.node_label, gloss=s.gloss) }}{% endblock %}
 {% block content %}
 {% macro npass(n) %}{{ t('passages_one') if n == 1 else t('passages_n', n=n|num) }}{% endmacro %}
 <nav class="breadcrumb muted" aria-label="{{ t('breadcrumb') }}">
