@@ -588,8 +588,8 @@
     "es": "Para especialistas"
   },
   "sch_intro": {
-    "en": "Method, provenance, data and citation. No number on this site is produced by a model: deterministic code counts, a model only translates and glosses, and every step is listed here.",
-    "es": "Método, procedencia, datos y cita. Ningún número de este sitio lo produce un modelo: cuenta un código determinista, el modelo solo traduce y glosa, y cada paso se detalla aquí."
+    "en": "Method, provenance, data and citation. No number on this site is produced by a model: deterministic code counts, a model only translates and interprets, and every step is listed here.",
+    "es": "Método, procedencia, datos y cita. Ningún número de este sitio lo produce un modelo: cuenta un código determinista, el modelo solo traduce e interpreta, y cada paso se detalla aquí."
   },
   "sch_method_h": {
     "en": "Method",

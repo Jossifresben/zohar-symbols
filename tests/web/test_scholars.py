@@ -96,3 +96,10 @@ def test_scholars_links_repo_and_doi(client):
     html = client.get("/scholars").get_data(as_text=True)
     assert 'href="https://github.com/Jossifresben/zohar-symbols"' in html and 'href="https://doi.org/10.5281/zenodo.23305097"' in html
     assert "Código y datos" in client.get("/es/scholars").get_data(as_text=True)
+
+
+def test_method_docs_are_current():
+    """docs/METHOD*.md are generated from the Scholars strings; regenerate with `python -m web.method_doc`."""
+    from web import method_doc
+    for lang, path in method_doc.OUT.items():
+        assert path.read_text(encoding="utf-8") == method_doc.render(lang), f"{path.name} is stale"
