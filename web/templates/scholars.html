@@ -20,6 +20,12 @@
       conf_high=sp('conf_high', counts.conf_high))|safe }}</p>
   <p>{{ t('sch_p_cav') }}</p>
 </section>
+<section class="card" id="model-text"><h2 class="label">{{ t('sch_model_h') }}</h2>
+  {%- for k in ['translate','interpret','checks','status'] %}
+  {%- set m = t('sch_x_' ~ k, translated=counts.translated|num, interpreted=counts.interpreted|num) %}{% set i = m.find('. ') + 1 %}
+  <p><strong>{{ m[:i] }}</strong>{{ m[i:] }}</p>
+  {%- endfor %}
+</section>
 <section class="card" id="tables"><h2 class="label">{{ t('sch_tables_h') }}</h2>
   <p>{{ t('sch_t_version') }}: <code>{{ meta.tables_version }}</code><br>{{ t('sch_t_built') }}: <code>{{ meta.built_at }}</code><br>
   {{ t('sch_t_revids') }}: <code>{{ revids }}</code></p>

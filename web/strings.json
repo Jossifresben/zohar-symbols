@@ -946,5 +946,25 @@
   "font_standard": {
     "en": "Standard",
     "es": "Estándar"
+  },
+  "sch_model_h": {
+    "en": "Translations and interpretations",
+    "es": "Traducciones e interpretaciones"
+  },
+  "sch_x_translate": {
+    "en": "Translations. {translated} surfaced passages (the strongest passages of each symbol, deduplicated) are translated from the Aramaic into English and into Spanish, each language directly from the Aramaic, by Claude Fable 5.1 (claude-fable-5-1) through Anthropic's Batch API. The model is given the passage, two paragraphs on each side for context, the verse under comment and a glossary of every symbol label, so the images keep the dictionary's names. It is told to keep images as images (\"the moon\" stays \"the moon\") and not to decode them; Teshuvah keeps its name, glossed as \"the return of the he\".",
+    "es": "Traducciones. {translated} pasajes destacados (los pasajes más fuertes de cada símbolo, sin duplicados) se traducen del arameo al inglés y al español, cada lengua directamente desde el arameo, con Claude Fable 5.1 (claude-fable-5-1) mediante la Batch API de Anthropic. El modelo recibe el pasaje, dos párrafos a cada lado como contexto, el versículo comentado y un glosario con la etiqueta de cada símbolo, para que las imágenes conserven los nombres del diccionario. Se le pide que mantenga las imágenes como imágenes («la luna» sigue siendo «la luna») y que no las descifre; Teshuvá conserva su nombre, glosado como «el retorno de la he»."
+  },
+  "sch_x_interpret": {
+    "en": "Interpretations. Under {interpreted} of those translations, \"What this passage means\" is a plain-language reading of about 120–200 words in each language (some run longer), by the same model. It is given the passage, its neighbours, our English translation and the passage's keys (each image and the sefirah it usually stands for), and asked to say what happens, what the images stand for and why it matters; to gloss every technical term; to say so where a passage is open; and not to use later Kabbalistic terms (partzufim, tzimtzum) unless the passage itself does. It is given no commentary and cites none: in a blind pilot, readings written with the classical commentaries Ohr HaChamah and Mikdash Melekh as background were not preferred to plain ones. The model declined one passage (III 128a, Idra Rabba), which has none.",
+    "es": "Interpretaciones. Bajo {interpreted} de esas traducciones, «Qué significa este pasaje» es una lectura en lenguaje llano de unas 120–200 palabras en cada lengua (algunas son más largas), del mismo modelo. Recibe el pasaje, sus vecinos, nuestra traducción inglesa y las claves del pasaje (cada imagen y la sefirá que suele representar), y se le pide que diga qué ocurre, qué representan las imágenes y por qué importa; que explique cada término técnico; que lo diga cuando un pasaje queda abierto; y que no use términos cabalísticos posteriores (partzufim, tzimtzum) salvo que el pasaje los use. No recibe ningún comentario ni cita ninguno: en una prueba a ciegas, las lecturas escritas con los comentarios clásicos Or HaJamá y Mikdash Mélej como trasfondo no fueron preferidas a las simples. El modelo declinó un pasaje (III 128a, Idra Rabá), que no tiene interpretación."
+  },
+  "sch_x_checks": {
+    "en": "Checks and provenance. Code, not the model, checks every output: its shape, its length, and that it uses no later terms and names no commentator. Each row stores the model id, the prompt version, the date and a hash of the Aramaic it was made from; if that text changes, the row is dropped at the next build. Hand corrections go into data/translation_overrides.tsv and data/interpretation_overrides.tsv and replace the model text. Every translation and interpretation has a \"Report a problem\" link.",
+    "es": "Controles y procedencia. Es el código, no el modelo, el que revisa cada resultado: su forma, su extensión, y que no use términos posteriores ni nombre a ningún comentarista. Cada fila guarda el id del modelo, la versión del prompt, la fecha y un hash del arameo del que se hizo; si ese texto cambia, la fila se descarta en la siguiente construcción. Las correcciones manuales van en data/translation_overrides.tsv y data/interpretation_overrides.tsv y sustituyen al texto del modelo. Cada traducción e interpretación tiene un enlace «Señalar un error»."
+  },
+  "sch_x_status": {
+    "en": "Status. None of this has been reviewed by specialists. Read the interpretations as one informed reading, not as the tradition's verdict. The prompts are in the repository (pipeline/translate.py, pipeline/interpret.py).",
+    "es": "Estado. Nada de esto lo han revisado especialistas. Lee las interpretaciones como una lectura informada, no como el veredicto de la tradición. Los prompts están en el repositorio (pipeline/translate.py, pipeline/interpret.py)."
   }
 }

@@ -256,7 +256,9 @@ def token_shares() -> dict:
 
 def passage_totals() -> dict:
     r = one("select count(*) passages, count(distinct volume||'.'||folio||side) sides from passage")
-    return dict(passages=r["passages"], sides=r["sides"])
+    tr = one("select count(distinct passage_id) n from translation")
+    it = one("select count(distinct passage_id) n from interpretation")
+    return dict(passages=r["passages"], sides=r["sides"], translated=tr["n"], interpreted=it["n"])
 
 
 def alias_split() -> dict:

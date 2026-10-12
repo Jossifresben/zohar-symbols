@@ -82,3 +82,11 @@ def test_pairs_show_aramaic_labels(app):
     with app.app_context():
         ps = q.scholars_pairs(min_together=1, lang="es")
         assert ps and all(p["a_ar"] and p["b_ar"] for p in ps)
+
+
+def test_scholars_model_text_card(client):
+    html = client.get("/scholars").get_data(as_text=True)
+    assert 'id="model-text"' in html and "Translations and interpretations" in html
+    assert "<strong>Interpretations.</strong>" in html and "Ohr HaChamah" in html
+    es = client.get("/es/scholars").get_data(as_text=True)
+    assert "Traducciones e interpretaciones" in es and "<strong>Interpretaciones.</strong>" in es
