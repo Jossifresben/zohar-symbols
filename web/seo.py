@@ -4,7 +4,7 @@ from flask import Response, g, request, url_for
 from . import db, queries
 
 SITE = "https://zohar.digital"
-STATIC_PAGES = ["home", "tree", "scholars", "about"]
+STATIC_PAGES = ["home", "tree", "idrot", "scholars", "about"]
 
 
 def page_url(lang: str) -> str | None:

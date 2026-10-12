@@ -101,7 +101,7 @@ def _passage_suggestions(pid: str, lang: str) -> list[dict]:
 
 
 def register(app) -> None:
-    from . import api, ask, home, nodes, passages, scholars, symbols, tree  # noqa: F401  (decorate bp)
+    from . import api, ask, home, idrot, nodes, passages, scholars, symbols, tree  # noqa: F401  (decorate bp)
 
     app.jinja_env.filters["highlight"] = highlight
     app.jinja_env.filters["verse_ref"] = verse_ref

@@ -277,6 +277,8 @@ def main(argv=None) -> None:
     r.add_argument("name")
     fu = sub.add_parser("full", help="plain requests for every surfaced passage not yet in cc_results.jsonl")
     fu.add_argument("--name", default="full")
+    fu.add_argument("--stratum", help="instead: every translated passage of this stratum with no interpretation yet")
+    fu.add_argument("--min-tokens", type=int, default=12)
     fu.add_argument("--submit", action="store_true")
     ch = sub.add_parser("chunks")
     ch.add_argument("--size", type=int, default=20)
@@ -317,7 +319,14 @@ def main(argv=None) -> None:
     elif a.cmd == "full":
         done = {json.loads(l)["passage_id"] for l in (WORK / "cc_results.jsonl").open(encoding="utf-8")} \
             if (WORK / "cc_results.jsonl").exists() else set()
-        reqs = [build_request(conn, pid, "plain") for pid in surfaced_ids(conn) if pid not in done]
+        if a.stratum:
+            ids = [r[0] for r in conn.execute(
+                "select p.id from passage p where p.stratum = ? and p.token_count >= ? "
+                "and p.id in (select passage_id from translation) and p.id not in (select passage_id from interpretation) "
+                "order by p.volume, p.folio, p.side, p.para, p.id", (a.stratum, a.min_tokens))]
+        else:
+            ids = [pid for pid in surfaced_ids(conn) if pid not in done]
+        reqs = [build_request(conn, pid, "plain") for pid in ids]
         (WORK / f"{a.name}_requests.json").write_text(json.dumps(reqs, ensure_ascii=False), encoding="utf-8")
         print(f"{len(reqs)} requests ({len(done)} already done) -> {a.name}")
         if a.submit:

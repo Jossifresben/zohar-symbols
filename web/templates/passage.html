@@ -15,7 +15,8 @@
   <p class="muted">
     {%- if p.parasha %}{{ p.parasha }}{% endif %}
     {%- if p.stream != 'main' %} · {{ t('stream_' ~ p.stream) }}{% endif %}
-    {%- if p.stratum not in ('main', p.stream) %} · {{ t('stratum_' ~ p.stratum) }}{% endif %}
+    {%- if p.stratum in ('idra_rabba', 'idra_zuta') %} · <a href="{{ lang_url('idrot') }}#{{ p.stratum }}">{{ t('stratum_' ~ p.stratum) }}</a>
+    {%- elif p.stratum not in ('main', p.stream) %} · {{ t('stratum_' ~ p.stratum) }}{% endif %}
     {%- if p.verse_ref %} · {{ t('on_verse', ref=p.verse_ref|verse_ref) }}{% endif %}
   </p>
 </section>

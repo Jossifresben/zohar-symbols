@@ -225,6 +225,10 @@ def main(argv=None) -> None:
     rs.add_argument("--symbol", required=True)
     rs.add_argument("--name", required=True)
     rs.add_argument("--submit", action="store_true")
+    st = sub.add_parser("stratum", help="translate every untranslated passage of one stratum (e.g. idra_zuta)")
+    st.add_argument("--stratum", required=True)
+    st.add_argument("--name", required=True)
+    st.add_argument("--submit", action="store_true")
     f = sub.add_parser("full")
     f.add_argument("--name", required=True)
     f.add_argument("--range", default="0:")
@@ -270,6 +274,18 @@ def main(argv=None) -> None:
         reqs = [build_request(conn, pid, lang, EFFORT, system) for pid in ids for lang in LANGS]
         (WORK / f"{a.name}_requests.json").write_text(json.dumps(reqs, ensure_ascii=False), encoding="utf-8")
         print(f"{len(reqs)} requests ({len(ids)} passages) -> {a.name}")
+        if a.submit:
+            bid = submit(reqs)
+            (WORK / f"{a.name}_batch_id").write_text(bid)
+            print(f"submitted batch {bid}")
+    elif a.cmd == "stratum":
+        system = system_blocks(conn, cache=False)
+        ids = [r[0] for r in conn.execute(
+            "select id from passage where stratum = ? and id not in (select passage_id from translation) "
+            "order by volume, folio, side, para, id", (a.stratum,))]
+        reqs = [build_request(conn, pid, lang, EFFORT, system) for pid in ids for lang in LANGS]
+        (WORK / f"{a.name}_requests.json").write_text(json.dumps(reqs, ensure_ascii=False), encoding="utf-8")
+        print(f"{len(reqs)} requests ({len(ids)} passages of {a.stratum}) -> {a.name}")
         if a.submit:
             bid = submit(reqs)
             (WORK / f"{a.name}_batch_id").write_text(bid)

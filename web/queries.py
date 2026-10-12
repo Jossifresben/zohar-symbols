@@ -297,6 +297,29 @@ def all_pairs() -> list[dict]:
             for r in rows("select symbol_a, symbol_b, passages_together, pmi from cooccurrence order by pmi desc, symbol_a, symbol_b")]
 
 
+IDROT = ["idra_rabba", "idra_zuta"]
+IDRA_AR = {"idra_rabba": "אדרא רבא", "idra_zuta": "אדרא זוטא"}
+
+
+def idra(stratum: str, lang: str) -> dict | None:
+    """One Idra: its range, counts, most-mentioned symbols and its translated passages in reading order."""
+    order = "order by volume, folio, side, para, id"
+    ps = rows(f"select id, volume, folio, side from passage where stratum=? {order}", (stratum,))
+    if not ps:
+        return None
+    first, last = ps[0], ps[-1]
+    top = rows("""select s.id, s.kind, s.label_en, s.label_es, s.label_ar, count(*) n from mention m
+                  join passage p on p.id=m.passage_id join symbol s on s.id=m.symbol_id
+                  where p.stratum=? group by s.id order by n desc, s.id limit 12""", (stratum,))
+    read = rows(f"""select p.id, p.volume, p.folio, p.side, t.text from passage p join translation t on t.passage_id=p.id
+                    where p.stratum=? and t.lang=? {order.replace('order by ', 'order by p.')}""", (stratum, lang))
+    return dict(stratum=stratum, name_ar=IDRA_AR[stratum], passages=len(ps), translated=len(read),
+                first_id=first["id"], first_cite=cite.citation(first["volume"], first["folio"], first["side"]),
+                last_cite=cite.citation(last["volume"], last["folio"], last["side"]),
+                top_symbols=[dict(id=r["id"], kind=r["kind"], label=_lab(r, lang), label_ar=r["label_ar"], size=16) for r in top],
+                read=[dict(id=r["id"], cite=cite.citation(r["volume"], r["folio"], r["side"]), text=r["text"]) for r in read])
+
+
 LANGS = ("en", "es")
 
 

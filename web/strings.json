@@ -1030,5 +1030,49 @@
   "title_passage_ar": {
     "en": "{cite}: the Aramaic text and its symbols",
     "es": "{cite}: el texto arameo y sus símbolos"
+  },
+  "idrot_title": {
+    "en": "The Idrot: the two Assemblies of the Zohar",
+    "es": "Las Idrot: las dos Asambleas del Zohar"
+  },
+  "idrot_h1": {
+    "en": "The Idrot",
+    "es": "Las Idrot"
+  },
+  "meta_desc_idrot": {
+    "en": "The Idra Rabba and the Idra Zuta, the two Assemblies of the Zohar: what they are, the images they use, and their passages in English and Spanish.",
+    "es": "La Idra Rabá y la Idra Zutá, las dos Asambleas del Zohar: qué son, las imágenes que usan y sus pasajes en español e inglés."
+  },
+  "idrot_intro": {
+    "en": "Twice the Zohar gathers Rabbi Shimon and his companions in an idra, an assembly, to reveal its deepest teaching: the divine as a face, described feature by feature. These are the two Assemblies, with the images they use most and the passages you can read.",
+    "es": "Dos veces el Zohar reúne a Rabí Shimón y sus compañeros en una idra, una asamblea, para revelar su enseñanza más profunda: lo divino como un rostro, descrito rasgo a rasgo. Estas son las dos Asambleas, con las imágenes que más usan y los pasajes que puedes leer."
+  },
+  "idrot_counts": {
+    "en": "{passages} passages · {translated} translated",
+    "es": "{passages} pasajes · {translated} traducidos"
+  },
+  "idrot_about_idra_rabba": {
+    "en": "The Great Assembly. Rabbi Shimon gathers his companions in a field and opens what had been sealed. One by one they describe the Ancient Holy One and Ze'eir Anpin: the skull, the hair, the eyes, the beard and its arrangements. At its close three of the companions die in rapture.",
+    "es": "La Gran Asamblea. Rabí Shimón reúne a sus compañeros en un campo y abre lo que estaba sellado. Uno a uno describen al Anciano Santo y a Zeer Anpín: el cráneo, el cabello, los ojos, la barba y sus disposiciones. Al final, tres de los compañeros mueren en éxtasis."
+  },
+  "idrot_about_idra_zuta": {
+    "en": "The Lesser Assembly: Rabbi Shimon's last day. He gathers the companions who remain and reveals what he had held back, returning to the same divine faces. He dies in the middle of a word, on \"life\", and the house fills with fire.",
+    "es": "La Pequeña Asamblea: el último día de Rabí Shimón. Reúne a los compañeros que quedan y revela lo que se había reservado, volviendo a los mismos rostros divinos. Muere en mitad de una palabra, en «vida», y la casa se llena de fuego."
+  },
+  "idrot_start": {
+    "en": "Start reading at {cite}",
+    "es": "Empezar a leer en {cite}"
+  },
+  "idrot_images": {
+    "en": "Its images",
+    "es": "Sus imágenes"
+  },
+  "idrot_translated": {
+    "en": "Translated passages",
+    "es": "Pasajes traducidos"
+  },
+  "nav_idrot": {
+    "en": "Idrot",
+    "es": "Idrot"
   }
 }

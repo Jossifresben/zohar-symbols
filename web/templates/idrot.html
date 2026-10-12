@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% from "_chips.html" import chips with context %}
+{% block title %}{{ t('idrot_title') }} · {{ t('site_title') }}{% endblock %}
+{% block description %}{{ t('meta_desc_idrot') }}{% endblock %}
+{% block content %}
+<section class="sym-head"><h1 class="display">{{ t('idrot_h1') }}</h1><p class="intro">{{ t('idrot_intro') }}</p></section>
+{%- for d in idrot %}
+<section class="card idra" id="{{ d.stratum }}">
+  <h2 class="display idra-h">{{ t('stratum_' ~ d.stratum) }} <span class="heb gold" lang="arc" dir="rtl">{{ d.name_ar }}</span></h2>
+  <p class="muted">{{ d.first_cite }}–{{ d.last_cite }} · {{ t('idrot_counts', passages=d.passages|num, translated=d.translated|num) }}</p>
+  <p>{{ t('idrot_about_' ~ d.stratum) }}</p>
+  <p><a class="idra-start" href="{{ passage_url(d.first_id) }}">{{ t('idrot_start', cite=d.first_cite) }} →</a></p>
+  <h3 class="label">{{ t('idrot_images') }}</h3>
+  {{ chips(dict(chips=d.top_symbols, more=0, node=None)) }}
+  {%- if d.read %}
+  <details class="idra-read">
+  <summary class="label">{{ t('idrot_translated') }} ({{ d.translated|num }})</summary>
+  <ol class="idra-list">
+    {%- for r in d.read %}
+    <li><a class="pc-cite" href="{{ passage_url(r.id) }}">{{ r.cite }}</a> <span class="muted">{{ r.text|truncate(110, True, '…') }}</span></li>
+    {%- endfor %}
+  </ol>
+  </details>
+  {%- endif %}
+</section>
+{%- endfor %}
+{% endblock %}

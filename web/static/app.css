@@ -181,6 +181,12 @@ a.bar-row:hover{text-decoration:none}a.bar-row:hover .bar-label{color:var(--gold
 .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
 .copy-btn{min-height:44px}
 
+/* idrot */
+.idra{margin-bottom:24px}.idra-h{font-size:32px;margin:0 0 4px}.idra-h .heb{font-size:26px;margin-inline-start:10px}
+.idra h3{margin:20px 0 8px}.idra-start{font-weight:600}
+.idra-read{margin-top:20px}.idra-read summary{cursor:pointer;min-height:44px;display:flex;align-items:center}
+.idra-list{padding-inline-start:20px;margin:0}.idra-list li{margin:6px 0;line-height:1.45}
+
 /* scholars / about */
 .card pre{white-space:pre-wrap;background:var(--bg,transparent);border:1px solid var(--border);border-radius:6px;padding:12px;overflow-x:auto}
 table.pairs{border-collapse:collapse;width:100%}.pair-ar{color:var(--gold);margin-inline-start:6px;font-size:1.05em}.pairs th,.pairs td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--border)}
