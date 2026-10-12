@@ -1,7 +1,12 @@
 # Changelog
 
-## unreleased
+## release 0.1.1 — 2026-10-12 (zohar.digital)
 - Interpretations: "What this passage means" / "Qué significa este pasaje" under the translation of 677 passages, EN and ES, by Claude Fable 5.1 (prompt i2), labelled as inferred, not a traditional commentary and not reviewed; same provenance, staleness check, overrides (`data/interpretation_overrides.tsv`) and report link as the translations. $33.84 including the pilot. One Idra Rabba passage (III 128a) was refused and has none.
+- Interpretations also on symbol-page passage cards (collapsed); Scholars card on how translations and interpretations are made; repository and DOI linked on Scholars.
+- Hebrew font choice: Standard (Frank Ruhl Libre) or Rashi (Noto Rashi Hebrew), remembered per reader.
+- Phone layout: two-row header, no sideways scrolling in either language, scrollable pairs table, 44px tap targets.
+- Author and ORCID in the footer; home line "Every number here is counted…" removed.
+- docs/METHOD.md generated from the Scholars text; README in English; DOI badge fixed.
 
 ## release 0.1.0 — 2026-10-11 (zohar.digital)
 - First public release: the site at https://zohar.digital, bilingual EN/ES, on tables 0.1.0 (below).

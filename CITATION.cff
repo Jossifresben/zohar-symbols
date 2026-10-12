@@ -6,8 +6,8 @@ authors:
     given-names: "Jose"
     orcid: "https://orcid.org/0009-0000-2026-0836"
     affiliation: "SomosUno Digital, Madrid"
-version: 0.1.0
-date-released: 2026-10-11
+version: 0.1.1
+date-released: 2026-10-12
 url: "https://zohar.digital"
 repository-code: "https://github.com/Jossifresben/zohar-symbols"
 license: MIT

@@ -69,7 +69,7 @@ uv run --no-sync flask --app web run --port 5055   # http://localhost:5055
 
 ## Cite
 
-Fresco Benaim, Jose. (2026). *Zohar Symbols: a computed dictionary of the Zohar's kinnuyim* (v0.1.0). Zenodo. https://doi.org/10.5281/zenodo.23305097
+Fresco Benaim, Jose. (2026). *Zohar Symbols: a computed dictionary of the Zohar's kinnuyim* (v0.1.1). Zenodo. https://doi.org/10.5281/zenodo.23305097
 
 See also [CITATION.cff](CITATION.cff). The concept DOI always resolves to the latest version.
 
