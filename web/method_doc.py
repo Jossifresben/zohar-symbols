@@ -59,7 +59,8 @@ def render(lang: str) -> str:
     lines += [f"- `https://zohar.digital{path}`: {t(key, lang)}" for path, key in EXPORTS]
     lines += ["", t("sch_e_symbol", lang), "", f"## {t('sch_cite_h', lang)}", ""]
     for k in ("bibtex", "chicago", "sbl"):
-        lines += [f"**{t('sch_cite_' + k, lang)}**", "", "```", fmt[k], "```", ""]
+        head = t(f"sch_cite_{k}", lang)
+        lines += [f"**{head}**", "", "```", fmt[k], "```", ""]
     lines += [f"## {t('sch_caveat_h', lang)}", "", t("caveat", lang), "", f"## {t('sch_lic_h', lang)}", "", t("sch_lic_text", lang), ""]
     return "\n".join(lines)
 
