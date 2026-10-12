@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% from "_chips.html" import chips with context %}
-{% block title %}{{ n.label }} · {{ n.label_ar }} · Zohar{% endblock %}
+{% block title %}{{ t('title_node', label=n.label, ar=n.label_ar) }} · {{ t('site_title') }}{% endblock %}
 {% block description %}{{ t('meta_desc_node', label=n.label, ar=n.label_ar) }}{% endblock %}
 {% block content %}
 <section class="sym-head node-head">

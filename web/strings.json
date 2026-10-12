@@ -998,5 +998,37 @@
   "og_alt": {
     "en": "Zohar Symbols: a computed dictionary of the Zohar's symbols",
     "es": "Símbolos del Zohar: diccionario computado de los símbolos del Zohar"
+  },
+  "title_home": {
+    "en": "Zohar Symbols: a computed dictionary of the Zohar's images",
+    "es": "Símbolos del Zohar: diccionario computado de sus imágenes"
+  },
+  "title_symbol": {
+    "en": "{label} ({ar}) in the Zohar, a symbol of {node}",
+    "es": "{label} ({ar}) en el Zohar, símbolo de {node}"
+  },
+  "title_node": {
+    "en": "{label} ({ar}): its symbols in the Zohar",
+    "es": "{label} ({ar}): sus símbolos en el Zohar"
+  },
+  "title_passage": {
+    "en": "{cite}: Aramaic text, translation and meaning",
+    "es": "{cite}: texto arameo, traducción y significado"
+  },
+  "title_tree": {
+    "en": "The Tree of Life as a map of the Zohar's symbols",
+    "es": "El Árbol de la Vida como mapa de los símbolos del Zohar"
+  },
+  "title_scholars": {
+    "en": "For scholars: method, data and citation",
+    "es": "Para especialistas: método, datos y cita"
+  },
+  "title_about": {
+    "en": "About: reading the Zohar through its images",
+    "es": "Acerca de: leer el Zohar a través de sus imágenes"
+  },
+  "title_passage_ar": {
+    "en": "{cite}: the Aramaic text and its symbols",
+    "es": "{cite}: el texto arameo y sus símbolos"
   }
 }

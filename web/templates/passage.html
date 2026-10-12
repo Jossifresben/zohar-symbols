@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% from "_chips.html" import chips %}
 {% from "_translation.html" import translation, interpretation_body with context %}
-{% block title %}{{ p.citation }} · Zohar{% endblock %}
+{% block title %}{{ t('title_passage' if p.translation else 'title_passage_ar', cite=p.citation) }} · {{ t('site_title') }}{% endblock %}
 {% block description %}{% if p.translation %}{{ p.citation }}: {{ p.translation|truncate(150, True, '…') }}{% else %}{{ t('meta_desc_passage', cite=p.citation) }}{% endif %}{% endblock %}
 {% block content %}
 {% macro folio_nav(pos) %}

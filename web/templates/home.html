@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% from "_chips.html" import chips with context %}
-{% block title %}{% if q or heading %}{{ heading or t('search_results', q=q) }} · Zohar{% else %}{{ t('site_title') }}{% endif %}{% endblock %}
+{% block title %}{% if q or heading %}{{ heading or t('search_results', q=q) }} · Zohar{% else %}{{ t('title_home') }}{% endif %}{% endblock %}
 {% block content %}
 {%- if not (q or heading) %}
 <figure class="epigraph">
