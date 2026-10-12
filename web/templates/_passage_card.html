@@ -1,4 +1,4 @@
-{% from "_translation.html" import translation with context %}
+{% from "_translation.html" import translation, interpretation_body with context %}
 <article class="card passage-card">
   <header class="pc-head">
     <a class="pc-cite" href="{{ passage_url(p.id) }}">{{ p.citation }}</a>
@@ -7,4 +7,10 @@
   </header>
   <p class="heb pc-ar" lang="arc" dir="rtl">{{ p.text_ar|highlight(p.mentions, s.id if s is defined else none) }}</p>
   {{ translation(p.id, p.translation, p.translation_model) }}
+  {%- if p.interpretation %}
+  <details class="interp interp-card">
+    <summary class="label">{{ t('interp_title') }}</summary>
+    {{ interpretation_body(p) }}
+  </details>
+  {%- endif %}
 </article>

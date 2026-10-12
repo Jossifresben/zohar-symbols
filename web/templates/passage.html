@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% from "_chips.html" import chips %}
-{% from "_translation.html" import translation with context %}
+{% from "_translation.html" import translation, interpretation_body with context %}
 {% block title %}{{ p.citation }} · Zohar{% endblock %}
 {% block content %}
 {% macro folio_nav(pos) %}
@@ -33,13 +33,7 @@
     {%- if q.interpretation %}
     <section class="interp" aria-labelledby="interp-h">
       <h2 id="interp-h" class="label">{{ t('interp_title') }}</h2>
-      {%- for para in q.interpretation.split('\n') if para.strip() %}
-      <p class="pc-tr" data-kind="interpretation" lang="{{ lang }}">{{ para }}</p>
-      {%- endfor %}
-      <p class="attribution muted">
-        {%- if q.interpretation_model == 'human-correction' %}{{ t('corrected_by_hand') }}{% else %}{{ t('interp_by', model=model_name(q.interpretation_model)) }}{% endif %}
-        · <a href="{{ report_url(q.id, 'interpretation') }}" rel="nofollow">{{ t('report_problem') }}</a>
-      </p>
+      {{ interpretation_body(q) }}
     </section>
     {%- endif %}
     {%- endif %}

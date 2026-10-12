@@ -9,3 +9,13 @@
 <p class="pc-tr"><span class="muted">{{ t('not_translated') }}</span></p>
 {%- endif %}
 {% endmacro %}
+
+{% macro interpretation_body(p) %}
+{%- for para in p.interpretation.split('\n') if para.strip() %}
+<p class="pc-tr" data-kind="interpretation" lang="{{ lang }}">{{ para }}</p>
+{%- endfor %}
+<p class="attribution muted">
+  {%- if p.interpretation_model == 'human-correction' %}{{ t('corrected_by_hand') }}{% else %}{{ t('interp_by', model=model_name(p.interpretation_model)) }}{% endif %}
+  · <a href="{{ report_url(p.id, 'interpretation') }}" rel="nofollow">{{ t('report_problem') }}</a>
+</p>
+{% endmacro %}

@@ -156,3 +156,16 @@ def test_states_order_and_strata_chip(client):
     assert html.index(">full<") < html.index(">diminished<")
     assert "Across 2 strata" in html or "Across 3 strata" in html or "Only in" in html
     assert 'aria-label="Breadcrumb"' in html
+
+
+def test_symbol_cards_show_interpretation_collapsed(app, fixture_db):
+    import sqlite3
+    from web import queries as q
+    with app.app_context():
+        pid = q.surfaced("matronita", "en")[0]["id"]
+    con = sqlite3.connect(fixture_db)
+    con.execute("insert or replace into interpretation values (?,'en','A reading.','claude-fable-5-1','i2','2026-10-12')", (pid,))
+    con.commit(); con.close()
+    html = app.test_client().get("/symbol/matronita").get_data(as_text=True)
+    assert '<details class="interp interp-card">' in html and "What this passage means" in html and "A reading." in html
+    con = sqlite3.connect(fixture_db); con.execute("delete from interpretation"); con.commit(); con.close()
