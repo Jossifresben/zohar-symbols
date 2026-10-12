@@ -8,3 +8,7 @@ work/
 !tests/fixtures/
 *.egg-info/
 data/zohar.sqlite
+
+# planning and agent workspaces (kept local)
+docs/superpowers/
+.superpowers/

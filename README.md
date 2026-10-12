@@ -4,6 +4,8 @@
 
 A computed dictionary of the Zohar's symbols (*kinnuyim*), for curious readers. The Zohar speaks in images: the moon, the river, the bride, gold, the beard. Each image points to a sefirah. Deterministic code reads the Aramaic text of *Sefer ha-Zohar*, finds every image, counts where it appears and what it appears with, and shows you the passages. Bilingual English/Spanish, open access.
 
+**How it works:** [docs/METHOD.md](docs/METHOD.md) covers the method, provenance, how the translations and interpretations are made, and how to cite.
+
 ## What the site shows
 
 - **Symbols** — 139 symbols, each with its counts, its partners (co-occurrence and PMI), its states and the passages where it is strongest.
@@ -31,7 +33,7 @@ Every count, correlation and ranking is computed by deterministic code; no model
 | `data/SOURCES.md` | Pinned Wikisource revisions |
 | `seeds/` | Symbol seed (`kinnuyim.tsv`), strata, parashot, lemma overrides |
 
-`data/zohar.sqlite` (~65 MB) is **not** committed; rebuild it with `uv run --no-sync python -m pipeline.run_all`. The method, provenance and model use are written up in [docs/METHOD.md](docs/METHOD.md), generated from the same text as the Scholars page. Changes per release are in [CHANGELOG.md](CHANGELOG.md); deferred work is in [docs/BACKLOG.md](docs/BACKLOG.md). Design: [spec](docs/superpowers/specs/2026-10-11-zohar-symbols-design.md).
+`data/zohar.sqlite` (~65 MB) is **not** committed; rebuild it with `uv run --no-sync python -m pipeline.run_all`. The method, provenance and model use are written up in [docs/METHOD.md](docs/METHOD.md), generated from the same text as the Scholars page. Changes per release are in [CHANGELOG.md](CHANGELOG.md); deferred work is in [docs/BACKLOG.md](docs/BACKLOG.md).
 
 ## Pipeline
 
