@@ -1,6 +1,6 @@
 # For scholars
 
-_Generated from `web/strings.json` by `python -m web.method_doc`; the same text is on https://zohar.digital/scholars. Do not edit by hand._ · [Español](METHOD.es.md)
+_Generated from `web/strings.json` by `python -m web.method_doc`; the same text is on https://zohar.digital/scholars. Do not edit by hand._
 
 Method, provenance, data and citation. No number on this site is produced by a model: deterministic code counts, a model only translates and interprets, and every step is listed here.
 

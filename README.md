@@ -35,7 +35,7 @@
 | `data/SOURCES.md` | Pinned Wikisource revisions |
 | `seeds/` | Symbol seed (`kinnuyim.tsv`), strata, parashot, lemma overrides |
 
-`data/zohar.sqlite` (~65 MB) is **not** committed; rebuild it with `uv run --no-sync python -m pipeline.run_all`. The method, provenance and model use are written up in [docs/METHOD.md](docs/METHOD.md) ([español](docs/METHOD.es.md)), generated from the same text as the Scholars page. Changes per release are in [CHANGELOG.md](CHANGELOG.md); deferred work is in [docs/BACKLOG.md](docs/BACKLOG.md). Design: [spec](docs/superpowers/specs/2026-10-11-zohar-symbols-design.md).
+`data/zohar.sqlite` (~65 MB) is **not** committed; rebuild it with `uv run --no-sync python -m pipeline.run_all`. The method, provenance and model use are written up in [docs/METHOD.md](docs/METHOD.md), generated from the same text as the Scholars page. Changes per release are in [CHANGELOG.md](CHANGELOG.md); deferred work is in [docs/BACKLOG.md](docs/BACKLOG.md). Design: [spec](docs/superpowers/specs/2026-10-11-zohar-symbols-design.md).
 
 ## Pipeline
 

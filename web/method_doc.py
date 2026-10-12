@@ -1,7 +1,7 @@
-"""docs/METHOD.md and docs/METHOD.es.md, generated from the strings the Scholars page shows, so the
+"""docs/METHOD.md, generated from the strings the Scholars page shows, so the
 page and the repository never say different things.
 
-    python -m web.method_doc          # rewrite both files (a test fails if they are stale)
+    python -m web.method_doc          # rewrite it (a test fails if it is stale)
 """
 import json
 from pathlib import Path
@@ -13,7 +13,7 @@ from .i18n import fmt_num
 
 ROOT = Path(__file__).resolve().parent.parent
 STRINGS = json.loads((ROOT / "web" / "strings.json").read_text(encoding="utf-8"))
-OUT = {"en": ROOT / "docs" / "METHOD.md", "es": ROOT / "docs" / "METHOD.es.md"}
+OUT = {"en": ROOT / "docs" / "METHOD.md"}   # English only in the repository; the site has both languages
 METHOD_KEYS = ["corpus", "lemma", "tag", "cooc", "states", "surf", "resolve"]
 MODEL_KEYS = ["translate", "interpret", "checks", "status"]
 EXPORTS = [("/api/symbols.json", "sch_e_symbols"), ("/api/pairs.csv", "sch_e_pairs"), ("/api/meta.json", "sch_e_meta")]
@@ -21,7 +21,6 @@ NOTE = {"en": "Generated from `web/strings.json` by `python -m web.method_doc`; 
         "es": "Generado desde `web/strings.json` con `python -m web.method_doc`; el mismo texto está en https://zohar.digital/es/scholars. No editar a mano."}
 FIGURES = {"en": "Figures for this build (passages, tokens, roots, mentions, pairs, translations, interpretations): [data/report.md](../data/report.md).",
            "es": "Cifras de esta construcción (pasajes, tokens, raíces, menciones, pares, traducciones, interpretaciones): [data/report.md](../data/report.md)."}
-OTHER = {"en": "[Español](METHOD.es.md)", "es": "[English](METHOD.md)"}
 
 
 def t(key: str, lang: str, **kw) -> str:
@@ -47,7 +46,7 @@ def counts(lang: str) -> dict:
 def render(lang: str) -> str:
     n = counts(lang)
     fmt = cite.formats({"tables_version": TABLES_VERSION}, lang)
-    lines = [f"# {t('sch_title', lang)}", "", f"_{NOTE[lang]}_ · {OTHER[lang]}", "", t("sch_intro", lang), "",
+    lines = [f"# {t('sch_title', lang)}", "", f"_{NOTE[lang]}_", "", t("sch_intro", lang), "",
              f"{t('sch_repo', lang)}: https://github.com/Jossifresben/zohar-symbols · DOI [{cite.DOI}](https://doi.org/{cite.DOI})", "",
              f"## {t('sch_method_h', lang)}", ""]
     lines += [bold_head(t(f"sch_m_{k}", lang)) + "\n" for k in METHOD_KEYS]
