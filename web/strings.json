@@ -962,5 +962,9 @@
   "sch_x_status": {
     "en": "Status. None of this has been reviewed by specialists. Read the interpretations as one informed reading, not as the tradition's verdict. The prompts are in the repository (pipeline/translate.py, pipeline/interpret.py).",
     "es": "Estado. Nada de esto lo han revisado especialistas. Lee las interpretaciones como una lectura informada, no como el veredicto de la tradición. Los prompts están en el repositorio (pipeline/translate.py, pipeline/interpret.py)."
+  },
+  "sch_repo": {
+    "en": "Code and data",
+    "es": "Código y datos"
   }
 }

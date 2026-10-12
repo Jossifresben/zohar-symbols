@@ -2,7 +2,8 @@
 {% block title %}{{ t('sch_title') }} · Zohar{% endblock %}
 {% block content %}
 {% macro sp(key, n) %}<span data-n="{{ key }}">{{ n|num }}</span>{% endmacro %}
-<section class="sym-head"><h1 class="display">{{ t('sch_title') }}</h1><p class="intro">{{ t('sch_intro') }}</p></section>
+<section class="sym-head"><h1 class="display">{{ t('sch_title') }}</h1><p class="intro">{{ t('sch_intro') }}</p>
+  <p class="muted">{{ t('sch_repo') }}: <a href="https://github.com/Jossifresben/zohar-symbols">github.com/Jossifresben/zohar-symbols</a> · DOI <a href="https://doi.org/10.5281/zenodo.23305097">10.5281/zenodo.23305097</a></p></section>
 <section class="card" id="method"><h2 class="label">{{ t('sch_method_h') }}</h2>
   {%- for k in ['corpus','lemma','tag','cooc','states','surf','resolve'] %}
   {%- set m = t('sch_m_' ~ k) %}{% set i = m.find('. ') + 1 %}

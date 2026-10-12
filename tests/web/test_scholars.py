@@ -90,3 +90,9 @@ def test_scholars_model_text_card(client):
     assert "<strong>Interpretations.</strong>" in html and "Ohr HaChamah" in html
     es = client.get("/es/scholars").get_data(as_text=True)
     assert "Traducciones e interpretaciones" in es and "<strong>Interpretaciones.</strong>" in es
+
+
+def test_scholars_links_repo_and_doi(client):
+    html = client.get("/scholars").get_data(as_text=True)
+    assert 'href="https://github.com/Jossifresben/zohar-symbols"' in html and 'href="https://doi.org/10.5281/zenodo.23305097"' in html
+    assert "Código y datos" in client.get("/es/scholars").get_data(as_text=True)
