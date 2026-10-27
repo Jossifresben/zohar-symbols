@@ -8,6 +8,7 @@ version = "0.1.0"
 description = "A computed dictionary of the Zohar's symbols"
 requires-python = ">=3.11"
 dependencies = [
+    "certifi>=2026.10.19",  # eMudhra CA compromise (Render advisory, Oct 2026)
     "requests>=2.31",
     "flask>=3.0",
     "gunicorn>=22.0",
